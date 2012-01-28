@@ -81,7 +81,7 @@ public class FastTagBridge extends JavaTagBase {
     }
 
     @Override
-    public TextBuilder build() {
+    public void call(ParameterList params, Body body) {
         PrintWriter w = new PrintWriter(new Writer() {
             @Override
             public void write(char[] cbuf, int off, int len) throws IOException {
@@ -98,7 +98,7 @@ public class FastTagBridge extends JavaTagBase {
         });
         try {
             Method m = targetClass.getDeclaredMethod("_" + tagName, Map.class, Closure.class, PrintWriter.class, GroovyTemplate.ExecutableTemplate.class, int.class);
-            m.invoke(null, null == params ? null : params.asMap(), new TagBodyClosure(_body), w, null, 0);
+            m.invoke(null, null == params ? null : params.asMap(), new TagBodyClosure(body), w, null, 0);
         } catch (NoSuchMethodException e) {
             throw new UnexpectedException("cannot find fast tag method to invoke: " + tagName, e);
         } catch (InvocationTargetException e) {
@@ -106,7 +106,6 @@ public class FastTagBridge extends JavaTagBase {
         } catch (IllegalAccessException e) {
             throw new UnexpectedException("no access to fast tag method: " + tagName , e);
         }
-        return this;
     }
 
     @Override

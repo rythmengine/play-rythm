@@ -1,6 +1,5 @@
 package play.modules.rythm;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -9,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.greenlaw110.rythm.internal.compiler.TemplateClass;
-import com.greenlaw110.rythm.runtime.ITag;
 import play.Logger;
 import play.Play;
 import play.classloading.ApplicationClasses;
@@ -19,7 +16,9 @@ import play.mvc.Controller;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 
+import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
+import com.greenlaw110.rythm.runtime.ITag;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,11 +44,11 @@ public class RythmTemplateLoader {
         while (path.startsWith("/") || path.startsWith("\\")) path = path.substring(1);
         // strip off file extension
         pos = path.lastIndexOf('.');
-        path = path.substring(0, pos);
+        if (-1 != pos) path = path.substring(0, pos);
         path = path.replace('/', '.');
         pos = path.lastIndexOf('.');
         if (-1 == pos) {
-            // should be top level layout template like: main.html
+            // should be top level layout template like: main.html or template content
             return null;
         }
         String cName = "controllers." + path.substring(0, pos);

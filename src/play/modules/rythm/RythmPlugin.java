@@ -1,15 +1,21 @@
 package play.modules.rythm;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.greenlaw110.rythm.template.JavaTagBase;
 import play.Logger;
 import play.Play;
 import play.PlayPlugin;
 import play.classloading.ApplicationClasses;
 import play.exceptions.ConfigurationException;
+import play.exceptions.UnexpectedException;
+import play.templates.FastTags;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 
@@ -188,8 +194,6 @@ public class RythmPlugin extends PlayPlugin {
             engine.init(p);
         }
 
-        RythmTemplateLoader.scanTagFolder();
-        
         info("template engine initialized");
     }
     
@@ -197,6 +201,34 @@ public class RythmPlugin extends PlayPlugin {
     public void onApplicationStart() {
         RythmTemplateLoader.buildBlackWhiteList();
         FastTagBridge.registerFastTags();
+        registerJavaTags();
+        RythmTemplateLoader.scanTagFolder();
+    }
+    
+    private void registerJavaTags() {
+        List<ApplicationClasses.ApplicationClass> classes = Play.classes.getAssignableClasses(FastRythmTag.class);
+        for (ApplicationClasses.ApplicationClass ac: classes) {
+            Class<?> jc = ac.javaClass;
+            int flag = jc.getModifiers();
+            if (Modifier.isAbstract(flag)) continue;
+            Constructor[] cca = jc.getConstructors();
+//            boolean found = false;
+//            for (Constructor cc: cca) {
+//                if (cc.getParameterTypes().length == 0) {
+//                    found = true;
+//                    break;
+//                }
+//            }
+//            if (!found) continue; // no zero parameter constructor
+            try {
+                Constructor c = jc.getConstructor(new Class[]{});
+                c.setAccessible(true);
+                FastRythmTag tag = (FastRythmTag)c.newInstance();
+                engine.registerTag(tag);
+            } catch (Exception e) {
+                throw new UnexpectedException("Error initialize JavaTag: " + jc.getName(), e);
+            }
+        }
     }
 
     @Override
