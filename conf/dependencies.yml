@@ -1,0 +1,4 @@
+self: play -> rythm 0.1d
+
+require:
+    - play 1.2

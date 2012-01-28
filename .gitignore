@@ -1,0 +1,7 @@
+.classpath
+.project
+.settings
+dist
+*.eml
+*.iml
+targets
