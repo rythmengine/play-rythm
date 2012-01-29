@@ -1,7 +1,6 @@
 package play.modules.rythm;
 
 import com.greenlaw110.rythm.template.JavaTagBase;
-import com.greenlaw110.rythm.util.TextBuilder;
 import play.templates.FastTags;
 
 /**

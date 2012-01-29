@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.greenlaw110.rythm.spi.IParserFactory;
-import com.greenlaw110.rythm.template.JavaTagBase;
 import play.Logger;
 import play.Play;
 import play.PlayPlugin;
@@ -18,7 +17,6 @@ import play.exceptions.ConfigurationException;
 import play.exceptions.UnexpectedException;
 import play.modules.rythm.parsers.AbsoluteUrlReverseLookupParser;
 import play.modules.rythm.parsers.UrlReverseLookupParser;
-import play.templates.FastTags;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 
@@ -29,7 +27,7 @@ import com.greenlaw110.rythm.logger.ILogger;
 import com.greenlaw110.rythm.logger.ILoggerFactory;
 import com.greenlaw110.rythm.spi.ITemplateClassEnhancer;
 import com.greenlaw110.rythm.template.ITemplate;
-import com.greenlaw110.rythm.util.IRythmListener;
+import com.greenlaw110.rythm.utils.IRythmListener;
 
 public class RythmPlugin extends PlayPlugin {
     public static final String VERSION = "0.1";
@@ -212,28 +210,29 @@ public class RythmPlugin extends PlayPlugin {
     }
     
     private void registerJavaTags() {
+        // -- register application java tags
         List<ApplicationClasses.ApplicationClass> classes = Play.classes.getAssignableClasses(FastRythmTag.class);
         for (ApplicationClasses.ApplicationClass ac: classes) {
-            Class<?> jc = ac.javaClass;
-            int flag = jc.getModifiers();
-            if (Modifier.isAbstract(flag)) continue;
-            Constructor[] cca = jc.getConstructors();
-//            boolean found = false;
-//            for (Constructor cc: cca) {
-//                if (cc.getParameterTypes().length == 0) {
-//                    found = true;
-//                    break;
-//                }
-//            }
-//            if (!found) continue; // no zero parameter constructor
-            try {
-                Constructor c = jc.getConstructor(new Class[]{});
-                c.setAccessible(true);
-                FastRythmTag tag = (FastRythmTag)c.newInstance();
-                engine.registerTag(tag);
-            } catch (Exception e) {
-                throw new UnexpectedException("Error initialize JavaTag: " + jc.getName(), e);
-            }
+            registerJavaTag(ac.javaClass);
+        }
+        
+        // -- register PlayRythm build-in tags
+        Class<?>[] ca = FastRythmTags.class.getDeclaredClasses();
+        for (Class<?> c: ca) {
+            registerJavaTag(c);
+        }
+    }
+    
+    private void registerJavaTag(Class<?> jc) {
+        int flag = jc.getModifiers();
+        if (Modifier.isAbstract(flag)) return;
+        try {
+            Constructor<?> c = jc.getConstructor(new Class[]{});
+            c.setAccessible(true);
+            FastRythmTag tag = (FastRythmTag)c.newInstance();
+            engine.registerTag(tag);
+        } catch (Exception e) {
+            throw new UnexpectedException("Error initialize JavaTag: " + jc.getName(), e);
         }
     }
 

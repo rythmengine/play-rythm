@@ -2,10 +2,8 @@ package play.modules.rythm;
 
 import com.greenlaw110.rythm.RythmEngine;
 import com.greenlaw110.rythm.runtime.ITag;
-import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.template.JavaTagBase;
 import com.greenlaw110.rythm.template.TemplateBase;
-import com.greenlaw110.rythm.util.TextBuilder;
 import groovy.lang.Closure;
 import play.Play;
 import play.classloading.ApplicationClasses;
