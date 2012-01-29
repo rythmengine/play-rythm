@@ -1,4 +1,4 @@
-self: play -> rythm 0.1d
+self: play -> rythm 0.2
 
 require:
     - play 1.2
