@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.greenlaw110.rythm.spi.IParserFactory;
 import com.greenlaw110.rythm.template.JavaTagBase;
 import play.Logger;
 import play.Play;
@@ -15,6 +16,8 @@ import play.PlayPlugin;
 import play.classloading.ApplicationClasses;
 import play.exceptions.ConfigurationException;
 import play.exceptions.UnexpectedException;
+import play.modules.rythm.parsers.AbsoluteUrlReverseLookupParser;
+import play.modules.rythm.parsers.UrlReverseLookupParser;
 import play.templates.FastTags;
 import play.templates.Template;
 import play.vfs.VirtualFile;
@@ -190,6 +193,9 @@ public class RythmPlugin extends PlayPlugin {
                 }
             });
             Rythm.engine = engine;
+
+            IParserFactory[] factories = {new AbsoluteUrlReverseLookupParser(), new UrlReverseLookupParser()};
+            engine.getExtensionManager().registerUserDefinedParsers(factories);
         } else {
             engine.init(p);
         }
