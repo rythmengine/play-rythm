@@ -72,7 +72,13 @@ public class RythmTemplateLoader {
     static boolean whiteListed(String path) {
         if (Play.mode == Play.Mode.DEV) {
             Method m = getActionMethod(path);
-            if (null != m && m.getAnnotation(UseRythmTemplateEngine.class) != null) return true;
+            if (null != m) {
+                if (m.getAnnotation(UseSystemTemplateEngine.class) != null) return false;
+                if (m.getAnnotation(UseRythmTemplateEngine.class) != null) return true;
+                Class<?> c = m.getDeclaringClass();
+                if (c.getAnnotation(UseSystemTemplateEngine.class) != null) return false;
+                if (c.getAnnotation(UseRythmTemplateEngine.class) != null) return true;
+            }
             return false;
         }
         // strip off /app/views
@@ -90,7 +96,13 @@ public class RythmTemplateLoader {
     static boolean blackListed(String path) {
         if (Play.mode == Play.Mode.DEV) {
             Method m = getActionMethod(path);
-            if (null != m && m.getAnnotation(UseSystemTemplateEngine.class) != null) return true;
+            if (null != m) {
+                if (m.getAnnotation(UseSystemTemplateEngine.class) != null) return true;
+                if (m.getAnnotation(UseRythmTemplateEngine.class) != null) return false;
+                Class<?> c = m.getDeclaringClass();
+                if (c.getAnnotation(UseSystemTemplateEngine.class) != null) return true;
+                if (c.getAnnotation(UseRythmTemplateEngine.class) != null) return false;
+            }
             return false;
         }
         return blackList.contains(path);
@@ -160,8 +172,21 @@ public class RythmTemplateLoader {
                 boolean useRythm = ar != null;
                 UseSystemTemplateEngine as = m.getAnnotation(UseSystemTemplateEngine.class);
                 boolean useSystem = as != null;
-                if (!useRythm && !useSystem) continue; // no annotation found, use default behavior
-                if (useRythm && useSystem) throw new UnexpectedException(String.format("Both UseRythmTemplateEngine and UseSystemTemplateEngine found on [%s]. You should choose only one", m.toString()));
+                if (!useRythm && !useSystem) {
+                    // no annotation found, check class annotation
+                    useRythm  = c.getAnnotation(UseRythmTemplateEngine.class) != null;
+                    useSystem = c.getAnnotation(UseSystemTemplateEngine.class) != null;
+
+                    if (!useRythm && !useSystem) continue; // no annotation found on class either, use RythmPlugin default configuration
+                    if (useRythm && useSystem) {
+                        Logger.warn("Both UseRythmTemplateEngine and UseSystemTemplateEngine found on class [%s]. You should choose only one. System template engine will be used", c.getName());
+                        useRythm = false;
+                    }
+                }
+                if (useRythm && useSystem) {
+                    Logger.warn("Both UseRythmTemplateEngine and UseSystemTemplateEngine found on method [%s]. You should choose only one. System template engine will be used", m.toString());
+                    useRythm = false;
+                }
                 String path = sCls + "/" + m.getName();
                 if (useRythm) {
                     RythmPlugin.trace("adding %s to white list", path);
