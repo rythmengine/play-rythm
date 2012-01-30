@@ -1,14 +1,15 @@
 package play.modules.rythm;
 
-import com.greenlaw110.rythm.Rythm;
-import javassist.ClassPath;
-import javassist.NotFoundException;
-import play.classloading.enhancers.PropertiesEnhancer;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import javassist.ClassPath;
+import javassist.NotFoundException;
+import play.classloading.enhancers.PropertiesEnhancer;
+
+import com.greenlaw110.rythm.Rythm;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,6 +20,7 @@ import java.net.URL;
  */
 class TemplatePropertiesEnhancer extends PropertiesEnhancer {
     TemplatePropertiesEnhancer() {
+        this.classPool.removeClassPath(new ApplicationClassesClasspath());
         this.classPool.appendClassPath(new ClassPath() {
             @Override
             public InputStream openClassfile(String className) throws NotFoundException {

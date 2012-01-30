@@ -6,6 +6,7 @@ import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.resource.ITemplateResourceLoader;
 import com.greenlaw110.rythm.resource.TemplateResourceBase;
 import com.greenlaw110.rythm.runtime.ITag;
+import play.Logger;
 import play.Play;
 import play.libs.IO;
 import play.vfs.VirtualFile;
@@ -99,6 +100,10 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
         }
 
         VirtualFile file = VirtualFile.fromRelativePath(path);
+        if (null == file) {
+            Logger.error("BAD PATH: %s", path);
+            return null;
+        }
         return isValid(file) ? new VirtualFileTemplateResource(file) : null;
     }
 

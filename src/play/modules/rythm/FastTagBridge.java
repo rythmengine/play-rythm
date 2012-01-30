@@ -29,6 +29,19 @@ import java.util.Map;
  */
 public class FastTagBridge extends JavaTagBase {
 
+    public static class RythmExecutableTemplate extends GroovyTemplate.ExecutableTemplate {
+
+        public TemplateBase caller;
+        RythmExecutableTemplate(TemplateBase caller) {
+            this.caller = caller;
+        }
+
+        @Override
+        public Object run() {
+            return null;
+        }
+    }
+
     public static class TagBodyClosure extends Closure {
         private Body _body;
         public TagBodyClosure(Body body) {
@@ -83,7 +96,7 @@ public class FastTagBridge extends JavaTagBase {
         PrintWriter w = new PrintWriter(new Writer() {
             @Override
             public void write(char[] cbuf, int off, int len) throws IOException {
-                _out.append(cbuf, off, len);
+                out().append(cbuf, off, len);
             }
 
             @Override
@@ -96,7 +109,7 @@ public class FastTagBridge extends JavaTagBase {
         });
         try {
             Method m = targetClass.getDeclaredMethod("_" + tagName, Map.class, Closure.class, PrintWriter.class, GroovyTemplate.ExecutableTemplate.class, int.class);
-            m.invoke(null, null == params ? null : params.asMap(), new TagBodyClosure(body), w, null, 0);
+            m.invoke(null, null == params ? null : params.asMap(), new TagBodyClosure(body), w, new RythmExecutableTemplate((TemplateBase)_caller), 0);
         } catch (NoSuchMethodException e) {
             throw new UnexpectedException("cannot find fast tag method to invoke: " + tagName, e);
         } catch (InvocationTargetException e) {

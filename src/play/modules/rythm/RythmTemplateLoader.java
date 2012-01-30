@@ -11,7 +11,6 @@ import java.util.Set;
 import play.Logger;
 import play.Play;
 import play.classloading.ApplicationClasses;
-import play.exceptions.UnexpectedException;
 import play.mvc.Controller;
 import play.templates.Template;
 import play.vfs.VirtualFile;
@@ -66,10 +65,13 @@ public class RythmTemplateLoader {
             if (mName.equalsIgnoreCase(m.getName())) return m;
         }
 
-        throw new UnexpectedException("oops, how can I come here without Controller action invocation?");
+        //throw new UnexpectedException("oops, how can I come here without Controller action invocation?");
+        // it must be layout template without 'rythm' in path
+        return null;
     }
     
     static boolean whiteListed(String path) {
+        if (path.contains("rythm")) return true;
         if (Play.mode == Play.Mode.DEV) {
             Method m = getActionMethod(path);
             if (null != m) {

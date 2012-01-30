@@ -99,7 +99,7 @@ public class RythmPlugin extends PlayPlugin {
     }
 
     public static EngineType defaultEngine = EngineType.system;
-    public static boolean underscoreImplicitVariableName = true;
+    public static boolean underscoreImplicitVariableName = false;
     public static boolean refreshOnRender = true;
     public static String templateRoot = "app/views";
     public static String tagRoot = "app/views/tags/rythm";
@@ -108,6 +108,11 @@ public class RythmPlugin extends PlayPlugin {
     public void onConfigurationRead() {
         Properties playConf = Play.configuration;
         
+        // special configurations
+        defaultEngine = EngineType.parseEngineType(playConf.getProperty("rythm.default.engine", "system"));
+        underscoreImplicitVariableName = Boolean.parseBoolean(playConf.getProperty("rythm.implicitVariable.underscore", "false"));
+        refreshOnRender = Boolean.parseBoolean(playConf.getProperty("rythm.resource.refreshOnRender", "true"));
+
         Properties p = new Properties();
 
         // set default configurations
@@ -160,11 +165,6 @@ public class RythmPlugin extends PlayPlugin {
         p.put("rythm.tag.root", new File(Play.applicationPath, tagRoot));
         
         if (Play.Mode.PROD == Play.mode) p.put("rythm.mode", Rythm.Mode.prod);
-
-        // special configurations
-        defaultEngine = EngineType.parseEngineType(playConf.getProperty("rythm.default.engine", "system"));
-        underscoreImplicitVariableName = Boolean.parseBoolean(playConf.getProperty("rythm.implicitVariable.underscore", "false"));
-        refreshOnRender = Boolean.parseBoolean(playConf.getProperty("rythm.resource.refreshOnRender", "true"));
 
         if (null == engine) {
             engine = new RythmEngine(p);
@@ -238,6 +238,10 @@ public class RythmPlugin extends PlayPlugin {
 
     @Override
     public Template loadTemplate(VirtualFile file) {
+        if (null == engine) {
+            // in prod mode this method is called in preCompile() when onConfigurationRead() has not been called yet
+            onConfigurationRead();
+        }
         return RythmTemplateLoader.loadTemplate(file);
     }
 

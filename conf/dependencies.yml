@@ -1,4 +1,9 @@
-self: play -> rythm 0.2
+# History
+# 0.2d - refactor template base and tag base class
+# 0.2c - fix bug: runtime exception when path point to a layout template
+# 0.2b - strip off ';' from @args declaration line
+# 0.2a - working with Play!
+self: play -> rythm 0.2d
 
 require:
     - play 1.2
