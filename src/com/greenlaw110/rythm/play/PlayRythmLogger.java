@@ -1,4 +1,4 @@
-package play.modules.rythm;
+package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.logger.ILogger;
 import play.Logger;

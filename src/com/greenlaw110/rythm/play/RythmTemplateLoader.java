@@ -1,4 +1,4 @@
-package play.modules.rythm;
+package com.greenlaw110.rythm.play;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

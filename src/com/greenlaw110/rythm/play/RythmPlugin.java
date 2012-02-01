@@ -1,4 +1,4 @@
-package play.modules.rythm;
+package com.greenlaw110.rythm.play;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.greenlaw110.rythm.play.parsers.AbsoluteUrlReverseLookupParser;
+import com.greenlaw110.rythm.play.parsers.UrlReverseLookupParser;
 import com.greenlaw110.rythm.spi.IParserFactory;
 import play.Logger;
 import play.Play;
@@ -15,8 +17,6 @@ import play.PlayPlugin;
 import play.classloading.ApplicationClasses;
 import play.exceptions.ConfigurationException;
 import play.exceptions.UnexpectedException;
-import play.modules.rythm.parsers.AbsoluteUrlReverseLookupParser;
-import play.modules.rythm.parsers.UrlReverseLookupParser;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 
@@ -30,7 +30,7 @@ import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.utils.IRythmListener;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "0.1";
+    public static final String VERSION = "0.2";
 
     public static void info(String msg, Object... args) {
         Logger.info(msg_(msg, args));

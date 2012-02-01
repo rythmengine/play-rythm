@@ -1,4 +1,4 @@
-package play.modules.rythm;
+package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.RythmEngine;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
@@ -109,8 +109,10 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
 
     @Override
     public void tryLoadTag(String tagName) {
+//Logger.info(">>> try to load tag: %s", tagName);
         RythmEngine engine = RythmPlugin.engine;
         if (engine.tags.containsKey(tagName)) return;
+//Logger.info(">>> try to load tag: %s, tag not found in engine registry, continue loading", tagName);
         tagName = tagName.replace('.', '/');
         final String[] suffixes = {
                 ".html",
@@ -123,15 +125,24 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
             String name = tagName + suffix;
             tagFile = Play.getVirtualFile(name);
             if (null != tagFile && tagFile.getRealFile().canRead()) {
+//Logger.info(">>> try to load tag: %s, tag file found: %s", tagName, tagFile);
                 try {
                     VirtualFileTemplateResource tr = new VirtualFileTemplateResource(tagFile);
                     TemplateClass tc = engine.classes.getByTemplate(tr.getKey());
                     if (null == tc) {
                         tc = new TemplateClass(tr, engine);
-                        ITag tag = (ITag)tc.asTemplate();
-                        if (null != tag) engine.registerTag(tag);
                     }
+//Logger.info(">>> try to load tag: %s, Template class found: %s", tagName, tc);
+                    ITag tag = (ITag)tc.asTemplate();
+                    if (null != tag) {
+//Logger.info(">>> try to load tag: %s, tag found!!!", tagName);
+                        engine.registerTag(tag);
+//Logger.info(">>> try to load tag: %s, tag registered!!!", tagName);
+                        return;
+                    }
+//Logger.info(">>> try to load tag: %s, tag find found: %s", tagName, tagFile);
                 } catch (Exception e) {
+//Logger.error(e, ">>> error loading tag: %s", tagName);
                     // ignore
                 }
             }

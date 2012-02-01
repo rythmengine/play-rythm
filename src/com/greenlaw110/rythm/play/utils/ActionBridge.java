@@ -1,4 +1,4 @@
-package play.modules.rythm.utils;
+package com.greenlaw110.rythm.play.utils;
 
 /**
  * Created by IntelliJ IDEA.

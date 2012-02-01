@@ -1,4 +1,4 @@
-package play.modules.rythm.parsers;
+package com.greenlaw110.rythm.play.parsers;
 
 import com.greenlaw110.rythm.exception.ParseException;
 import com.greenlaw110.rythm.internal.dialect.Rythm;
@@ -72,7 +72,7 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
                     return new CodeToken("", ctx()) {
                         @Override
                         public void output() {
-                            p("p(new play.modules.rythm.utils.ActionBridge(").p(isAbsolute).p(").invokeMethod(\"").p(action).p("\", new Object[] {").p(param).p("}));");
+                            p("p(new ActionBridge(").p(isAbsolute).p(").invokeMethod(\"").p(action).p("\", new Object[] {").p(param).p("}));");
                         }
                     };
                 } else {

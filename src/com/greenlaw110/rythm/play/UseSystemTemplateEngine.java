@@ -1,4 +1,4 @@
-package play.modules.rythm;
+package com.greenlaw110.rythm.play;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
