@@ -16,6 +16,6 @@ public class AbsoluteUrlReverseLookupParser extends UrlReverseLookupParser {
 
     @Override
     public IKeyword keyword() {
-        return PlayRythmKeyword.AURL;
+        return PlayRythmKeyword._AU;
     }
 }

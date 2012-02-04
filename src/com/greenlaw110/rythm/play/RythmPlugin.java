@@ -3,20 +3,19 @@ package com.greenlaw110.rythm.play;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import com.greenlaw110.rythm.play.parsers.AbsoluteUrlReverseLookupParser;
 import com.greenlaw110.rythm.play.parsers.UrlReverseLookupParser;
 import com.greenlaw110.rythm.spi.IParserFactory;
+import com.greenlaw110.rythm.utils.IImplicitRenderArgProvider;
 import play.Logger;
 import play.Play;
 import play.PlayPlugin;
 import play.classloading.ApplicationClasses;
 import play.exceptions.ConfigurationException;
 import play.exceptions.UnexpectedException;
+import play.mvc.Scope;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 
@@ -104,6 +103,17 @@ public class RythmPlugin extends PlayPlugin {
     public static String templateRoot = "app/views";
     public static String tagRoot = "app/views/tags/rythm";
     
+    public static List<ImplicitVariables.Var> implicitRenderArgs = new ArrayList<ImplicitVariables.Var>();
+    
+    public static void registerImplicitRenderArg(final String name, final String type) {
+        implicitRenderArgs.add(new ImplicitVariables.Var(name, type) {
+            @Override
+            protected Object evaluate() {
+                return Scope.RenderArgs.current().get(name());
+            }
+        });
+    }
+    
     @Override
     public void onConfigurationRead() {
         Properties playConf = Play.configuration;
@@ -140,13 +150,39 @@ public class RythmPlugin extends PlayPlugin {
                 return PlayRythmLogger.instance;
             }
         });
-        // put implicit render args declarations
-        // see http://www.playframework.org/documentation/1.2.4/templates#implicits
-        Map<String, Object> m = new HashMap<String, Object>();
-        for (ImplicitVariables.Var var: ImplicitVariables.vars) {
-            m.put(var.name(), var.type);
-        }
-        p.put("rythm.defaultRenderArgs", m);
+
+        // handle implicit render args
+        p.put("rythm.implicitRenderArgProvider", new IImplicitRenderArgProvider() {
+            @Override
+            public Map<String, ?> getRenderArgDescriptions() {
+                Map<String, Object> m = new HashMap<String, Object>();
+                // App registered render args
+                for (ImplicitVariables.Var var: implicitRenderArgs) {
+                    m.put(var.name(), var.type);
+                }
+                // Play default render args
+                for (ImplicitVariables.Var var: ImplicitVariables.vars) {
+                    m.put(var.name(), var.type);
+                }
+                return m;
+            }
+
+            @Override
+            public void setRenderArgs(ITemplate template) {
+                Map<String, Object> m = new HashMap<String, Object>();
+                // some system implicit render args are not set, so we need to set them here.
+                for (ImplicitVariables.Var var: ImplicitVariables.vars) {
+                    m.put(var.name(), var.evaluate());
+                }
+                // application render args should already be set in controller methods
+                template.setRenderArgs(m);
+            }
+
+            @Override
+            public List<String> getImplicitImportStatements() {
+                return Arrays.asList(new String[]{"controllers.*", "models.*"});
+            }
+        });
 
         // set user configurations - coming from application.conf
         for (String key: playConf.stringPropertyNames()) {
@@ -235,6 +271,17 @@ public class RythmPlugin extends PlayPlugin {
             throw new UnexpectedException("Error initialize JavaTag: " + jc.getName(), e);
         }
     }
+
+    public static final Template VOID_TEMPLATE = new Template() {
+        @Override
+        public void compile() {
+            //
+        }
+        @Override
+        protected String internalRender(Map<String, Object> args) {
+            throw new UnexpectedException("It's not supposed to be called");
+        }
+    };
 
     @Override
     public Template loadTemplate(VirtualFile file) {

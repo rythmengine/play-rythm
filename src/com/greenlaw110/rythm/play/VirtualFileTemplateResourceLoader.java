@@ -85,11 +85,24 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
     }
 
     public static boolean isValid(VirtualFile file) {
-        return file.exists() && file.getRealFile().canRead();
+        return (null != file) && file.exists() && file.getRealFile().canRead();
     }
 
     @Override
     public ITemplateResource load(String path) {
+        VirtualFile vf = VirtualFile.fromRelativePath(path);
+        if (!isValid(vf)) {
+            if (!path.startsWith(RythmPlugin.templateRoot)) {
+                if (!path.startsWith("/") && !path.startsWith("\\")) path = "/" + path;
+                path = RythmPlugin.templateRoot + path;
+            }
+            vf = Play.getVirtualFile(path);
+        }
+        return load(vf);
+    }
+    
+    public ITemplateResource load(VirtualFile file) {
+        String path = file.relativePath();
         if (path.contains(".svn")) return null; // definitely we don't want to load anything inside there
         if (RythmPlugin.defaultEngine == RythmPlugin.EngineType.system) {
             // by default use groovy template unless it's in the white list
@@ -98,13 +111,8 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
             // by default use rythm template unless it's in the black list
             if (RythmTemplateLoader.blackListed(path)) return null;
         }
-
-        VirtualFile file = VirtualFile.fromRelativePath(path);
-        if (null == file) {
-            Logger.error("BAD PATH: %s", path);
-            return null;
-        }
-        return isValid(file) ? new VirtualFileTemplateResource(file) : null;
+        
+        return new VirtualFileTemplateResource(file);
     }
 
     @Override

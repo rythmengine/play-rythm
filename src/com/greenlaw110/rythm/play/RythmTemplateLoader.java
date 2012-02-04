@@ -205,6 +205,8 @@ public class RythmTemplateLoader {
 
     public static Template loadTemplate(VirtualFile file) {
         String path = file.relativePath();
+RythmPlugin.info("loading template from virtual file: %s", file.relativePath());
+
         RythmTemplate rt = cache.get(path);
         if (null != rt) {
             rt.refresh(); // check if the resource is still valid
@@ -212,8 +214,18 @@ public class RythmTemplateLoader {
         }
         
         // load template from the virtual file
-        ITemplateResource resource = resourceLoader.load(path);
+        ITemplateResource resource = resourceLoader.load(file);
+RythmPlugin.info("loaded template resource: %s", null == resource ? null : resource.getKey());
         if (null == resource || !resource.isValid()) return null;
+        
+        // are we already started?
+        if (!Play.started) {
+            // we can't load real template at precompile time because we pobably needs application to
+            // register implicit variables
+RythmPlugin.info("Play not started, return void template");
+            return RythmPlugin.VOID_TEMPLATE;
+        }
+RythmPlugin.info("Play started, template returned");
 
         RythmTemplate tc = new RythmTemplate(resource);
         if (tc.isValid()) {

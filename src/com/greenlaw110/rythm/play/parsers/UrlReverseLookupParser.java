@@ -24,7 +24,7 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
     
     @Override
     public IKeyword keyword() {
-        return PlayRythmKeyword.URL;
+        return PlayRythmKeyword._U;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
                     return new CodeToken("", ctx()) {
                         @Override
                         public void output() {
-                            p("p(new ActionBridge(").p(isAbsolute).p(").invokeMethod(\"").p(action).p("\", new Object[] {").p(param).p("}));");
+                            p("p(new com.greenlaw110.rythm.play.utils.ActionBridge(").p(isAbsolute).p(").invokeMethod(\"").p(action).p("\", new Object[] {").p(param).p("}));");
                         }
                     };
                 } else {
@@ -85,7 +85,7 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
     public static void main(String[] args) {
         UrlReverseLookupParser p = new UrlReverseLookupParser();
         Regex r = p.reg(new Rythm());
-        String s = "@url(\"RythmTester.test(a.boc(), 14, '3', \"aa\")\") abc";
+        String s = "@_u(Clients.form(_._id)) abc";
         if (r.search(s)) {
             System.out.println(r.stringMatched());
             s = (r.stringMatched(1));
