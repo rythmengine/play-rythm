@@ -1,0 +1,18 @@
+h1. PlayRythm module documentation
+
+Welcome to PlayRythm module documentation. This documentation is intended for the *0.2 beta release* and may significantly differ from previous module version's documentation.
+
+Check the "version history":history.
+
+Your first steps with PlayRythm module and your first 5 minutes of fun.
+
+# "PlayRythm Features":feature
+# "PlayRythm overview":overview
+# "Frequently Asked Questions":faq
+# %(next)"Installation and Configuration":start%
+<div style="display:none">
+# "Watch the screencast":http://screenr.com/
+# "Five cool things you can do with PlayRythm":5things
+# "Your first application —— the ‘Hello World’ tutorial":firstapp
+# "Sample applications":samples
+</div>

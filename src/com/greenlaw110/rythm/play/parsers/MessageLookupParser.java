@@ -10,6 +10,7 @@ import com.greenlaw110.rythm.spi.IKeyword;
 import com.greenlaw110.rythm.spi.IParser;
 import com.greenlaw110.rythm.utils.TextBuilder;
 import com.stevesoft.pat.Regex;
+import play.i18n.Messages;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,13 +19,11 @@ import com.stevesoft.pat.Regex;
  * Time: 11:34 AM
  * To change this template use File | Settings | File Templates.
  */
-public class UrlReverseLookupParser extends KeywordParserFactory {
-    
-    protected boolean isAbsolute = false;
+public class MessageLookupParser extends KeywordParserFactory {
     
     @Override
     public IKeyword keyword() {
-        return PlayRythmKeyword._U;
+        return PlayRythmKeyword._M;
     }
 
     @Override
@@ -33,7 +32,7 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
     }
     
     protected String innerPattern() {
-        return "[a-zA-Z_][\\w$_\\.]*(?@())?";
+        return "(((?@\"\")|(?@'')|[a-zA-Z_][\\w$_\\.]*)(?@())?)(,\\s*([a-zA-Z_][\\w$_\\.]*(?@())?))?";
     }
 
     @Override
@@ -48,31 +47,19 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
                 //strip off ( and )
                 s = s.substring(1);
                 s = s.substring(0, s.length() - 1);
-                // strip off quotation mark if there is
-                if (s.startsWith("\"") || s.startsWith("'")) {
-                    s = s.substring(1);
-                }
-                if (s.endsWith("\"") || s.endsWith("'")) {
-                    s = s.substring(0, s.length() - 1);
-                }
-                // now parse action name and params
-                r = new Regex("([a-zA-Z_][\\w$_\\.]*)((?@())?)");
+                // now parse message string and parameters
+                r = new Regex(innerPattern());
                 if (r.search(s)) {
-                    final String action = r.stringMatched(1);
-                    s = r.substring(2);
-                    //strip off ( and ) if there is
-                    if (null == s) s = "";
-                    if (s.startsWith("(")) {
-                        s = s.substring(1);
-                    }
-                    if (s.endsWith(")")) {
-                        s = s.substring(0, s.length() - 1);
-                    }
-                    final String param = s;
+                    final String msgStr = r.stringMatched(1);
+                    final String param = r.stringMatched(4);
                     return new CodeToken("", ctx()) {
                         @Override
                         public void output() {
-                            p("p(new com.greenlaw110.rythm.play.utils.ActionBridge(").p(isAbsolute).p(").invokeMethod(\"").p(action).p("\", new Object[] {").p(param).p("}));");
+                            p("p(play.i18n.Messages.get(").p(msgStr);
+                            if (null != param) {
+                                p(", ").p(param);
+                            }
+                            p(");");
                         }
                     };
                 } else {
@@ -83,9 +70,9 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
     }
 
     public static void main(String[] args) {
-        UrlReverseLookupParser p = new UrlReverseLookupParser();
+        MessageLookupParser p = new MessageLookupParser();
         Regex r = p.reg(new Rythm());
-        String s = "@_u(Clients.form(_._id)) abc";
+        String s = "@_m(abc)";
         if (r.search(s)) {
             System.out.println(r.stringMatched());
             s = (r.stringMatched(1));
@@ -94,13 +81,14 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
             System.out.println("<<" + s);
 //            s = s.substring(0, s.length() - 1);
 //            System.out.println(">>" + s);
-            if (s.startsWith("\"") || s.startsWith("'")) {
-                s = s.substring(1);
+            //System.out.println(s);
+            r = new Regex(p.innerPattern());
+            if (r.search(s)) {
+                System.out.println("1>>" + r.stringMatched(1));
+                System.out.println("2>>" + r.stringMatched(2));
+                System.out.println("3>>" + r.stringMatched(3));
+                System.out.println("4>>" + r.stringMatched(4));
             }
-            if (s.endsWith("\"") || s.endsWith("'")) {
-                s = s.substring(0, s.length() - 1);
-            }
-            System.out.println(s);
         }
         
 //        s = "RythmTester.test(a.boc(), 14, '3', \"aa\")";

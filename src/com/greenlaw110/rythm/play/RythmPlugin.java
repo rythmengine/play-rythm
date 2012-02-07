@@ -6,6 +6,8 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 import com.greenlaw110.rythm.play.parsers.AbsoluteUrlReverseLookupParser;
+import com.greenlaw110.rythm.play.parsers.GroovyVerbatimTagParser;
+import com.greenlaw110.rythm.play.parsers.MessageLookupParser;
 import com.greenlaw110.rythm.play.parsers.UrlReverseLookupParser;
 import com.greenlaw110.rythm.spi.IParserFactory;
 import com.greenlaw110.rythm.utils.IImplicitRenderArgProvider;
@@ -228,7 +230,8 @@ public class RythmPlugin extends PlayPlugin {
             });
             Rythm.engine = engine;
 
-            IParserFactory[] factories = {new AbsoluteUrlReverseLookupParser(), new UrlReverseLookupParser()};
+            IParserFactory[] factories = {new AbsoluteUrlReverseLookupParser(), new UrlReverseLookupParser(),
+                    new MessageLookupParser(), new GroovyVerbatimTagParser()};
             engine.getExtensionManager().registerUserDefinedParsers(factories);
         } else {
             engine.init(p);

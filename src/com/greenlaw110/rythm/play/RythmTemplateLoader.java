@@ -71,7 +71,7 @@ public class RythmTemplateLoader {
     }
     
     static boolean whiteListed(String path) {
-        if (path.contains("rythm")) return true;
+        if (RythmPlugin.defaultEngine == RythmPlugin.EngineType.rythm || path.contains("rythm")) return true;
         if (Play.mode == Play.Mode.DEV) {
             Method m = getActionMethod(path);
             if (null != m) {

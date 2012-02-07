@@ -15,6 +15,10 @@ public enum PlayRythmKeyword implements IKeyword {
      */
     _AU,
     /**
+     * Message lookup
+     */
+    _M,
+    /**
      * used for url reverse lookup
      */
     _U;

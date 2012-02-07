@@ -1,0 +1,14 @@
+h1. PlayRythm features
+
+PlayRythm is yet another template engine plugin for Play!Framework 1.2x version:
+
+# Static and strong typed pure Java template. Yes it's like Japid and Jamon. See "user's guide":user_guide.
+# Transparently integrated with Play!Framework. There is no "RythmController" and no special directly layout. Think PlayRythm as an unobtrusive Japid.
+# Reuse your existing "fast tags":user_guide#play_fasttag.
+# Flexible tag creating
+# Generic template extension
+#
+
+h2. <a name="resource">See Also</a>
+
+# %(next)"PlayRythm overview":overview%

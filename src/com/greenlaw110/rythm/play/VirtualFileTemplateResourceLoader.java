@@ -1,5 +1,7 @@
 package com.greenlaw110.rythm.play;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.greenlaw110.rythm.RythmEngine;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
@@ -92,12 +94,19 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
     public ITemplateResource load(String path) {
         VirtualFile vf = VirtualFile.fromRelativePath(path);
         if (!isValid(vf)) {
+            // change a packaged name into a file path name
+            path = path.replace(".", "/");
+            // but not for suffix
+            int pos = path.lastIndexOf("/");
+            String path0 = path;
+            path = path0.substring(0, pos) + "." + path0.substring(pos + 1);
             if (!path.startsWith(RythmPlugin.templateRoot)) {
                 if (!path.startsWith("/") && !path.startsWith("\\")) path = "/" + path;
                 path = RythmPlugin.templateRoot + path;
             }
             vf = Play.getVirtualFile(path);
         }
+        if (null == vf) return null;
         return load(vf);
     }
     
@@ -121,37 +130,42 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
         RythmEngine engine = RythmPlugin.engine;
         if (engine.tags.containsKey(tagName)) return;
 //Logger.info(">>> try to load tag: %s, tag not found in engine registry, continue loading", tagName);
+        String origName = tagName;
         tagName = tagName.replace('.', '/');
         final String[] suffixes = {
                 ".html",
                 ".json",
                 ".tag"
         };
-        tagName = RythmPlugin.tagRoot + "/" + tagName;
-        VirtualFile tagFile = null;
-        for (String suffix: suffixes) {
-            String name = tagName + suffix;
-            tagFile = Play.getVirtualFile(name);
-            if (null != tagFile && tagFile.getRealFile().canRead()) {
-//Logger.info(">>> try to load tag: %s, tag file found: %s", tagName, tagFile);
-                try {
-                    VirtualFileTemplateResource tr = new VirtualFileTemplateResource(tagFile);
-                    TemplateClass tc = engine.classes.getByTemplate(tr.getKey());
-                    if (null == tc) {
-                        tc = new TemplateClass(tr, engine);
+        String[] roots = {RythmPlugin.tagRoot, RythmPlugin.templateRoot};
+        String tagName0 = tagName;
+        for (String root: roots) {
+            tagName = root + "/" + tagName0;
+            VirtualFile tagFile = null;
+            for (String suffix: suffixes) {
+                String name = tagName + suffix;
+                tagFile = Play.getVirtualFile(name);
+                if (null != tagFile && tagFile.getRealFile().canRead()) {
+    //Logger.info(">>> try to load tag: %s, tag file found: %s", tagName, tagFile);
+                    try {
+                        VirtualFileTemplateResource tr = new VirtualFileTemplateResource(tagFile);
+                        TemplateClass tc = engine.classes.getByTemplate(tr.getKey());
+                        if (null == tc) {
+                            tc = new TemplateClass(tr, engine);
+                        }
+    //Logger.info(">>> try to load tag: %s, Template class found: %s", tagName, tc);
+                        ITag tag = (ITag)tc.asTemplate();
+                        if (null != tag) {
+    //Logger.info(">>> try to load tag: %s, tag found!!!", tagName);
+                            engine.registerTag(origName, tag);
+    //Logger.info(">>> try to load tag: %s, tag registered!!!", tagName);
+                            return;
+                        }
+    //Logger.info(">>> try to load tag: %s, tag find found: %s", tagName, tagFile);
+                    } catch (Exception e) {
+    //Logger.error(e, ">>> error loading tag: %s", tagName);
+                        // ignore
                     }
-//Logger.info(">>> try to load tag: %s, Template class found: %s", tagName, tc);
-                    ITag tag = (ITag)tc.asTemplate();
-                    if (null != tag) {
-//Logger.info(">>> try to load tag: %s, tag found!!!", tagName);
-                        engine.registerTag(tag);
-//Logger.info(">>> try to load tag: %s, tag registered!!!", tagName);
-                        return;
-                    }
-//Logger.info(">>> try to load tag: %s, tag find found: %s", tagName, tagFile);
-                } catch (Exception e) {
-//Logger.error(e, ">>> error loading tag: %s", tagName);
-                    // ignore
                 }
             }
         }
