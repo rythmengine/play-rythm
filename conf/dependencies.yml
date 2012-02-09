@@ -1,4 +1,5 @@
 # History
+# 0.2h - improved render speed by preallocate stringbuilder buffer size
 # 0.2g - allow application to register implicit render args
 # 0.2f - fix bug: @ArgParser fail if there is no character left behind ";" of the @args line
 # 0.2e - lots of bug fix, greenscript running correctly! setRender by object array no longer touch defaultRenderArgs
@@ -6,7 +7,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 0.2g
+self: play -> rythm 0.2h
 
 require:
     - play 1.2

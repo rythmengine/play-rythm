@@ -1,17 +1,16 @@
 package com.greenlaw110.rythm.play;
 
-import org.apache.commons.lang.StringUtils;
+import play.Play;
+import play.libs.IO;
+import play.vfs.VirtualFile;
 
 import com.greenlaw110.rythm.RythmEngine;
+import com.greenlaw110.rythm.exception.ParseException;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.resource.ITemplateResourceLoader;
 import com.greenlaw110.rythm.resource.TemplateResourceBase;
 import com.greenlaw110.rythm.runtime.ITag;
-import play.Logger;
-import play.Play;
-import play.libs.IO;
-import play.vfs.VirtualFile;
 
 /**
  * Created by IntelliJ IDEA.
@@ -164,6 +163,9 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
     //Logger.info(">>> try to load tag: %s, tag find found: %s", tagName, tagFile);
                     } catch (Exception e) {
     //Logger.error(e, ">>> error loading tag: %s", tagName);
+                        if (e instanceof ParseException) {
+                            throw (ParseException)e;
+                        }
                         // ignore
                     }
                 }
