@@ -1,6 +1,8 @@
 package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.runtime.ITag;
+import com.greenlaw110.rythm.utils.S;
+import play.Logger;
 import play.Play;
 import play.cache.Cache;
 import play.data.validation.Validation;
@@ -50,7 +52,12 @@ public class FastRythmTags {
             if (Play.mode == Play.Mode.DEV) {
                 p(body);
             } else {
-                String key = params.getDefault().toString();
+                Object o = params.getDefault();
+                String key = null == o ? null : o.toString().trim();
+                if (S.isEmpty(key)) {
+                    p(body);
+                    return;
+                }
                 String duration = params.size() > 1 ? params.getByPosition(1).toString() : "1h";
                 Object cached = Cache.get(key);
                 if (cached != null) {
