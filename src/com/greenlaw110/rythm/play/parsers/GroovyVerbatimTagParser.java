@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * play's default groovy compiler able to compile rythm template which is included inside #{vertatim} tag
  */
 public class GroovyVerbatimTagParser implements IParserFactory {
-    private static final Pattern P = Pattern.compile("(#\\{\\/?verbatim\\}).*", Pattern.DOTALL);
+    private static final Pattern P = Pattern.compile("(#\\{\\/?verbatim\\}\\s*\\r*\\n*).*", Pattern.DOTALL);
     @Override
     public IParser create(IContext ctx) {
         return new ParserBase(ctx) {
