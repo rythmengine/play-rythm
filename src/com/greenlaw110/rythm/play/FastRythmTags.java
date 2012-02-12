@@ -127,6 +127,13 @@ public class FastRythmTags {
         }
     }
 
+    public static class i18n extends FastRythmTag {
+        @Override
+        protected void call(ParameterList params, Body body) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+    }
+
     public static class jsAction extends FastRythmTag {
         @Override
         protected void call(ParameterList params, Body body) {

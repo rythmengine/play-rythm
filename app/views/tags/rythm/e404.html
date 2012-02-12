@@ -1,0 +1,66 @@
+#{verbatim}
+@import com.greenlaw110.rythm.utils.S, play.mvc.Router;
+@args play.mvc.results.Result result;
+
+<style type="text/css">
+    html, body {
+        margin: 0;
+        padding: 0;
+        font-family: Helvetica, Arial, Sans;
+        background: #EEEEEE;
+    }            
+    .block {
+        padding: 20px;
+        border-bottom: 1px solid #aaa;
+    }
+    #header h1 {
+        font-weight: normal;
+        font-size: 28px;
+        margin: 0;
+    }
+    #more {
+        color: #666;
+        font-size: 80%;
+        border: none;
+    }
+    #header {
+        background: #FFFFCC;
+    }
+    #header p {
+        color: #333;
+    }
+    #routes {
+        background: #f6f6f6;
+    }
+    #routes h2 {
+        font-weight: normal;
+        font-size: 18px;
+        margin: 0 0 10px 0;
+    }
+    #routes ol {
+     
+    }
+    #routes li {
+        font-size: 14px;
+        font-family: monospace;  
+        color: #333;
+    }
+</style>
+
+<div id="header" class="block">
+    <h1>
+        Not found
+    </h1>
+    <p>
+        @result.getMessage()
+    </p>
+</div>
+<div id="routes" class="block">
+    <h2>These routes have been tried, in this order :</h2>
+    <ol>
+        @for (Router.Route route: Router.routes) {
+            <li>@(S.pad(route.method, 10))@(S.pad(route.host + route.path, 50)@route.action</li>
+        }
+    </ol>
+</div>
+#{/verbatim}

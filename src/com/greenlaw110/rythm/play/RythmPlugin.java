@@ -5,6 +5,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
+import com.greenlaw110.rythm.exception.ParseException;
 import com.greenlaw110.rythm.play.parsers.AbsoluteUrlReverseLookupParser;
 import com.greenlaw110.rythm.play.parsers.GroovyVerbatimTagParser;
 import com.greenlaw110.rythm.play.parsers.MessageLookupParser;
@@ -122,6 +123,7 @@ public class RythmPlugin extends PlayPlugin {
         
         // special configurations
         defaultEngine = EngineType.parseEngineType(playConf.getProperty("rythm.default.engine", "system"));
+        debug("default template engine configured to: %s", defaultEngine);
         underscoreImplicitVariableName = Boolean.parseBoolean(playConf.getProperty("rythm.implicitVariable.underscore", "false"));
         refreshOnRender = Boolean.parseBoolean(playConf.getProperty("rythm.resource.refreshOnRender", "true"));
 
@@ -185,6 +187,7 @@ public class RythmPlugin extends PlayPlugin {
                 return Arrays.asList(new String[]{"controllers.*", "models.*"});
             }
         });
+        debug("Implicit render variables set up");
 
         // set user configurations - coming from application.conf
         for (String key: playConf.stringPropertyNames()) {
@@ -192,15 +195,18 @@ public class RythmPlugin extends PlayPlugin {
                 p.setProperty(key, playConf.getProperty(key));
             }
         }
+        debug("User defined rythm properties configured");
         
         // set template root
         templateRoot = p.getProperty("rythm.root", templateRoot);
         p.put("rythm.root", new File(Play.applicationPath, templateRoot));
+        if (Logger.isDebugEnabled()) debug("rythm template root set to: %s", p.get("rythm.root"));
 
         // set tag root
         tagRoot = p.getProperty("rythm.tag.root", tagRoot);
         if (tagRoot.endsWith("/")) tagRoot = tagRoot.substring(0, tagRoot.length() - 1);
         p.put("rythm.tag.root", new File(Play.applicationPath, tagRoot));
+        if (Logger.isDebugEnabled()) debug("rythm tag root set to %s", p.get("rythm.tag.root"));
         
         if (Play.Mode.PROD == Play.mode) p.put("rythm.mode", Rythm.Mode.prod);
 
@@ -216,6 +222,7 @@ public class RythmPlugin extends PlayPlugin {
                     template.setRenderArgs(m);
                 }
             });
+            debug("Implicit render variables runtime provider set up");
             engine.registerTemplateClassEnhancer(new ITemplateClassEnhancer() {
                 @Override
                 public byte[] enhance(String className, byte[] classBytes) throws  Exception {
@@ -228,11 +235,13 @@ public class RythmPlugin extends PlayPlugin {
                     return applicationClass.enhancedByteCode;
                 }
             });
+            debug("Template class enhancer registered");
             Rythm.engine = engine;
 
             IParserFactory[] factories = {new AbsoluteUrlReverseLookupParser(), new UrlReverseLookupParser(),
                     new MessageLookupParser(), new GroovyVerbatimTagParser()};
             engine.getExtensionManager().registerUserDefinedParsers(factories);
+            debug("Play specific parser registered");
         } else {
             engine.init(p);
         }
@@ -243,9 +252,13 @@ public class RythmPlugin extends PlayPlugin {
     @Override
     public void onApplicationStart() {
         RythmTemplateLoader.buildBlackWhiteList();
+        debug("black/white list built up");
         FastTagBridge.registerFastTags();
+        debug("Play fast tags registered");
         registerJavaTags();
+        debug("Rythm fast tags registered");
         RythmTemplateLoader.scanTagFolder();
+        debug("Rythm tags loaded");
     }
     
     private void registerJavaTags() {
