@@ -1,13 +1,8 @@
 package com.greenlaw110.rythm.play;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.greenlaw110.rythm.internal.compiler.TemplateClass;
+import com.greenlaw110.rythm.resource.ITemplateResource;
+import com.greenlaw110.rythm.runtime.ITag;
 import play.Logger;
 import play.Play;
 import play.classloading.ApplicationClasses;
@@ -15,9 +10,9 @@ import play.mvc.Controller;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 
-import com.greenlaw110.rythm.internal.compiler.TemplateClass;
-import com.greenlaw110.rythm.resource.ITemplateResource;
-import com.greenlaw110.rythm.runtime.ITag;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.

@@ -1,9 +1,5 @@
 package com.greenlaw110.rythm.play;
 
-import play.Play;
-import play.libs.IO;
-import play.vfs.VirtualFile;
-
 import com.greenlaw110.rythm.RythmEngine;
 import com.greenlaw110.rythm.exception.ParseException;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
@@ -11,6 +7,9 @@ import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.resource.ITemplateResourceLoader;
 import com.greenlaw110.rythm.resource.TemplateResourceBase;
 import com.greenlaw110.rythm.runtime.ITag;
+import play.Play;
+import play.libs.IO;
+import play.vfs.VirtualFile;
 
 /**
  * Created by IntelliJ IDEA.

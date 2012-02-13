@@ -76,7 +76,7 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
                         }
                     };
                 } else {
-                    throw new ParseException(ctx().currentLine(), "Error parsing url reverse lookup");
+                    throw new ParseException(ctx().getTemplateName(), ctx().currentLine(), "Error parsing url reverse lookup");
                 }
             }
         };

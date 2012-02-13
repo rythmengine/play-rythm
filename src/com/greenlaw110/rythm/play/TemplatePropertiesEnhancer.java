@@ -1,15 +1,14 @@
 package com.greenlaw110.rythm.play;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-
+import com.greenlaw110.rythm.Rythm;
 import javassist.ClassPath;
 import javassist.NotFoundException;
 import play.classloading.enhancers.PropertiesEnhancer;
 
-import com.greenlaw110.rythm.Rythm;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by IntelliJ IDEA.

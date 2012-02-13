@@ -1,17 +1,19 @@
 package com.greenlaw110.rythm.play;
 
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
-import java.util.*;
-
-import com.greenlaw110.rythm.exception.ParseException;
+import com.greenlaw110.rythm.IByteCodeHelper;
+import com.greenlaw110.rythm.Rythm;
+import com.greenlaw110.rythm.RythmEngine;
+import com.greenlaw110.rythm.logger.ILogger;
+import com.greenlaw110.rythm.logger.ILoggerFactory;
 import com.greenlaw110.rythm.play.parsers.AbsoluteUrlReverseLookupParser;
 import com.greenlaw110.rythm.play.parsers.GroovyVerbatimTagParser;
 import com.greenlaw110.rythm.play.parsers.MessageLookupParser;
 import com.greenlaw110.rythm.play.parsers.UrlReverseLookupParser;
 import com.greenlaw110.rythm.spi.IParserFactory;
+import com.greenlaw110.rythm.spi.ITemplateClassEnhancer;
+import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.utils.IImplicitRenderArgProvider;
+import com.greenlaw110.rythm.utils.IRythmListener;
 import play.Logger;
 import play.Play;
 import play.PlayPlugin;
@@ -22,14 +24,10 @@ import play.mvc.Scope;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 
-import com.greenlaw110.rythm.IByteCodeHelper;
-import com.greenlaw110.rythm.Rythm;
-import com.greenlaw110.rythm.RythmEngine;
-import com.greenlaw110.rythm.logger.ILogger;
-import com.greenlaw110.rythm.logger.ILoggerFactory;
-import com.greenlaw110.rythm.spi.ITemplateClassEnhancer;
-import com.greenlaw110.rythm.template.ITemplate;
-import com.greenlaw110.rythm.utils.IRythmListener;
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
     public static final String VERSION = "0.2";

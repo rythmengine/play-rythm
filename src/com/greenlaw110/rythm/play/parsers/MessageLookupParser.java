@@ -10,7 +10,6 @@ import com.greenlaw110.rythm.spi.IKeyword;
 import com.greenlaw110.rythm.spi.IParser;
 import com.greenlaw110.rythm.utils.TextBuilder;
 import com.stevesoft.pat.Regex;
-import play.i18n.Messages;
 
 /**
  * Created by IntelliJ IDEA.
@@ -63,7 +62,7 @@ public class MessageLookupParser extends KeywordParserFactory {
                         }
                     };
                 } else {
-                    throw new ParseException(ctx().currentLine(), "Error parsing url reverse lookup");
+                    throw new ParseException(ctx().getTemplateName(), ctx().currentLine(), "Error parsing url reverse lookup");
                 }
             }
         };
