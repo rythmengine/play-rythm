@@ -1,9 +1,12 @@
 package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.RythmEngine;
+import com.greenlaw110.rythm.exception.CompileException;
+import com.greenlaw110.rythm.exception.ParseException;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.template.ITemplate;
+import play.exceptions.TemplateCompilationException;
 import play.templates.Template;
 
 import java.util.Map;
@@ -21,19 +24,50 @@ public class RythmTemplate extends Template {
 
     RythmTemplate(ITemplateResource resource) {
         if (null == resource) throw new NullPointerException();
-        tc = new TemplateClass(resource, RythmPlugin.engine);
+        tc = new TemplateClass(resource, RythmPlugin.engine, true);
         name = resource.getKey();
+        source = tc.templateResource.asTemplateContent();
     }
 
     private RythmEngine engine() {
         return RythmPlugin.engine;
     }
+    
+    private static class JavaDumbTemplate extends Template {
+        @Override
+        public void compile() {
+        }
+        @Override
+        protected String internalRender(Map<String, Object> args) {
+            return null;
+        }
+        
+        JavaDumbTemplate(String javaSource) {
+            this.source = javaSource;
+        }
+    }
 
     void refresh() {
         if (engine().isProdMode()) return;
-        engine().classLoader.detectChange(tc);
+        try {
+            engine().classLoader.detectChange(tc);
+        } catch (ParseException e) {
+            throw new TemplateParseException(this, e);
+        } catch (CompileException e) {
+            int line = e.templatelineNumber;
+            if (-1 == line) {
+                line = e.javaLineNumber;
+                Template t = new JavaDumbTemplate(e.getJavaSource());
+                t.name = this.getName();
+                throw new TemplateCompilationException(t, line, e.errorMessage);
+            } else {
+                throw new TemplateCompilationException(this, line, e.errorMessage);
+            }
+        }
         if (!tc.isValid) {
             RythmTemplateLoader.cache.remove(getName());
+        } else {
+            source = tc.templateResource.asTemplateContent();
         }
     }
 
@@ -44,7 +78,7 @@ public class RythmTemplate extends Template {
     @Override
     public void compile() {
         refresh();
-        if (!tc.isValid) tc.compile();
+        //if (tc.isValid) tc.compile();
     }
 
     @Override

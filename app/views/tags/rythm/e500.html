@@ -113,7 +113,7 @@
             }
         }@
         @for (String line: lines) {
-            @(null == Utils.open(exception.getSourceFile(), line_index+from) ? ("<a href='" + Utils.open(exception.getSourceFile(), line_index+from) + "'>") : "")
+            @(null != Utils.open(exception.getSourceFile(), line_index+from) ? ("<a href='" + Utils.open(exception.getSourceFile(), line_index+from) + "'>") : "")
                 <div class="line @(exception.getLineNumber() == line_index+from ? "error":"") ">
                     <span class="lineNumber">@(line_index+from):</span>
                     <pre>&nbsp;@S.escape(line).replace("&darr;", "<strong>&darr;</strong>").replace("\000", "<em>").replace("\001", "</em>")</pre>
