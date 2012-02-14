@@ -3,10 +3,12 @@ package com.greenlaw110.rythm.play;
 import com.greenlaw110.rythm.RythmEngine;
 import com.greenlaw110.rythm.exception.CompileException;
 import com.greenlaw110.rythm.exception.ParseException;
+import com.greenlaw110.rythm.exception.RythmException;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.template.ITemplate;
 import play.exceptions.TemplateCompilationException;
+import play.exceptions.TemplateExecutionException;
 import play.templates.Template;
 
 import java.util.Map;
@@ -33,7 +35,7 @@ public class RythmTemplate extends Template {
         return RythmPlugin.engine;
     }
     
-    private static class JavaDumbTemplate extends Template {
+    private static class TemplateInfo extends Template {
         @Override
         public void compile() {
         }
@@ -42,27 +44,29 @@ public class RythmTemplate extends Template {
             return null;
         }
         
-        JavaDumbTemplate(String javaSource) {
-            this.source = javaSource;
+        TemplateInfo(String name, String source, int lineNo) {
+            this.source = source;
+            this.lineNo = lineNo;
+            this.name = name;
         }
+        
+        private int lineNo = -1; 
     }
 
     void refresh() {
-        if (engine().isProdMode()) return;
+        refresh(false);
+    }
+
+    void refresh(boolean forceRefresh) {
+        if (!forceRefresh && engine().isProdMode()) return;
+        RythmPlugin.info(">>> refreshing [%s]...", tc.name());
         try {
             engine().classLoader.detectChange(tc);
         } catch (ParseException e) {
             throw new TemplateParseException(this, e);
         } catch (CompileException e) {
-            int line = e.templatelineNumber;
-            if (-1 == line) {
-                line = e.javaLineNumber;
-                Template t = new JavaDumbTemplate(e.getJavaSource());
-                t.name = this.getName();
-                throw new TemplateCompilationException(t, line, e.errorMessage);
-            } else {
-                throw new TemplateCompilationException(this, line, e.errorMessage);
-            }
+            TemplateInfo t = handleRythmException(e);
+            throw new TemplateCompilationException(t, t.lineNo, e.originalMessage);
         }
         if (!tc.isValid) {
             RythmTemplateLoader.cache.remove(getName());
@@ -83,9 +87,28 @@ public class RythmTemplate extends Template {
 
     @Override
     protected String internalRender(Map<String, Object> args) {
-        ITemplate t = tc.asTemplate();
-        t.setRenderArgs(args);
-        return t.render();
+        try {
+            ITemplate t = tc.asTemplate();
+            t.setRenderArgs(args);
+            return t.render();
+        } catch (RythmException e) {
+            TemplateInfo t = handleRythmException(e);
+            throw new TemplateExecutionException(t, t.lineNo, e.errorMessage, e);
+        } catch (Exception e) {
+            throw new TemplateExecutionException(this, 0, e.getMessage(), e);
+        }
+    }
+    
+    private static TemplateInfo handleRythmException(RythmException e) {
+        int line = e.templatelineNumber;
+        TemplateInfo t;
+        if (-1 == line) {
+            line = e.javaLineNumber;
+            t = new TemplateInfo(e.getTemplateName(), e.getJavaSource(), line);
+        } else {
+            t = new TemplateInfo(e.getTemplateName(), e.getTemplateSource(), line);
+        }
+        return t;
     }
 
     @Override

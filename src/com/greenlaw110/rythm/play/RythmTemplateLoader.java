@@ -223,7 +223,7 @@ public class RythmTemplateLoader {
 //RythmPlugin.info("Play started, template returned");
 
         RythmTemplate tc = new RythmTemplate(resource);
-        tc.refresh();
+        tc.refresh(true);
         if (tc.isValid()) {
             cache.put(file.relativePath(), tc);
         } else {

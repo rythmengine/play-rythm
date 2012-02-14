@@ -13,7 +13,7 @@ import play.templates.Template;
  */
 public class TemplateParseException extends TemplateException {
     public TemplateParseException(Template template, ParseException pe) {
-        super(template, pe.getLine(), pe.getOriginalMessage());
+        super(template, pe.templatelineNumber, pe.originalMessage);
     }
 
     @Override
