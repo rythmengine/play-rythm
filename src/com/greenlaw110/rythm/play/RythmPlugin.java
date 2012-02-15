@@ -30,7 +30,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "0.2";
+    public static final String VERSION = "0.9.1";
 
     public static void info(String msg, Object... args) {
         Logger.info(msg_(msg, args));

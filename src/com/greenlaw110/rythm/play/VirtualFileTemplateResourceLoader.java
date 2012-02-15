@@ -87,24 +87,41 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
     public static boolean isValid(VirtualFile file) {
         return (null != file) && file.exists() && file.getRealFile().canRead();
     }
+    
+    private VirtualFile loadFromPath_(String path) {
+        VirtualFile vf = null;
+        if (path.indexOf("module:") != -1) vf = VirtualFile.fromRelativePath(path);
+        else {
+            vf = Play.getVirtualFile(path);
+            if (!isValid(vf) && path.startsWith("/")) {
+                // try to attach template home and tag home
+                if (!path.startsWith(RythmPlugin.templateRoot)) {
+                    String path0 = RythmPlugin.templateRoot + path;
+                    vf = Play.getVirtualFile(path0);
+                }
+                if (!isValid(vf) && !path.startsWith(RythmPlugin.tagRoot)) {
+                    String path0 = RythmPlugin.tagRoot + path;
+                    vf = Play.getVirtualFile(path0);
+                }
+            }
+        }
+        return vf;
+    }
 
     @Override
     public ITemplateResource load(String path) {
-        VirtualFile vf = VirtualFile.fromRelativePath(path);
-        if (!isValid(vf)) {
+        VirtualFile vf = loadFromPath_(path);
+        if (!isValid(vf) && path.indexOf("module:") == -1) {
+            // try to see if it's package.class style
             // change a packaged name into a file path name
             path = path.replace(".", "/");
             // but not for suffix
             int pos = path.lastIndexOf("/");
             String path0 = path;
             path = path0.substring(0, pos) + "." + path0.substring(pos + 1);
-            if (!path.startsWith(RythmPlugin.templateRoot)) {
-                if (!path.startsWith("/") && !path.startsWith("\\")) path = "/" + path;
-                path = RythmPlugin.templateRoot + path;
-            }
-            vf = Play.getVirtualFile(path);
+            vf = loadFromPath_(path);
         }
-        if (null == vf) return null;
+        if (!isValid(vf)) return null;
         return load(vf);
     }
     

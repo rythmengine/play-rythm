@@ -7,6 +7,8 @@ import com.greenlaw110.rythm.exception.RythmException;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.template.ITemplate;
+import play.Logger;
+import play.Play;
 import play.exceptions.TemplateCompilationException;
 import play.exceptions.TemplateExecutionException;
 import play.templates.Template;
@@ -59,7 +61,6 @@ public class RythmTemplate extends Template {
 
     void refresh(boolean forceRefresh) {
         if (!forceRefresh && engine().isProdMode()) return;
-        RythmPlugin.info(">>> refreshing [%s]...", tc.name());
         try {
             engine().classLoader.detectChange(tc);
         } catch (ParseException e) {
@@ -94,6 +95,10 @@ public class RythmTemplate extends Template {
         } catch (RythmException e) {
             TemplateInfo t = handleRythmException(e);
             throw new TemplateExecutionException(t, t.lineNo, e.errorMessage, e);
+        } catch (ClassCastException e) {
+            if (Logger.isDebugEnabled()) RythmPlugin.debug("ClassCastException detected, force refresh template class and continue...");
+            tc.refresh(true);
+            return internalRender(args);
         } catch (Exception e) {
             throw new TemplateExecutionException(this, 0, e.getMessage(), e);
         }

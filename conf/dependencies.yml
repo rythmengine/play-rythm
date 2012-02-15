@@ -1,4 +1,5 @@
 # History
+# 0.9.1 - suppress ClassCastException in dev mode
 # 0.9 - Increase version to mark it as pre-release. 
 #     - Bug fix: error report not correct when compile/parse error found in parent template
 # 0.4a - Template executing exception reporting integrated with Play!Framework
@@ -13,7 +14,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 0.4a
+self: play -> rythm 0.9.1
 
 require:
     - play 1.2
