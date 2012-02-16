@@ -2,6 +2,7 @@ package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.RythmEngine;
 import com.greenlaw110.rythm.exception.ParseException;
+import com.greenlaw110.rythm.exception.RythmException;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.resource.ITemplateResourceLoader;
@@ -179,8 +180,8 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
     //Logger.info(">>> try to load tag: %s, tag find found: %s", tagName, tagFile);
                     } catch (Exception e) {
     //Logger.error(e, ">>> error loading tag: %s", tagName);
-                        if (e instanceof ParseException) {
-                            throw (ParseException)e;
+                        if (e instanceof RythmException) {
+                            throw (RythmException)e;
                         }
                         // ignore
                     }

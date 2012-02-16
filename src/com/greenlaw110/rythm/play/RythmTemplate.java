@@ -11,6 +11,7 @@ import play.Logger;
 import play.Play;
 import play.exceptions.TemplateCompilationException;
 import play.exceptions.TemplateExecutionException;
+import play.exceptions.UnexpectedException;
 import play.templates.Template;
 
 import java.util.Map;
@@ -64,7 +65,8 @@ public class RythmTemplate extends Template {
         try {
             engine().classLoader.detectChange(tc);
         } catch (ParseException e) {
-            throw new TemplateParseException(this, e);
+            TemplateInfo t = handleRythmException(e);
+            throw new TemplateParseException(t, e);
         } catch (CompileException e) {
             TemplateInfo t = handleRythmException(e);
             throw new TemplateCompilationException(t, t.lineNo, e.originalMessage);
@@ -86,19 +88,32 @@ public class RythmTemplate extends Template {
         //if (tc.isValid) tc.compile();
     }
 
+    private static final ThreadLocal<Integer> refreshCounter = new ThreadLocal<Integer>();
     @Override
     protected String internalRender(Map<String, Object> args) {
         try {
             ITemplate t = tc.asTemplate();
             t.setRenderArgs(args);
-            return t.render();
+            String s = t.render();
+            if (!RythmPlugin.engine.isProdMode()) {
+                refreshCounter.set(0);
+            }
+            return s;
         } catch (RythmException e) {
             TemplateInfo t = handleRythmException(e);
             throw new TemplateExecutionException(t, t.lineNo, e.errorMessage, e);
         } catch (ClassCastException e) {
-            if (Logger.isDebugEnabled()) RythmPlugin.debug("ClassCastException detected, force refresh template class and continue...");
-            tc.refresh(true);
-            return internalRender(args);
+            Integer I = refreshCounter.get();
+            if (null == I || I < 5) {
+                if (null == I) refreshCounter.set(1);
+                else refreshCounter.set(++I);
+                if (Logger.isDebugEnabled()) RythmPlugin.debug("ClassCastException detected, force refresh template class and continue...");
+                tc.refresh(true);
+                return internalRender(args);
+            } else {
+                refreshCounter.set(0);
+                throw new UnexpectedException("Too many ClassCastException encountered, please restart Play", e);
+            }
         } catch (Exception e) {
             throw new TemplateExecutionException(this, 0, e.getMessage(), e);
         }
