@@ -1,11 +1,16 @@
 package com.greenlaw110.rythm.play;
 
+import com.greenlaw110.rythm.exception.CompileException;
+import com.greenlaw110.rythm.exception.ParseException;
+import com.greenlaw110.rythm.exception.RythmException;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.runtime.ITag;
 import play.Logger;
 import play.Play;
 import play.classloading.ApplicationClasses;
+import play.exceptions.TemplateCompilationException;
+import play.exceptions.UnexpectedException;
 import play.mvc.Controller;
 import play.templates.Template;
 import play.vfs.VirtualFile;
@@ -128,6 +133,15 @@ public class RythmTemplateLoader {
                     }
                     ITag tag = (ITag)templateClass.asTemplate();
                     if (null != tag)RythmPlugin.engine.registerTag(tag);
+                } catch (RythmException e) {
+                    RythmTemplate.TemplateInfo t = RythmTemplate.handleRythmException(e);
+                    if (e instanceof ParseException) {
+                        throw new TemplateParseException(t, (ParseException)e);
+                    } else if (e instanceof CompileException) {
+                        throw new TemplateCompilationException(t, t.lineNo, e.getMessage());
+                    } else {
+                        throw new UnexpectedException("Don't know why I am here");
+                    }
                 } catch (Exception e) {
                     Logger.warn(e, "error loading tag: %s", f.relativePath());
                     // might be groovy template, let's ignore it

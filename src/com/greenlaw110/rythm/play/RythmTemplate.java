@@ -38,7 +38,7 @@ public class RythmTemplate extends Template {
         return RythmPlugin.engine;
     }
     
-    private static class TemplateInfo extends Template {
+    static class TemplateInfo extends Template {
         @Override
         public void compile() {
         }
@@ -53,7 +53,7 @@ public class RythmTemplate extends Template {
             this.name = name;
         }
         
-        private int lineNo = -1; 
+        public int lineNo = -1;
     }
 
     void refresh() {
@@ -119,7 +119,7 @@ public class RythmTemplate extends Template {
         }
     }
     
-    private static TemplateInfo handleRythmException(RythmException e) {
+    static TemplateInfo handleRythmException(RythmException e) {
         int line = e.templatelineNumber;
         TemplateInfo t;
         if (-1 == line) {

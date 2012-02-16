@@ -221,19 +221,19 @@ public class RythmPlugin extends PlayPlugin {
                 }
             });
             debug("Implicit render variables runtime provider set up");
-            engine.registerTemplateClassEnhancer(new ITemplateClassEnhancer() {
-                @Override
-                public byte[] enhance(String className, byte[] classBytes) throws  Exception {
-                    ApplicationClasses.ApplicationClass applicationClass = new ApplicationClasses.ApplicationClass();
-                    applicationClass.javaByteCode = classBytes;
-                    applicationClass.enhancedByteCode = classBytes;
-                    File f = File.createTempFile("rythm_", className.contains("$") ? "$1" : "" + ".java", Play.tmpDir);
-                    applicationClass.javaFile = VirtualFile.open(f);
-                    new TemplatePropertiesEnhancer().enhanceThisClass(applicationClass);
-                    return applicationClass.enhancedByteCode;
-                }
-            });
-            debug("Template class enhancer registered");
+//            engine.registerTemplateClassEnhancer(new ITemplateClassEnhancer() {
+//                @Override
+//                public byte[] enhance(String className, byte[] classBytes) throws  Exception {
+//                    ApplicationClasses.ApplicationClass applicationClass = new ApplicationClasses.ApplicationClass();
+//                    applicationClass.javaByteCode = classBytes;
+//                    applicationClass.enhancedByteCode = classBytes;
+//                    File f = File.createTempFile("rythm_", className.contains("$") ? "$1" : "" + ".java", Play.tmpDir);
+//                    applicationClass.javaFile = VirtualFile.open(f);
+//                    new TemplatePropertiesEnhancer().enhanceThisClass(applicationClass);
+//                    return applicationClass.enhancedByteCode;
+//                }
+//            });
+//            debug("Template class enhancer registered");
             Rythm.engine = engine;
 
             IParserFactory[] factories = {new AbsoluteUrlReverseLookupParser(), new UrlReverseLookupParser(),
