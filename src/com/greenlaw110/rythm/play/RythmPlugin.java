@@ -1,6 +1,7 @@
 package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.IByteCodeHelper;
+import com.greenlaw110.rythm.IHotswapAgent;
 import com.greenlaw110.rythm.Rythm;
 import com.greenlaw110.rythm.RythmEngine;
 import com.greenlaw110.rythm.logger.ILogger;
@@ -18,6 +19,7 @@ import play.Logger;
 import play.Play;
 import play.PlayPlugin;
 import play.classloading.ApplicationClasses;
+import play.classloading.HotswapAgent;
 import play.exceptions.ConfigurationException;
 import play.exceptions.UnexpectedException;
 import play.mvc.Scope;
@@ -25,12 +27,14 @@ import play.templates.Template;
 import play.vfs.VirtualFile;
 
 import java.io.File;
+import java.lang.instrument.ClassDefinition;
+import java.lang.instrument.UnmodifiableClassException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "0.9.1";
+    public static final String VERSION = "0.9.2";
 
     public static void info(String msg, Object... args) {
         Logger.info(msg_(msg, args));
@@ -206,6 +210,24 @@ public class RythmPlugin extends PlayPlugin {
         p.put("rythm.tag.root", new File(Play.applicationPath, tagRoot));
         if (Logger.isDebugEnabled()) debug("rythm tag root set to %s", p.get("rythm.tag.root"));
         
+        // set tmp dir
+        File tmpDir = new File(Play.tmpDir, "rythm");
+        tmpDir.mkdirs();
+        p.put("rythm.tmpDir", tmpDir);
+        if (Logger.isDebugEnabled()) debug("rythm tmp dir set to %s", p.get("rythm.tmpDir"));
+
+        // always get "java.lang.UnsupportedOperationException: class redefinition failed: attempted to change the schema" exception
+        // from the hotswapAgent
+        boolean useHotswapAgent = Boolean.valueOf(playConf.getProperty("rythm.useHotswapAgent", "false"));
+        if (useHotswapAgent) {
+            p.put("rythm.classLoader.hotswapAgent", new IHotswapAgent() {
+                @Override
+                public void reload(ClassDefinition... definitions) throws UnmodifiableClassException, ClassNotFoundException {
+                    HotswapAgent.reload(definitions);
+                }
+            });
+        }
+
         if (Play.Mode.PROD == Play.mode) p.put("rythm.mode", Rythm.Mode.prod);
 
         if (null == engine) {
@@ -249,14 +271,17 @@ public class RythmPlugin extends PlayPlugin {
     
     @Override
     public void onApplicationStart() {
+        long l = System.currentTimeMillis();
         RythmTemplateLoader.buildBlackWhiteList();
-        debug("black/white list built up");
+        debug("%sms to built up black/white list", System.currentTimeMillis() - l);
+        l = System.currentTimeMillis();
         FastTagBridge.registerFastTags();
-        debug("Play fast tags registered");
         registerJavaTags();
-        debug("Rythm fast tags registered");
+        debug("%sms to register fast tags", System.currentTimeMillis() - l);
+
+        l = System.currentTimeMillis();
         RythmTemplateLoader.scanTagFolder();
-        debug("Rythm tags loaded");
+        debug("%sms to load Rythm tags", System.currentTimeMillis() - l);
     }
     
     private void registerJavaTags() {
