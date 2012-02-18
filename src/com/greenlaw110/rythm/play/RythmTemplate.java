@@ -4,6 +4,7 @@ import com.greenlaw110.rythm.RythmEngine;
 import com.greenlaw110.rythm.exception.CompileException;
 import com.greenlaw110.rythm.exception.ParseException;
 import com.greenlaw110.rythm.exception.RythmException;
+import com.greenlaw110.rythm.internal.compiler.ClassReloadException;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.template.ITemplate;
@@ -64,6 +65,10 @@ public class RythmTemplate extends Template {
         if (!forceRefresh && engine().isProdMode()) return;
         try {
             engine().classLoader.detectChange(tc);
+        } catch (ClassReloadException e) {
+            RythmPlugin.debug("restart rythm engine to reload changed template...");
+            engine().restart();
+            refresh(forceRefresh);
         } catch (ParseException e) {
             TemplateInfo t = handleRythmException(e);
             throw new TemplateParseException(t, e);
