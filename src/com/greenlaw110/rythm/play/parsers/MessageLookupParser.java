@@ -8,6 +8,8 @@ import com.greenlaw110.rythm.internal.parser.build_in.KeywordParserFactory;
 import com.greenlaw110.rythm.spi.IContext;
 import com.greenlaw110.rythm.spi.IKeyword;
 import com.greenlaw110.rythm.spi.IParser;
+import com.greenlaw110.rythm.spi.Token;
+import com.greenlaw110.rythm.utils.S;
 import com.greenlaw110.rythm.utils.TextBuilder;
 import com.stevesoft.pat.Regex;
 
@@ -51,18 +53,20 @@ public class MessageLookupParser extends KeywordParserFactory {
                 if (r.search(s)) {
                     final String msgStr = r.stringMatched(1);
                     final String param = r.stringMatched(4);
-                    return new CodeToken("", ctx()) {
+                    if (S.isEmpty(param)) {
+                        s = String.format("Messages.get(%s)", msgStr);
+                    } else {
+                        s = String.format("Messages.get(%s, %s)", msgStr, param);
+                    }
+                    ctx().getCodeBuilder().addImport("play.i18n.Messages");
+                    return new CodeToken(s, ctx()){
                         @Override
                         public void output() {
-                            p("p(play.i18n.Messages.get(").p(msgStr);
-                            if (null != param) {
-                                p(", ").p(param);
-                            }
-                            p(");");
+                            p("p(").p(s).p(");");
                         }
                     };
                 } else {
-                    throw new ParseException(ctx().getTemplateClass(), ctx().currentLine(), "Error parsing url reverse lookup");
+                    throw new ParseException(ctx().getTemplateClass(), ctx().currentLine(), "Error parsing message lookup");
                 }
             }
         };
@@ -71,7 +75,8 @@ public class MessageLookupParser extends KeywordParserFactory {
     public static void main(String[] args) {
         MessageLookupParser p = new MessageLookupParser();
         Regex r = p.reg(new Rythm());
-        String s = "@_m(abc)";
+        System.out.println(S.escapeJavaScript(S.escapeJavaScript("\"abc\"")));
+        String s = "@_m(\"abc\")";
         if (r.search(s)) {
             System.out.println(r.stringMatched());
             s = (r.stringMatched(1));

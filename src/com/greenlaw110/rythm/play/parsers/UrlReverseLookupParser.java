@@ -85,7 +85,7 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
     public static void main(String[] args) {
         UrlReverseLookupParser p = new UrlReverseLookupParser();
         Regex r = p.reg(new Rythm());
-        String s = "@_u(Clients.form(_._id)) abc";
+        String s = "@_u(\"Clients.form(_._id)\") abc";
         if (r.search(s)) {
             System.out.println(r.stringMatched());
             s = (r.stringMatched(1));
