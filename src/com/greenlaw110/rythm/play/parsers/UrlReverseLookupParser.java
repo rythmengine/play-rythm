@@ -8,8 +8,14 @@ import com.greenlaw110.rythm.internal.parser.build_in.KeywordParserFactory;
 import com.greenlaw110.rythm.spi.IContext;
 import com.greenlaw110.rythm.spi.IKeyword;
 import com.greenlaw110.rythm.spi.IParser;
+import com.greenlaw110.rythm.utils.S;
 import com.greenlaw110.rythm.utils.TextBuilder;
 import com.stevesoft.pat.Regex;
+import play.Play;
+import play.mvc.Router;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,19 +35,21 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
 
     @Override
     protected String patternStr() {
-        return "%s%s\\s*((?@()))";
+        return "^%s%s\\s*((?@()))";
     }
     
     protected String innerPattern() {
         return "[a-zA-Z_][\\w$_\\.]*(?@())?";
     }
+    
+    private static final ConcurrentMap<String, String> staticRouteMap = new ConcurrentHashMap<String, String>();
 
     @Override
     public IParser create(IContext ctx) {
         return new ParserBase(ctx) {
             public TextBuilder go() {
-                Regex r = new Regex(String.format(patternStr(), dialect().a(), keyword()));
-                if (!r.search(remain())) return null;
+                Regex r = reg(dialect());
+                if (!r.search(remain())) throw new ParseException(ctx().getTemplateClass(), ctx().currentLine(), "Error parsing @_u statement, correct usage: @_u(Controller.action), or @_u(/public/<your public assets>)");
                 String s = r.stringMatched();
                 step(s.length());
                 s = r.stringMatched(1);
@@ -55,7 +63,26 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
                 if (s.endsWith("\"") || s.endsWith("'")) {
                     s = s.substring(0, s.length() - 1);
                 }
-                // now parse action name and params
+                // try to see if it is a static url
+                String staticUrl = staticRouteMap.get(s);
+                if (null == staticUrl) {
+                    try {
+                        staticUrl = Router.reverseWithCheck(s, Play.getVirtualFile(s), isAbsolute);
+                    } catch (play.exceptions.NoRouteFoundException e) {
+                        // ignore it and try controller action
+                    }
+                }
+                if (null != staticUrl) {
+                    staticRouteMap.put(s, staticUrl);
+                    return new CodeToken(staticUrl, ctx()) {
+                        @Override
+                        public void output() {
+                            p("p(\"").p(s).p("\"); // line: ").p(ctx().currentLine()).p("\n");
+                        }
+                    };
+                }
+                
+                // now try parse action name and params
                 r = new Regex("([a-zA-Z_][\\w$_\\.]*)((?@())?)");
                 if (r.search(s)) {
                     final String action = r.stringMatched(1);
@@ -72,7 +99,7 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
                     return new CodeToken("", ctx()) {
                         @Override
                         public void output() {
-                            p("p(new com.greenlaw110.rythm.play.utils.ActionBridge(").p(isAbsolute).p(").invokeMethod(\"").p(action).p("\", new Object[] {").p(param).p("}));");
+                            p("p(new com.greenlaw110.rythm.play.utils.ActionBridge(").p(isAbsolute).p(").invokeMethod(\"").p(action).p("\", new Object[] {").p(param).p("})); // line: ").p(ctx().currentLine()).p("\n");
                         }
                     };
                 } else {
@@ -85,7 +112,7 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
     public static void main(String[] args) {
         UrlReverseLookupParser p = new UrlReverseLookupParser();
         Regex r = p.reg(new Rythm());
-        String s = "@_u(\"Clients.form(_._id)\") abc";
+        String s = "@_u(Application.index()) abc";
         if (r.search(s)) {
             System.out.println(r.stringMatched());
             s = (r.stringMatched(1));

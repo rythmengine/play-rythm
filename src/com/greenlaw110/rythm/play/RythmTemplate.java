@@ -67,7 +67,7 @@ public class RythmTemplate extends Template {
             engine().classLoader.detectChange(tc);
         } catch (ClassReloadException e) {
             RythmPlugin.debug("restart rythm engine to reload changed template...");
-            engine().restart();
+            engine().restart(e);
             refresh(forceRefresh);
         } catch (ParseException e) {
             TemplateInfo t = handleRythmException(e);
@@ -109,7 +109,7 @@ public class RythmTemplate extends Template {
             throw new TemplateExecutionException(t, t.lineNo, e.errorMessage, e);
         } catch (ClassCastException e) {
             Integer I = refreshCounter.get();
-            if (null == I || I < 5) {
+            if (null == I || I < 2) {
                 if (null == I) refreshCounter.set(1);
                 else refreshCounter.set(++I);
                 if (Logger.isDebugEnabled()) RythmPlugin.debug("ClassCastException detected, force refresh template class and continue...");
@@ -120,7 +120,7 @@ public class RythmTemplate extends Template {
                 throw new UnexpectedException("Too many ClassCastException encountered, please restart Play", e);
             }
         } catch (Exception e) {
-            throw new TemplateExecutionException(this, 0, e.getMessage(), e);
+            throw new TemplateExecutionException(this, -1, e.getMessage(), e);
         }
     }
     

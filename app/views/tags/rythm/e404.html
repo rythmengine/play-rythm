@@ -1,5 +1,5 @@
 #{verbatim}
-@import com.greenlaw110.rythm.utils.S, play.mvc.Router;
+@import play.mvc.Router;
 @args play.mvc.results.Result result;
 
 <style type="text/css">
@@ -45,6 +45,9 @@
         font-family: monospace;  
         color: #333;
     }
+    #routes li.even {
+        background-color: #cde;
+    }
 </style>
 
 <div id="header" class="block">
@@ -59,7 +62,7 @@
     <h2>These routes have been tried, in this order :</h2>
     <ol>
         @for (Router.Route route: Router.routes) {
-            <li>@(S.pad(route.method, 10))@(S.pad(route.host + route.path, 50)@route.action</li>
+            <li class="@route_parity">@(play.templates.JavaExtensions.pad(route.method, 10)) @(play.templates.JavaExtensions.pad(route.path, 80)) @route.action</li>
         }
     </ol>
 </div>

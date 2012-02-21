@@ -1,7 +1,7 @@
 #{verbatim}
 @set(title="Your application is ready !")
 
-@if ("DEV".equals(play.mode.toString())) {
+@if ("DEV".equals(_play.mode.toString())) {
 
 @section("moreStyles") {
 	<link rel="stylesheet" href="/public/playmanual/manual.css" type="text/css" media="screen" charset="@_response_encoding">
@@ -14,7 +14,7 @@
 		
 		<div id="logo">
 			<img src="/public/playmanual/logo.png">
-			<h2 id="version">Play @play.version</h2>
+			<h2 id="version">Play @_play.version</h2>
 		</div>
 
         <h2>Browse</h2>

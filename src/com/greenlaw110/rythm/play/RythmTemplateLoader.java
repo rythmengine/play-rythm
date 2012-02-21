@@ -215,6 +215,7 @@ public class RythmTemplateLoader {
     public static Template loadTemplate(VirtualFile file) {
         String path = file.relativePath();
 //RythmPlugin.info("loading template from virtual file: %s", file.relativePath());
+        if (path.indexOf("conf/routes") != -1) return null; // we don't handle routes file at the moment
 
         RythmTemplate rt = cache.get(path);
         if (null != rt) {

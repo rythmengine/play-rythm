@@ -10,6 +10,7 @@ import com.greenlaw110.rythm.play.parsers.AbsoluteUrlReverseLookupParser;
 import com.greenlaw110.rythm.play.parsers.GroovyVerbatimTagParser;
 import com.greenlaw110.rythm.play.parsers.MessageLookupParser;
 import com.greenlaw110.rythm.play.parsers.UrlReverseLookupParser;
+import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.spi.IParserFactory;
 import com.greenlaw110.rythm.spi.ITemplateClassEnhancer;
 import com.greenlaw110.rythm.template.ITemplate;
@@ -275,30 +276,36 @@ public class RythmPlugin extends PlayPlugin {
         RythmTemplateLoader.buildBlackWhiteList();
         debug("%sms to built up black/white list", System.currentTimeMillis() - l);
         l = System.currentTimeMillis();
-        FastTagBridge.registerFastTags();
-        registerJavaTags();
+        FastTagBridge.registerFastTags(engine);
+        registerJavaTags(engine);
         debug("%sms to register fast tags", System.currentTimeMillis() - l);
+
+        if (engine.enableJavaExtensions()) {
+            l = System.currentTimeMillis();
+            JavaExtensionBridge.registerPlayBuiltInJavaExtensions(engine);
+            debug("%sms to register java extension", System.currentTimeMillis() - l);
+        }
 
         l = System.currentTimeMillis();
         RythmTemplateLoader.scanTagFolder();
         debug("%sms to load Rythm tags", System.currentTimeMillis() - l);
     }
     
-    private void registerJavaTags() {
+    private void registerJavaTags(RythmEngine engine) {
         // -- register application java tags
         List<ApplicationClasses.ApplicationClass> classes = Play.classes.getAssignableClasses(FastRythmTag.class);
         for (ApplicationClasses.ApplicationClass ac: classes) {
-            registerJavaTag(ac.javaClass);
+            registerJavaTag(ac.javaClass, engine);
         }
         
         // -- register PlayRythm build-in tags
         Class<?>[] ca = FastRythmTags.class.getDeclaredClasses();
         for (Class<?> c: ca) {
-            registerJavaTag(c);
+            registerJavaTag(c, engine);
         }
     }
     
-    private void registerJavaTag(Class<?> jc) {
+    private void registerJavaTag(Class<?> jc, RythmEngine engine) {
         int flag = jc.getModifiers();
         if (Modifier.isAbstract(flag)) return;
         try {
@@ -335,4 +342,5 @@ public class RythmPlugin extends PlayPlugin {
     public void detectChange() {
         if (!refreshOnRender) engine.classLoader.detectChanges();
     }
+
 }

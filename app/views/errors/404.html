@@ -7,7 +7,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=@_response_encoding"/>
     </head>
     <body>
-        @if ("DEV".equals(play.mode.name())) {
+        @if ("DEV".equals(_play.mode.name())) {
             @e404(result)
         } else {
             <h1>Not found</h1>

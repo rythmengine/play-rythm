@@ -25,6 +25,8 @@ class ImplicitVariables {
             return RythmPlugin.underscoreImplicitVariableName ? "_" + name : name;
         }
         protected Object evaluate() {
+            Scope.RenderArgs args = Scope.RenderArgs.current();
+            if (null == args) return null;
             return Scope.RenderArgs.current().get(name());
         }
     }
@@ -35,6 +37,7 @@ class ImplicitVariables {
             new Var("params", "play.mvc.Scope.Params"),
             new Var("request", "play.mvc.Http.Request"),
             new Var("session", "play.mvc.Scope.Session"),
+            new Var("errors", "java.util.List<play.data.validation.Error>"),
             // -- the above render args set in controller method
             // -- the following render args set in groovy template, thus we need to provide evaluate method
             new Var("lang", "java.lang.String") {
@@ -49,7 +52,9 @@ class ImplicitVariables {
                     return new Messages();
                 }
             },
-            new Var("play", "play.Play") {
+            // use _play instead of play to avoid name conflicting why reference class in play.** package with full
+            // qualified name
+            new Var("_play", "play.Play") {
                 @Override
                 protected Object evaluate() {
                     return new Play();

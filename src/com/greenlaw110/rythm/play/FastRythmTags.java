@@ -1,13 +1,19 @@
 package com.greenlaw110.rythm.play;
 
+import com.greenlaw110.rythm.play.utils.ActionBridge;
+import com.greenlaw110.rythm.runtime.ITag;
 import com.greenlaw110.rythm.utils.S;
+import com.stevesoft.pat.Regex;
 import play.Play;
 import play.cache.Cache;
 import play.data.validation.Validation;
+import play.mvc.Router;
 import play.mvc.Scope;
 import play.templates.FastTags;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -106,7 +112,8 @@ public class FastRythmTags {
         }
     }
 
-    public static class errors extends FastRythmTag {
+    // rename errors to errorList to avoid name conflict with errors renderArg
+    public static class errorList extends FastRythmTag {
         @Override
         protected void call(ParameterList params, Body body) {
             String field = params.size() > 0 ? params.getByPosition(0).toString() : null;
@@ -133,9 +140,11 @@ public class FastRythmTags {
     public static class jsAction extends FastRythmTag {
         @Override
         protected void call(ParameterList params, Body body) {
+            String action = params.getDefault().toString();
+            //String url = new ActionBridge(false).invokeMethod(action)
             p("function(options) {var pattern = '")
-                    .p(params.getDefault().toString().replace("&amp;", "&"))
-                    .p("'; for(key in options) { pattern = pattern.replace(':'+key, options[key]); } return pattern }");
+                .p(params.getDefault().toString().replace("&amp;", "&"))
+                .p("'; for(key in options) { pattern = pattern.replace(':'+key, options[key]); } return pattern }");
         }
     }
 }
