@@ -157,6 +157,7 @@ public class RythmPlugin extends PlayPlugin {
                 return PlayRythmLogger.instance;
             }
         });
+        p.put("rythm.enableJavaExtensions", true); // enable java extension by default
 
         // handle implicit render args
         p.put("rythm.implicitRenderArgProvider", new IImplicitRenderArgProvider() {

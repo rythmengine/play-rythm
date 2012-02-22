@@ -1,4 +1,7 @@
 # History
+# 0.9.4b - Add views for docviewer plugins
+# 0.9.4a - Add line information to Tag invocation statement, default to enable Java Extension
+# 0.9.4 - Java Extension mechanism and all Play's built-in java extension now supported
 # 0.9.3 - Permanent cache for generated source code and bytecode
 # 0.9.2 - Improved ClassCastException handling
 #       - Compact mode
@@ -20,7 +23,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 0.9.3
+self: play -> rythm 0.9.4b
 
 require:
     - play 1.2
