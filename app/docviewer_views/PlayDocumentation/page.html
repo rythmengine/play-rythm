@@ -19,7 +19,7 @@
                 </div>
 
                 @{
-                    String s = module
+                    String s = module;
                     if (null != s) {
                         s = "(" + play.templates.JavaExtensions.capitalizeWords(module) + ")";
                     } else {
@@ -29,11 +29,11 @@
                 <h2>Browse @s</h2>
                 <ul>
                     @if (null != module)
-                         <li id="gotoc"><a href="/@documentation">Documentation home</a></li>
+                         <li id="gotoc"><a href="/@@documentation">Documentation home</a></li>
                     }
                     @{
                         if (null != module) {
-                            s = play.templates.JavaExtensions.capitalizeWords(module) + "-"
+                            s = play.templates.JavaExtensions.capitalizeWords(module) + "-";
                         } else {
                             s = "";
                         }
@@ -44,11 +44,11 @@
                 @if (null != modules)
                     <h2>Installed modules</h2>
                     <ul>
-                        for (String module: modules) {
+                        @for (String module: modules) {
                             <li>
-                                <a href="modules/${module}/home">@module.capitalizeWords()</a>
+                                <a href="modules/@module/home">@module.capitalizeWords()</a>
                                 @if (apis.contains(module)) {
-                                    — <a href="/@api/-@module/index.html">Browse API</a>
+                                    — <a href="/@@api/-@module/index.html">Browse API</a>
                                 }
                             </li>
                         }

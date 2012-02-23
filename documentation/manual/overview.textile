@@ -1,0 +1,58 @@
+h1. PlayRythm overview
+
+The PlayRythm module a powerful template engine plugin aims to replace existing Groovy template with a faster static typed java language based template engine. This module is built on top of the "Rythm project":github.com/greenlaw110/rythm.
+
+h2. Template Syntax at a glance
+
+Based on Rythm template engine, PlayRythm module provides an easy to read/write template language which is very like that is used in .Net MVC's "Razor template engine":http://razorengine.codeplex.com/. Here is one rythm template example:
+
+bc. @extends(/main.html);
+@args List<User> users;
+...
+<ul>
+@for(User user: users) {
+    @if (!user.disabled()) {
+        <li class="@user_parity">
+            <span>@user_index</span>
+            <a href="@_u(User.show(user.getId()))">user.getName()</a>
+        </li>
+    }
+}
+</ul>
+
+h2. Use PlayRythm template engine
+
+h3. 1. Add PlayRythm into your @dependencies.conf@ file:
+
+bc. # Application dependencies
+   require:
+       - com.gelinsoft -> play-rythm 0.9.4c
+   repositories:
+       - gelinsoft:
+           type: http
+           artifact: "http://gelinsoft.com/play/repo/[module]-[revision].zip"
+           contains:
+               - com.gelinsoft -> *
+
+At the moment you need to add gelinsoft repository, once PlayRythm released to Play's official repository, you just need to add one line into your @dependencies.conf@ file: @-play -> play-rythm@.
+
+h3. 2. Process your controller action method:
+
+bc. @UseRythmTemplateEngine public static void list() {
+    List<User> users = User.findAll();
+    render(users);
+}
+
+So as you can see, you don't need to rewrite your existing controller action methods, just annotate it with <code>@UseRythmTemplateEngine</code> is enough. PlayRythm will shortcut template loading process and process the template rendering before Play's default groovy template engine activated.
+
+You can also annotate <code>@UseRythmTemplateEngine</code> on Controller class declaration, which mark all action methods inside this controller to be processed by PlayRythm template engine.
+
+p(note). If you set @rythm.default.engine=rythm@ in your @application.conf@ file, then you don't need <code>@UseRythmTemplateEngine</code> annotation because all your templates will be processed by PlayRythm by default unless you have annotated <code>UseSystemTemplateEngine</code> to your controller class or action methods, which explicitly indicate the relevant rendering request shall not be processed by PlayRythm and leave it to Play's built-in template engine.
+
+h3. 3. Write your view or port your existing view using Rythm syntax.
+
+This might be the hardest part but not that hard as almost all Groovy template's keywords or facility has corresponding part provided by Rythm template engine. Please refer to "Rythm Template User Guide":user_guide for more information
+
+p(note). **Give it a try**
+
+"Install the PlayRythm plugin":http://www.playframework.org/modules/rythm and start boosting your application performance!

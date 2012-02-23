@@ -1,0 +1,238 @@
+h1. PlayRythm User Guide
+
+PlayRythm provides an alternative template processing engine for Play!Framework. The template engine uses Java as an expression language. A powerful tag system allows you to create reusable functions.
+
+Templates are stored in @app/views@ directory, user defined tags are stored in @app/views/tags/rythm@ directory by default. But both location could be configured. See "Configuration Reference":reference#configuration
+
+h2. <a name="syntax">Template Syntax</a>
+
+A template file is a text file, some parts of which have placeholders for dynamically generated content. The template’s dynamic elements are written using the Java language.
+
+Dynamic elements are resolved during template execution. The rendered result is then sent as part of the HTTP response.
+
+p(note). All template elements are started with the '@' caret.
+
+h3. <a name="comment">Comments</a>
+
+one line comment:
+
+<code>@// this is one line comment</code>
+
+multiple lines comment:
+
+bc. @{
+    this is a multiple line comment.
+    The text inside this block will be ignore by Rythm template processor
+}@
+
+h3. <a name="expression">Expressions</a>
+
+bc. @user.name @// evaluate user's name property and print it out
+@user.getName(), @// call a method on an object and print out the result
+
+The bracket "( )" can be used to compose complicated expressions or to separate an expression from other part of the template:
+
+bc. @(1 + 5) @// print out the result of 1 + 5
+@(user.name)_and_some_other_string @// use ( ) to separate expression from other part of the tempalte
+
+h3. <a name="call_build-in_function">Call built-in function</a>
+
+"@" is also used to invoke built-in functions. Built-in function could be treated as special type of tags. From the user's perspective there is no difference between calling a built-in function and calling a tag (either built-in or custom)
+
+bc. @// indicate this template extends "/main.html" template
+@extends(/main.html)
+ 
+@// declare the java package/classes needed in this template
+@import play.util.*, play.templates.*
+ 
+@// declare arguments used in this template
+@args String name, int score
+ 
+@// output some information for debugging purpose
+@debug("the variable is %s", someVariable)
+
+There are about a dozen of built-in functions defined in Rythm, please go to "Reference":reference for details
+
+h3. <a name="invoke_tag">Invoke tag</a>
+
+Yes "@" is also used to invoke tags:
+
+bc. @greenscript.js("app<jqueryui<jquery", all:true)
+ 
+@greenscript.js <<
+    $(function(){
+        // do whatever needed
+    })
+@
+
+h4. Call a tag with body
+
+In the second example we see how to use @ to invoke a tag with body. Veteran might notice that the syntax to include tag body is kind of like "here document":http://en.wikipedia.org/wiki/Here_document used in Linux shell and perl. But it's not exactly a here document. You use "<<" to indicate start of a tag body and "@" to indicate the end.
+
+The usual curly brace "{" and "}" can also be used to enclose tag body:
+
+bc. @greenscript.js {
+    $(function(){
+        // do whatever needed
+    })
+}
+
+hmm... the here document style is my favorite however ;-)
+
+h4. Passing arguments to tag
+
+Suppose you have defined a tag file hello.html:
+
+bc. @args String title, String who;
+Hello @title @who
+
+And in another template you want to invoke hello.html. Like groovy template, you can pass an argument to a tag by name:
+
+bc. @hello(title = "Mr.", who = "Green")
+
+or this is also good:
+
+bc. @hello(title: "Mr.", who: "Green")
+
+Unlike groovy template, you are free to pass arguments to tag by position in Rythem template:
+
+bc. @hello("Mr.", "Green)
+
+h3. <a name="scripting">Scripting</a>
+
+Use "@{" and "}@" to include arbitrary java source code into your template:
+
+bc. @{
+    String fullName = client.name.toUpperCase() + " " + client.forname;
+}@
+<h1>Client @fullName</h1>
+
+A script can write dynamic content directly using @p()@ function:
+
+bc. @{
+    String fullName = client.name.toUpperCase() + " " + client.forname;
+    p("<h1>").p(fullName).p("</h1>");
+}@
+
+You can use a script to create a structure such as an iteration in your template:
+
+bc. <h1>Client @client.name</h1>
+<ul>
+@{
+     for(Account account: client.accounts) {
+}@
+     <li>@account</li>
+@{
+     }
+}@
+</ul>
+
+However, this is not encouraged because you have much more clean and powerful @for tag to use:
+
+bc. <h1>Client @client.name</h1>
+<ul>
+@for (Account account: client.accounts) {
+    <li class="@account_parity">@account</li>
+}
+</ul>
+
+Also bear in mind that a template is not a place to do complex things. So, use a tag when you can, or move the computations into the controller or the model object.
+
+h2. <a name="inheritance">Template inheritance</a>
+
+A template can inherit another template, i.e. it can be included as a part of an other template.
+
+To inherit another template, use the <code>@extends</code> tag:
+
+bc. @extends(/main.html)
+ 
+<h1>Some code</h1>
+
+The @main.html@ template is a standard template, but it uses the @doLayout@ tag to include the content:
+
+bc. <h1>Main template</h1>
+ 
+<div id="content">
+    @doLayout
+</div>
+
+p(note). You can also use @renderBody@ in place of @doLayout@ to include the content, which comes from Razor
+
+h2. <a name="custom_tag">Custom Tag</a>
+
+You can easily create specific tags for your application. A tag is a simple template file, stored in the @app/views/tags/rythm@ directory. The template’s file name is used as the tag name.
+
+To create a @hello@ tag, just create the @app/views/tags/rythm/hello.html@ file.
+
+bc. Hello from tag!
+
+No need to configure anything. You can use the tag directly:
+
+bc. @hello
+
+h3. Retrieve tag parameters
+
+Tag parameters are exposed as template variables which declared using <code>@args</code> tag.
+
+For example: 
+
+bc. @args String name;
+Hello @name !
+
+And you can pass the name parameter to the tag:
+
+bc. @hello(name: "Bob")
+
+or to pass parameter by position:
+
+bc. @hello("Bob")
+
+h3. Invoke tag body
+
+If your tag supports a @body@, you can include it at any point in the tag code, using the <code>@_body</code> tag.
+
+For example:
+
+bc. Hello @_body!
+
+And you can then pass the name as tag body:
+
+bc. @hello <<
+   Bob
+@
+
+Format-specific tags
+
+In play's groovy template, you can have different versions of tag for different "content types":http://www.playframework.org/documentation/1.2.4/routes#content-types. This is not supported in PlayRythm yet. There is a "plan":https://github.com/greenlaw110/play-rythm/issues/1 to add the support to content type based tag selection.
+
+h2. <a name="java_tags">Custom Java tags</a>
+
+Honestly creating Java tag is not so important in Rythm as it is in Groovy because Rythm template is running so fast that it is almost like a handwriting StringBuilder appended java code. However you might still want to do it because the logic in that tag is complicated and it is more easier to code in a Java source code than in a text template source.
+
+There are 2 ways to creating Custom Java tags.
+
+h3. <a name="fast_tags">The old Play FastTags approach</a>
+
+PlayRythm provides a bridge to intercept a rythm tag call to FastTags call. So you are free to continue define FastTags as you did for Groovy template. See http://www.playframework.org/documentation/1.2.4/templates#fasttags for more details on how to create FastTags.
+
+p(note). Developer cannot use all stuffs in FastTags. The constraints include @Closure@ parameter and @TagContext@ etc. 
+
+h3. <a name="rythm_java_tag">Implement Java Tag using Rythm's new Java Tag interface<a>
+
+Another approach is to implement Java Tag using Rythm's new @com.greenlaw110.rythm.play.FastRythmTag@:
+
+bc. import com.greenlaw110.rythm.play.FastRythmTag;
+@play.templates.FastTags.Namespace("")
+public class authenticityToken extends FastRythmTag {
+    @Override public void call(ParameterList params, Body body) {
+        p("<input type=\"hidden\" name=\"authenticityToken\" value=\"" + Scope.Session.current().getAuthenticityToken() + "\">");
+    }
+}
+
+The above code shows how to implement Play's authenticityToken tag in Rythm.
+
+h4. Pros and Cons of the two approach
+
+The good side of FastTags approach is it's compatible to Groovy template, and thus should be welcome by module developers who don't need a PlayRythm copy to get their code compileds and distributed.
+
+The only tiny problem with FastTags is that it uses reflection to lookup the method to be called, which might be a little bit more time consuming than using Rythm's tag interface 
