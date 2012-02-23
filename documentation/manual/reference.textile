@@ -1,0 +1,23 @@
+h1. PlayRythm Reference
+
+h2. <a name="tags">Built-in Tags</a>
+
+h3. <a name="args">args</a>
+
+The @args@ tag declare variables used in the template.
+
+bc. @args String var1, int var2, ...;
+
+p(note). @args@ is one of few tags that are not invoked in @tag(...) style. At the moment please use ";" to terminate @args@ statement. This limitation will be removed in the future, and line-break could be an natural way to terminate the statement
+
+You can have any arbitrary number of @args@ statement in any where of your template, all variables declared will be effective in your template.
+
+h3. <a name="debug">debug<a>
+
+You can use @debug@ tag to output debug message to your log file or screen:
+
+bc. @debug("this is a debug message for %s", myvar)
+
+... TO BE CONTINUED ...
+
+ 
