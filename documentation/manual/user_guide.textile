@@ -69,7 +69,7 @@ Yes "@" is also used to invoke tags:
 
 bc. @greenscript.js("app<jqueryui<jquery", all:true)
  
-@greenscript.js <<
+@greenscript.js() <<
     $(function(){
         // do whatever needed
     })
@@ -81,7 +81,7 @@ In the second example we see how to use @ to invoke a tag with body. Veteran mig
 
 The usual curly brace "{" and "}" can also be used to enclose tag body:
 
-bc. @greenscript.js {
+bc. @greenscript.js() {
     $(function(){
         // do whatever needed
     })
