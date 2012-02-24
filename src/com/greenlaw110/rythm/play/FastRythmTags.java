@@ -89,7 +89,7 @@ public class FastRythmTags {
             String key = params.getDefault().toString();
             play.data.validation.Error error = Validation.error(key);
             if (error != null) {
-                Object field = params.getByName("field");
+                Object field = params.size() > 1 ? params.getByPosition(1) : null;
                 if (null == field) {
                     p(error.message());
                 } else {
@@ -116,7 +116,7 @@ public class FastRythmTags {
     public static class errorList extends FastRythmTag {
         @Override
         protected void call(ParameterList params, Body body) {
-            String field = params.size() > 0 ? params.getByPosition(0).toString() : null;
+            String field = params.size() > 0 ? params.getDefault().toString() : null;
             List<play.data.validation.Error> errors = null == field ? play.data.validation.Validation.errors() : play.data.validation.Validation.errors(field);
             int count = errors.size();
             for (int i = 0; i < count; ++i) {
@@ -130,21 +130,20 @@ public class FastRythmTags {
         }
     }
 
-    public static class i18n extends FastRythmTag {
-        @Override
-        protected void call(ParameterList params, Body body) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-    }
-
-    public static class jsAction extends FastRythmTag {
-        @Override
-        protected void call(ParameterList params, Body body) {
-            String action = params.getDefault().toString();
-            //String url = new ActionBridge(false).invokeMethod(action)
-            p("function(options) {var pattern = '")
-                .p(params.getDefault().toString().replace("&amp;", "&"))
-                .p("'; for(key in options) { pattern = pattern.replace(':'+key, options[key]); } return pattern }");
-        }
-    }
+//    public static class i18n extends FastRythmTag {
+//        @Override
+//        protected void call(ParameterList params, Body body) {
+//        }
+//    }
+//
+//    public static class jsAction extends FastRythmTag {
+//        @Override
+//        protected void call(ParameterList params, Body body) {
+//            String action = params.getDefault().toString();
+//            //String url = new ActionBridge(false).invokeMethod(action)
+//            p("function(options) {var pattern = '")
+//                .p(params.getDefault().toString().replace("&amp;", "&"))
+//                .p("'; for(key in options) { pattern = pattern.replace(':'+key, options[key]); } return pattern }");
+//        }
+//    }
 }

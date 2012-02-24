@@ -12,12 +12,273 @@ p(note). @args@ is one of few tags that are not invoked in @tag(...) style. At t
 
 You can have any arbitrary number of @args@ statement in any where of your template, all variables declared will be effective in your template.
 
+h3. <a name="authenticityToken">authenticityToken</a>
+
+This is a clone of the "authenticityToken":http://www.playframework.org/documentation/1.2.4/tags#authenticityToken tag in Play's groovy template.
+
+bc. @authenticityToken()
+
+Rendered as:
+
+bc. <input type="hidden" name="authenticityToken"  
+    value="1c6d92fed96200347f06b7c5e1a3a28fa258ef7c">
+    
+h3. <a name="authenticityTokenValue">authenticityTokenValue</a>
+
+Use @authenticityTokenValue@ when you want to put the authenticity token value inside a javascript code in your view:
+
+bc. $.post("@_u(User.save())", 
+    {authenticityToken: '@authenticityTokenValue()', ...}, 
+    function(data){...});
+    
+Rendered as:
+
+bc. $.post("/user/save",
+    {authenticityToken: "1c6d92fed96200347f06b7c5e1a3a28fa258ef7c", ...},
+    function(data){...});
+    
+h3. <a name="cache">cache</a>
+
+Caches the tag body using the @play.cache.Cache@ API, for the cache key specified by the tag parameter/
+
+bc. @cache("startTime") {
+    @(new java.util.Date())
+}
+
+The body is cached indefinitely by default, but you can specify an expiration duration with the for parameter.
+
+bc. @cache("currentTime", "3s") {
+    @(new java.util.Date())
+}
+
+h3. <a name="cacheOnProd">cacheOnProd<a>
+
+Same as "cache":#cache, but cache happens only when @play.Play.mode@ is "@prod@".
+
+h3. <a name="doLayout">doLayout</a>
+
+Used with template inheritance, this tag inserts the evaluated sub-template’s contents.
+
+bc. <!-- common header here -->
+<div id="content">
+    @doLayout()
+</div>
+<!-- common footer here -->
+
+@renderBody@ is an alias of @doLayout@. 
+
+See also "template inheritance":user_guide#inheritance
+
+h3. <a name="error">error</a>
+
+Outputs the validation error message, if present, for the field specified by the tag parameter.
+
+bc. @error("user.name")
+
+You can use the optional parameter to use a different field’s error message. This is useful when you want several fields to share a common error message.
+
+bc. @error("contact.street", "contact.address")
+@error("contact.city", "contact.address")
+@error("contact.country", "contact.address")
+
+h3. <a name="errorClass">errorClass</a>
+
+Outputs the text @hasError@ if there is a validation error for the field specified by the tag parameter. This is useful for setting a CSS class for input fields with errors:
+
+bc. <input name="name" class="@errorClass("name")">
+
+which is equivalent to:
+
+bc. <input name="name" class="@(play.data.validation.Validation.hasError("name") ? "hasError" : '')">
+
+h3. <a name="errorList">errorList</a>
+
+Corresponding to Groovy template's "errors":http://www.playframework.org/documentation/1.2.4/tags#errors. Iterates over the current validation errors.
+
+bc. <ul>
+@errors() {
+    <li>@error</li>
+}
+
+The tag defines implicit variables in its body.
+
+* @error@, the error
+* @error_index@, the error’s index, starting at 1
+* @error_isLast@, true for the last element
+* @error_isFirst@, true for the first element
+* @error_parity@, alternates between @odd@ and @even@
+
+bc. <table>
+<tr><th>#</th><th>Error</th></tr>
+@errorList() {
+    <tr class="@error_parity"><td>@error_index</td><td>@error</td></tr>
+}
+</table>
+
+You can also use the optional field parameter, or just the default parameter, to filter only the errors belonging to a certain field.
+
+bc. <ul>
+@errorList("myField") {
+    There where errors with the field myField<br />
+    <li>@error</li>
+}
+</ul>
+
+h3. <a name="extends">extends</a>
+
+Makes the template inherit another template.
+
+bc. @extends(/main.html)
+
+or
+
+bc. @extends("/main.html")
+
+You can pass parameter to extended template if the there are arguments declared.
+
+Suppose you have a parent template defined as:
+
+bc. @args String style;
+<div class="panel @style">
+    @renderBody()
+</div>
+
+And in your extending template, you pass the argument style as:
+
+bc. @extends(panel.html, style: "span4")
+
+or pass by position:
+
+bc. @extends(panel.html, "span4")
+
 h3. <a name="debug">debug<a>
 
 You can use @debug@ tag to output debug message to your log file or screen:
 
 bc. @debug("this is a debug message for %s", myvar)
 
-... TO BE CONTINUED ...
+h3. <a name="for">for</a>
+
+Use @for@ to iterate a collection of objects. The synatx is the same as for loop in Java language:
+
+bc. <ul>
+@for (Product product: products) {
+    <li>@product</li>
+}
+
+The tag defines implicit variables in it's body. The variable names are prefixed with loop variable name:
+
+* @name_index@, the item's index, start with 1
+* @name_isFirst@, true for the first element
+* @name_isLast@, true for the last element
+* @name_parity@, alternates between @odd@ and @even@
+* @name_size@, the size of the collection
+
+bc. <ul>
+@for (Product product: products) {
+    <span class="@product_parity">@product_index. @product</span>
+    @(product_isLast ? "" : "-")
+}
+</ul>
+
+h3. <a name="get">get</a>
+
+Retrieves value defined with a "set":#set tag. You may use the get/set mechanism to exchange values between templates, layouts and sub-templates.
+
+bc. <head>
+    <title>@get("title")</title>
+</head>
+
+You can provide a default value in the following way, which will display "Homepage", if title has not been specified:
+
+bc. <head>
+    <title>@get("title": "Homepage")</title>
+</head>
+
+h3. <a name="if">if-elseif</a>
+
+Evaluates a given test, and if true, evaluate the tag body. The syntax is the same as @if@ clause in Java language
+
+bc. @if ("en".equals(user.countryCode)) {
+    Connect user is @user
+}
+
+You can also use @else@ clause:
+
+bc. @if (null != user) {
+    Connected user is @user
+} else {
+    Please log in
+}
+
+or @else if@ clause
+
+bc. @if (tasks.size() > 1) {
+    Busy tasklist
+} else if (tasks.size() > 0) {
+    One task in the list
+} else {
+    Nothing to do
+}
+
+h3. <a name="renderBody">renderBody</a>
+
+@renderBody@ is an alias of "doLayout":#doLayout.
+
+h3. <a name="renderSection">renderSection</a>
+
+Used with template inheritance, this tag inserts the evaluated sub-template’s contents defined with "section":#section tag
+
+bc. <div id="sidebar">
+    @renderSection("sidebar")
+</div>
+
+h3. <a name="section">section</a>
+
+Define a block of template to be output in parent template's named section.
+
+bc. @section sidebar {
+    <ul>
+        <li><a href="#">Link one</li>
+        <li><a href="#">Link two</li>
+    </ul>
+}
+
+h3. <a name="set">set</a>
+
+Define a value which can be retrieved in the same template or any layout with the "get":#get tag.
+
+bc. @set(title: "Admin")
+@set(style: "span6")
+
+You can use any expression in @set@ tag
+
+bc. @set(title:"Profile of " + user.login)
+
+Unlike "set"#http://www.playframework.org/documentation/1.2.4/tags#set tag in Groovy template engine, Rythm @set@ tag does not accept tag body. You can use "section":#section tag to achieve the same result.
+
+h3. <a name="tag">tag</a>
+
+Define an inline tag used in the same template, parent template or child template.
+
+bc. @tag sayHi(String who) {
+    Hi @who
+}
+
+To use the tag defined just follow the common way:
+
+bc. @sayHi("Play!framework")
+
+or pass argument by name:
+
+bc. @sayHi(who: "Play!framework")
+
+h3. <a name="verbatim">verbatim</a>
+
+Define a block of code that not to be parsed by Rythm.
+
+bc. @verbatim() {
+    OK, anything inside this block is not parsed: @someTag, @someExpression, etc
+}
 
  

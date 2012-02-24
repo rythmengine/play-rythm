@@ -10,20 +10,24 @@ A template file is a text file, some parts of which have placeholders for dynami
 
 Dynamic elements are resolved during template execution. The rendered result is then sent as part of the HTTP response.
 
-p(note). All template elements are started with the '@' caret.
+p(note). All template elements are started with the '@' caret. 
+
+If you want to output a literal "<code>@</code>" character, you need to double it. E.g.
+
+bc. This is an email address in template: someone@@gmail.com
 
 h3. <a name="comment">Comments</a>
 
-one line comment:
+one line comment start with <code>@//</code>
 
 bc. @// this is one line comment
 
-multiple lines comment:
+multiple lines comment are put inside <code>@ * * @</code> block. yes it is the same as the new scala template
 
-bc. @{
+bc. @*
     this is a multiple line comment.
     The text inside this block will be ignore by Rythm template processor
-}@
+*@
 
 h3. <a name="expression">Expressions</a>
 
@@ -69,23 +73,23 @@ Yes "@" is also used to invoke tags:
 
 bc. @greenscript.js("app<jqueryui<jquery", all:true)
  
-@greenscript.js() <<
-    $(function(){
-        // do whatever needed
-    })
-@
-
 h4. Call a tag with body
 
-In the second example we see how to use @ to invoke a tag with body. Veteran might notice that the syntax to include tag body is kind of like "here document":http://en.wikipedia.org/wiki/Here_document used in Linux shell and perl. But it's not exactly a here document. You use "<<" to indicate start of a tag body and "@" to indicate the end.
+To invoke tag which accept body, the user just use the common @{ }@ to include the body content:
 
-The usual curly brace "{" and "}" can also be used to enclose tag body:
-
-bc. @greenscript.js() {
+@greenscript.js() {
     $(function(){
         // do whatever needed
     })
 }
+
+Rythm also support the "here document":http://en.wikipedia.org/wiki/Here_document style symbol to mark tag body:
+
+bc. @greenscript.js() <<
+    $(function(){
+        // do whatever needed
+    })
+@
 
 hmm... the here document style is my favorite however ;-)
 
@@ -183,7 +187,64 @@ bc. <h1>Main template</h1>
 
 p(note). You can also use @renderBody@ in place of @doLayout@ to include the content, which comes from Razor
 
-h2. <a name="custom_tag">Custom Tag</a>
+h3. Define section and output section
+
+Like Razor, Rythm provides a section concept to enable you to define sections in sub templates and output them in parent template.
+
+In your parent template, say 'main.html':
+
+bc. <!DOCTYPE html>
+<html>
+<head>
+...
+</head>
+<body>
+ 
+  <div id="header">
+    <h1>@get("title')</h1>
+  </div>
+  
+  <div id="sidebar">
+    @renderSection("sidebar")
+  </div>
+  
+  <div id="content">
+    @renderBody()
+  </div>
+  
+  <div id="footer">
+    <p>Site footer - &copy; Santa Clause</p>
+  </div>
+  
+</body>
+</html>
+
+And in your parent template, say 'index.html':
+
+bc. @extends(/main.html)
+ 
+@set(title="Home page")
+ 
+<h2>Welcome to my site</h2>
+ 
+<p>This is our home page</p>
+ 
+<p>Not super exciting is it?</p>
+ 
+<p>Yada, Yada, Yada</p>
+ 
+@section sidebar {
+  <p>This sidebar has "Home Page" specific content</p>
+ 
+  <ul>
+    <li><a href="#">Link One</a></li>
+    <li><a href="#">Link Two</a></li>
+    <li><a href="#">Link Three</a></li>
+  </ul>
+}
+
+
+h2. <a name="custom_tag">Custom Tags</a>
 
 You can easily create specific tags for your application. A tag is a simple template file, stored in the @app/views/tags/rythm@ directory. The template’s file name is used as the tag name.
 
@@ -222,13 +283,29 @@ bc. Hello @_body!
 
 And you can then pass the name as tag body:
 
-bc. @hello <<
+bc. @hello {
    Bob
-@
+}
 
 Format-specific tags
 
 In play's groovy template, you can have different versions of tag for different "content types":http://www.playframework.org/documentation/1.2.4/routes#content-types. This is not supported in PlayRythm yet. There is a "plan":https://github.com/greenlaw110/play-rythm/issues/1 to add the support to content type based tag selection.
+
+h2. <a name="inline_tag">Define inline tags</a>
+
+There is no inline tag concept in Groovy (The #{set...} and #{get ..} tag could be used to implement static content include). Rythm provides inline tag definition to achieve a lightweight and light speed reuse method in one template.
+
+bc. @tag sayHello(String who, String title) {
+  <p>Hello, @title @who</p>
+}
+
+And in the same template you can call the tag defined as usual:
+
+bc. @for (User user: users) {
+  @sayHello(user.name, user.title)
+}
+
+Inline tag definition is some how like "helper":http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx tool in Razor engine. At the moment Rythm does not support reuse inline tags across templates. With the support of "@include":https://github.com/greenlaw110/Rythm/issues/6 tag implemented, reusing inline tags across templates will be very easy.
 
 h2. <a name="java_tags">Custom Java tags</a>
 
