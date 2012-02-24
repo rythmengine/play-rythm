@@ -50,7 +50,7 @@ Rendered as:
 
 bc. <input type="hidden" name="authenticityToken"  
     value="1c6d92fed96200347f06b7c5e1a3a28fa258ef7c">
-    
+
 h3. <a name="authenticityTokenValue">authenticityTokenValue</a>
 
 Use @authenticityTokenValue@ when you want to put the authenticity token value inside a javascript code in your view:
@@ -64,7 +64,7 @@ Rendered as:
 bc. $.post("/user/save",
     {authenticityToken: "1c6d92fed96200347f06b7c5e1a3a28fa258ef7c", ...},
     function(data){...});
-    
+
 h3. <a name="cache">cache</a>
 
 Caches the tag body using the @play.cache.Cache@ API, for the cache key specified by the tag parameter/
@@ -93,7 +93,7 @@ bc. <!-- common header here -->
 </div>
 <!-- common footer here -->
 
-@renderBody@ is an alias of @doLayout@. 
+@doLayout@ tag has an alias called "renderBody":#renderBody 
 
 See also "template inheritance":user_guide#inheritance
 
@@ -310,13 +310,16 @@ bc. @verbatim() {
 }
 
 h2. PlayRythm Configuration
-   
+
 PlayRythm provides all default configuration settings that cater for most common use cases. 
 
 |_. configuration |_. description |_. default value|
-|rythm.mode|set rythm template engine to run in dev or prod mode|the value of play.mode|
-|rythm.compactOutput|remove redundant space and line breaks|true in prod mode and false in dev mode|
-|rythm.enableJavaExtensions|enable "Java extension parsing":user_guide#java_extension|true|
-|rythm.default.engine|Indicate which template should be used as default|system (i.e. groovy)| 
-   
-# %(next)"Migrating from Groovy template to Rythm":migration%
+|@rythm.mode@|set rythm template engine to run in dev or prod mode|the value of play.mode|
+|@rythm.compactOutput@|remove redundant space and line breaks|true in prod mode and false in dev mode|
+|@rythm.enableJavaExtensions@|enable "Java extension parsing":user_guide#java_extension|true|
+|@rythm.default.engine@|Indicate which template should be used as default|system (i.e. groovy)| 
+
+h2. <a name="resource">See Also</a>
+
+# "Integrate PlayRythm into your Play project":integration
+# "Rythm Template User guide":user_guide

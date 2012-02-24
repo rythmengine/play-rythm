@@ -400,4 +400,5 @@ PlayRythm automatically insert the following import statements so that user can 
 
 h2. <a name="resource">See also</a>
 
-# "References Manual":reference
+# "References manual":reference
+# "Integrate PlayRythm into your Play project":integration
