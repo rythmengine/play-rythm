@@ -2,9 +2,7 @@ h1. PlayRythm version history
 
 h2. <a name="roadmap">TODO list</a>
 
-* Parsing and Runtime Error Reporting
 * Add new dialect to attract current Groovy, Japid and Razor template users
 
-h2. <a name="0.2">Updates in 0.2</a>
-
-* The first beta release
+h2. <a name="v0.9">v0.9</a>
+* The first public beta release

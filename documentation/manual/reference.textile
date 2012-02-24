@@ -2,6 +2,34 @@ h1. PlayRythm Reference
 
 h2. <a name="tags">Built-in Tags</a>
 
+h3. <a name="_m">_m</a>
+
+Lookup message string.
+
+bc. @_m("validation.required")
+
+The above has the same effect of the following groovy template code:
+
+bc. &('validation.required')
+
+You can also pass parameters:
+
+bc. @_m("some.message", "param1")
+
+h3. <a name="_u">_u</a>
+
+Reverse lookup URL.
+
+bc. @_u(Application.index)
+
+The above code is equal to the following groovy template code:
+
+bc. @{Applicaiton.index}
+
+You can also reverse lookup static url
+
+bc. @_u(/public/javascripts/myscript.js) 
+
 h3. <a name="args">args</a>
 
 The @args@ tag declare variables used in the template.
@@ -281,4 +309,14 @@ bc. @verbatim() {
     OK, anything inside this block is not parsed: @someTag, @someExpression, etc
 }
 
- 
+h2. PlayRythm Configuration
+   
+PlayRythm provides all default configuration settings that cater for most common use cases. 
+
+|_. configuration |_. description |_. default value|
+|rythm.mode|set rythm template engine to run in dev or prod mode|the value of play.mode|
+|rythm.compactOutput|remove redundant space and line breaks|true in prod mode and false in dev mode|
+|rythm.enableJavaExtensions|enable "Java extension parsing":user_guide#java_extension|true|
+|rythm.default.engine|Indicate which template should be used as default|system (i.e. groovy)| 
+   
+# %(next)"Migrating from Groovy template to Rythm":migration%

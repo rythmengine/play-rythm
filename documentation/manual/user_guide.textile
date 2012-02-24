@@ -339,7 +339,7 @@ The good side of FastTags approach is it's compatible to Groovy template, and th
 
 The only tiny problem with FastTags is that it uses reflection to lookup the method to be called, which might be a little bit more time consuming than using Rythm's tag interface 
 
-h2. Java object extensions in templates
+h2. <a name="java_extension">Java object extensions in templates</a>
 
 Rythm template provides limited support for "Java object extensions":http://www.playframework.org/documentation/1.2.4/templates#extensions. 
 
@@ -400,4 +400,4 @@ PlayRythm automatically insert the following import statements so that user can 
 
 h2. <a name="resource">See also</a>
 
-# "References":reference
+# "References Manual":reference
