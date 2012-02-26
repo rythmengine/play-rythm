@@ -230,7 +230,7 @@ public class RythmPlugin extends PlayPlugin {
             });
         }
 
-        if (Play.Mode.PROD == Play.mode) p.put("rythm.mode", Rythm.Mode.prod);
+        p.put("rythm.mode", Play.mode.isDev() ? Rythm.Mode.dev : Rythm.Mode.prod);
 
         if (null == engine) {
             engine = new RythmEngine(p);

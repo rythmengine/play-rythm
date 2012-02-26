@@ -72,12 +72,12 @@ h3. <a name="invoke_tag">Invoke tag</a>
 Yes "@" is also used to invoke tags:
 
 bc. @greenscript.js("app<jqueryui<jquery", all:true)
- 
+
 h4. Call a tag with body
 
 To invoke tag which accept body, the user just use the common @{ }@ to include the body content:
 
-@greenscript.js() {
+bc. @greenscript.js() {
     $(function(){
         // do whatever needed
     })
