@@ -10,20 +10,24 @@ A template file is a text file, some parts of which have placeholders for dynami
 
 Dynamic elements are resolved during template execution. The rendered result is then sent as part of the HTTP response.
 
-p(note). All template elements are started with the '@' caret.
+p(note). All template elements are started with the '@' caret. 
+
+If you want to output a literal "<code>@</code>" character, you need to double it. E.g.
+
+bc. This is an email address in template: someone@@gmail.com
 
 h3. <a name="comment">Comments</a>
 
-one line comment:
+one line comment start with <code>@//</code>
 
-<code>@// this is one line comment</code>
+bc. @// this is one line comment
 
-multiple lines comment:
+multiple lines comment are put inside <code>@ * * @</code> block. yes it is the same as the new scala template
 
-bc. @{
+bc. @*
     this is a multiple line comment.
     The text inside this block will be ignore by Rythm template processor
-}@
+*@
 
 h3. <a name="expression">Expressions</a>
 
@@ -33,7 +37,17 @@ bc. @user.name @// evaluate user's name property and print it out
 The bracket "( )" can be used to compose complicated expressions or to separate an expression from other part of the template:
 
 bc. @(1 + 5) @// print out the result of 1 + 5
-@(user.name)_and_some_other_string @// use ( ) to separate expression from other part of the tempalte
+@(user.name)_and_some_other_string @// use ( ) to separate expression from other part of the template
+
+h4. <a name="escape">Escape an expression</a>
+
+Unlike Groovy template which all expressions are escaped by default, Rythm template won't do that due to performance concern. You must explicitly call @escape@ java object extension to escape the variable:
+
+bc. @myVar.escape()
+
+If you want to escape variables in the middle of an expression, you must call @JavaExtensions.escape@:
+
+bc. @(JavaExtensions.escape(myVar) + "some other stuff")
 
 h3. <a name="call_build-in_function">Call built-in function</a>
 
@@ -58,24 +72,24 @@ h3. <a name="invoke_tag">Invoke tag</a>
 Yes "@" is also used to invoke tags:
 
 bc. @greenscript.js("app<jqueryui<jquery", all:true)
- 
-@greenscript.js <<
-    $(function(){
-        // do whatever needed
-    })
-@
 
 h4. Call a tag with body
 
-In the second example we see how to use @ to invoke a tag with body. Veteran might notice that the syntax to include tag body is kind of like "here document":http://en.wikipedia.org/wiki/Here_document used in Linux shell and perl. But it's not exactly a here document. You use "<<" to indicate start of a tag body and "@" to indicate the end.
+To invoke tag which accept body, the user just use the common @{ }@ to include the body content:
 
-The usual curly brace "{" and "}" can also be used to enclose tag body:
-
-bc. @greenscript.js {
+bc. @greenscript.js() {
     $(function(){
         // do whatever needed
     })
 }
+
+Rythm also support the "here document":http://en.wikipedia.org/wiki/Here_document style symbol to mark tag body:
+
+bc. @greenscript.js() <<
+    $(function(){
+        // do whatever needed
+    })
+@
 
 hmm... the here document style is my favorite however ;-)
 
@@ -97,6 +111,21 @@ bc. @hello(title: "Mr.", who: "Green")
 Unlike groovy template, you are free to pass arguments to tag by position in Rythem template:
 
 bc. @hello("Mr.", "Green)
+
+h3. <a name="nameconflict">Tag or expression?</a>
+
+Because Rythm template engine use the same caret <code>@</code> for both expression evaluation and tag invocation, there might be name conflict between invoking a tag and evaluating an expression. However in most cases this conflict could avoid. Suppose you have a tag file named @hello.html@, and you have a template defined with @hello@ variable declared:
+
+bc. @args String hello;
+@hello  @// this will evaluate the hello variable
+@hello() @// this will invoke hello tag
+
+But consider another case, when you have a tag file @hello.html@ defined in a folder named @who@, and you happened to have a variable named @who@ in a type @Who@ which has a method named @hello@, then
+
+bc. @args Who who
+@who.hello() @// name conflict happened here!
+
+In the above code, rythm will not evaluate the method @hello@ of variable @who@, instead the @who.hello@ tag is invoked. 
 
 h3. <a name="scripting">Scripting</a>
 
@@ -158,7 +187,64 @@ bc. <h1>Main template</h1>
 
 p(note). You can also use @renderBody@ in place of @doLayout@ to include the content, which comes from Razor
 
-h2. <a name="custom_tag">Custom Tag</a>
+h3. Define section and output section
+
+Like Razor, Rythm provides a section concept to enable you to define sections in sub templates and output them in parent template.
+
+In your parent template, say 'main.html':
+
+bc. <!DOCTYPE html>
+<html>
+<head>
+...
+</head>
+<body>
+ 
+  <div id="header">
+    <h1>@get("title')</h1>
+  </div>
+  
+  <div id="sidebar">
+    @renderSection("sidebar")
+  </div>
+  
+  <div id="content">
+    @renderBody()
+  </div>
+  
+  <div id="footer">
+    <p>Site footer - &copy; Santa Clause</p>
+  </div>
+  
+</body>
+</html>
+
+And in your parent template, say 'index.html':
+
+bc. @extends(/main.html)
+ 
+@set(title="Home page")
+ 
+<h2>Welcome to my site</h2>
+ 
+<p>This is our home page</p>
+ 
+<p>Not super exciting is it?</p>
+ 
+<p>Yada, Yada, Yada</p>
+ 
+@section sidebar {
+  <p>This sidebar has "Home Page" specific content</p>
+ 
+  <ul>
+    <li><a href="#">Link One</a></li>
+    <li><a href="#">Link Two</a></li>
+    <li><a href="#">Link Three</a></li>
+  </ul>
+}
+
+
+h2. <a name="custom_tag">Custom Tags</a>
 
 You can easily create specific tags for your application. A tag is a simple template file, stored in the @app/views/tags/rythm@ directory. The template’s file name is used as the tag name.
 
@@ -197,13 +283,29 @@ bc. Hello @_body!
 
 And you can then pass the name as tag body:
 
-bc. @hello <<
+bc. @hello {
    Bob
-@
+}
 
 Format-specific tags
 
 In play's groovy template, you can have different versions of tag for different "content types":http://www.playframework.org/documentation/1.2.4/routes#content-types. This is not supported in PlayRythm yet. There is a "plan":https://github.com/greenlaw110/play-rythm/issues/1 to add the support to content type based tag selection.
+
+h2. <a name="inline_tag">Define inline tags</a>
+
+There is no inline tag concept in Groovy (The #{set...} and #{get ..} tag could be used to implement static content include). Rythm provides inline tag definition to achieve a lightweight and light speed reuse method in one template.
+
+bc. @tag sayHello(String who, String title) {
+  <p>Hello, @title @who</p>
+}
+
+And in the same template you can call the tag defined as usual:
+
+bc. @for (User user: users) {
+  @sayHello(user.name, user.title)
+}
+
+Inline tag definition is some how like "helper":http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx tool in Razor engine. At the moment Rythm does not support reuse inline tags across templates. With the support of "@include":https://github.com/greenlaw110/Rythm/issues/6 tag implemented, reusing inline tags across templates will be very easy.
 
 h2. <a name="java_tags">Custom Java tags</a>
 
@@ -222,7 +324,7 @@ h3. <a name="rythm_java_tag">Implement Java Tag using Rythm's new Java Tag inter
 Another approach is to implement Java Tag using Rythm's new @com.greenlaw110.rythm.play.FastRythmTag@:
 
 bc. import com.greenlaw110.rythm.play.FastRythmTag;
-@play.templates.FastTags.Namespace("")
+@play.templates.FastTags.Namespace("") // yes, you use the same Namespace annotation in Rythm Fast Tag definition
 public class authenticityToken extends FastRythmTag {
     @Override public void call(ParameterList params, Body body) {
         p("<input type=\"hidden\" name=\"authenticityToken\" value=\"" + Scope.Session.current().getAuthenticityToken() + "\">");
@@ -236,3 +338,67 @@ h4. Pros and Cons of the two approach
 The good side of FastTags approach is it's compatible to Groovy template, and thus should be welcome by module developers who don't need a PlayRythm copy to get their code compileds and distributed.
 
 The only tiny problem with FastTags is that it uses reflection to lookup the method to be called, which might be a little bit more time consuming than using Rythm's tag interface 
+
+h2. <a name="java_extension">Java object extensions in templates</a>
+
+Rythm template provides limited support for "Java object extensions":http://www.playframework.org/documentation/1.2.4/templates#extensions. 
+
+# You are allowed to use most Java object extensions defined in Play's @play.templates.JavaExtensions.
+# Java object extensions can only be processed when they are in the end of an expression
+
+bc. <ul>
+@for(Product product: products) {
+    <li>@product.name. Price: @product.price.format("## ###,00") €</li>
+}
+</ul>
+
+The following expressions will not work because Java object extension ".escape()" is used in the middle of the expression.
+
+bc. @(myVal.escape() + myVal2.toString())
+@someString.escape().length()
+
+However you can chain java object extensions like:
+
+bc. @myVal.escape().capAll()
+
+In the above expression, java object extension @capAll@ and @escape@ is chained together and both of they will be processed.
+
+h3. Customized Java object extension
+
+This is not supported at the moment but is a "planned feature":https://github.com/greenlaw110/play-rythm/issues/2.
+
+h2. Implicit objects available in a template
+
+Unlike Play's Groovy template that all objects added to the renderArgs scope are directly injected as template variables, you must declare them (and might need to import their class packages) to use them freely in your template. PlayRythm plugin automatically declare and set the following implicit objects so that you don't need to do these job before using them:
+
+|| Variable || Description || API documentation || See also ||
+| @errors@ | Validation errors | "play.data.validation.Validation.errors()":/@api/play/data/validation/Validation.html#errors%28%29 | "Validating HTTP data":validation |
+| @flash@ | Flash scope | "play.mvc.Scope.Flash":/@api/play/mvc/Scope.Flash.html  | "Controllers - Session & Flash Scope":controllers#session |
+| @lang@ | The current language (in java.lang.String) | "play.i18n.Lang":/@api/play/i18n/Lang.html | "Setting up I18N - Define languages":i18n#languages |
+| @messages@ | The messages map | "play.i18n.Messages":/@api/play/i18n/Messages.html | "Setting up I18N - Externalize messages":i18n#messages |
+| @params@ | Current parameters | "play.mvc.Scope.Params":/@api/play/mvc/Scope.Params.html  | "Controllers - HTTP parameters":controllers#params |
+| @_play@ | Main framework class | "play.Play":/@api/play/Play.html |  |
+| @request@ | The current HTTP request | "play.mvc.Http.Request":/@api/play/mvc/Http.Request.html  |  |
+| @session@ | Session scope | "play.mvc.Scope.Session":/@api/play/mvc/Scope.Session.html  | "Controllers - Session & Flash Scope":controllers#session |
+| @_response_encoding@ | encoding of the response object | "play.mvc.Http.Response":/@api/play/mvc/Http.Response.html | |
+
+So as you can see most of these implicit variables are the same as those defined in "Groovy templates":http://localhost:9000/@documentation/modules/play/user_guide#Implicitobjectsavailableinatemplate. The only exception is Groovy's implicit variable @play@ has been renamed to @_play@. The reason for this is I want to allow user to use full qualified classes in play.* package.
+
+p(note). If you have put something into your @RenderArgs@, and you didn't declare it using <code>@args</code> statement, you are still able to access it via @_properties@ variable. But please be noted that all stuff you get from @_properties@ are @Object@ type, and you need to explicitly cast them before accessing properties and methods of them:
+
+bc. @(((User)_properties.get("user")).getName()) 
+
+h2. Implicit import statements
+
+PlayRythm automatically insert the following import statements so that user can reference relevant classes without write manually <code>@import</code> statement:
+
+# @java.util.*@
+# @java.io.*@
+# @controller.*@
+# @models.*@
+# @play.templates.JavaExtensions@
+
+h2. <a name="resource">See also</a>
+
+# "References manual":reference
+# "Integrate PlayRythm into your Play project":integration

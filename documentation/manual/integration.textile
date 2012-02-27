@@ -1,0 +1,28 @@
+h1. Integration Guide
+
+h2. Migrate your current project from Groovy template engine to Rythm
+
+PlayRythm is designed to support smooth migrating from Groovy template engine.
+
+By default "system" (i.e. groovy) template engine is used. Meaning without special annotation, controller's render request will be handled by groovy template engine. And this give developer a good base to move to Rythm template step by step.
+
+# Step 1, rewrite a groovy template using rythm syntax.
+# Step 2, annotate the relevant controller action method with <code>@UseRythmTemplateEngine</code> annotation
+
+Continue the above steps until all your controller migrated to rythm, you can annotate the controller with <code>@UseRythmTemplateEngine</code> and drop all that from action method
+
+p(note). Tip: enclose all your rythm template with @#{verbatim}@ and @#{/verbatim}@ can help you avoid groovy compile exception and does not impact your rythm template
+
+h2. Create an new project and use Rythm engine from the beginning
+
+If you decide to use Rythm engine in a new project, you can add one line to your application.conf
+
+bc. rythm.default.engine=rythm
+
+And you can start using rythm template without <code>@UseRythmTemplateEngine</code> annotation. On the contrary if you decide one or a few controller methods should use groovy template engine for some reason, you can annotate that action with <code>@UseSystemTemplateEngine</code> annotation
+
+h2. <a name="resource">See Also</a>
+
+# %(next)"Rythm Template User guide":user_guide%
+# "Reference manual":reference
+ 

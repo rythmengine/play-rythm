@@ -94,7 +94,8 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
         if (path.indexOf("module:") != -1) vf = VirtualFile.fromRelativePath(path);
         else {
             vf = Play.getVirtualFile(path);
-            if (!isValid(vf) && path.startsWith("/")) {
+            if (!isValid(vf)) {
+                if (!path.startsWith("/")) path = "/" + path;
                 // try to attach template home and tag home
                 if (!path.startsWith(RythmPlugin.templateRoot)) {
                     String path0 = RythmPlugin.templateRoot + path;
@@ -123,21 +124,29 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
             vf = loadFromPath_(path);
         }
         if (!isValid(vf)) return null;
-        return load(vf);
+        // don't check black and white list as this is initialized from template engine side, which
+        // might be very well loading a extended template which is not built into BW list
+        return load(vf, false);
+    }
+    
+    private ITemplateResource load(VirtualFile file, boolean checkBWList) {
+        String path = file.relativePath();
+        if (path.contains(".svn")) return null; // definitely we don't want to load anything inside there
+        if (checkBWList) {
+            if (RythmPlugin.defaultEngine == RythmPlugin.EngineType.system) {
+                // by default use groovy template unless it's in the white list
+                if (!RythmTemplateLoader.whiteListed(path)) return null;
+            } else {
+                // by default use rythm template unless it's in the black list
+                if (RythmTemplateLoader.blackListed(path)) return null;
+            }
+        }
+
+        return new VirtualFileTemplateResource(file);
     }
     
     public ITemplateResource load(VirtualFile file) {
-        String path = file.relativePath();
-        if (path.contains(".svn")) return null; // definitely we don't want to load anything inside there
-        if (RythmPlugin.defaultEngine == RythmPlugin.EngineType.system) {
-            // by default use groovy template unless it's in the white list
-            if (!RythmTemplateLoader.whiteListed(path)) return null;
-        } else {
-            // by default use rythm template unless it's in the black list
-            if (RythmTemplateLoader.blackListed(path)) return null;
-        }
-        
-        return new VirtualFileTemplateResource(file);
+        return load(file, true);
     }
 
     @Override
