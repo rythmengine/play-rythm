@@ -45,21 +45,17 @@ under the License.
                 <exclude>documentation/api/**</exclude>
             </excludes>
         </fileSet>
-<!--
         <fileSet>
             <directory>${basedir}/samples-and-tests</directory>
             <outputDirectory>samples-and-tests</outputDirectory>
             <includes>
+                <include>*/README.txt</include>
                 <include>*/app/**</include>
                 <include>*/conf/**</include>
                 <include>*/public/**</include>
                 <include>*/test/**</include>
-                <include>tag-in-modules/m1/app/**</include>
-                <include>tag-in-modules/m1/conf/**</include>
-                <include>tag-in-modules/m1/public/**</include>
             </includes>
         </fileSet>
--->
         <fileSet>
             <directory>${project.build.directory}/apidocs</directory>
             <outputDirectory>documentation/api</outputDirectory>
