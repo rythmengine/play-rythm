@@ -30,7 +30,7 @@ under the License.
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.greenlaw110.play-rythm</groupId>
     <artifactId>play-rythm</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.9.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Play! Rythm Module</name>
@@ -73,9 +73,9 @@ under the License.
         </dependency>
 
         <dependency>
-            <groupId>com.github.greenlaw110.rythm</groupId>
+            <groupId>com.rythmengine</groupId>
             <artifactId>rythm</artifactId>
-            <version>${project.version}</version>
+            <version>0.9.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.google.code.maven-play-plugin.org.eclipse.jdt</groupId>
