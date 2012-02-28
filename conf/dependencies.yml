@@ -1,4 +1,7 @@
 # History
+# 0.9.4e - Use resource loader to resolve template name when templateClassManager cannot find it
+#          this helps to solve the problem that user load resource start from tag root instead of
+#          template root
 # 0.9.4d - Bug fix in prod/dev mode set when rythm's default mode changed to prod
 # 0.9.4c - fix NPE when loading embedded class during template class loading in rare cases
 # 0.9.4b - Add views for docviewer plugins
@@ -25,7 +28,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 0.9.4d
+self: play -> rythm 0.9.4e
 
 require:
     - play 1.2
