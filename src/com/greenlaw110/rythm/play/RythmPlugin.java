@@ -267,6 +267,7 @@ public class RythmPlugin extends PlayPlugin {
         } else {
             engine.init(p);
         }
+        RythmTemplateLoader.clear();
 
         info("template engine initialized");
     }

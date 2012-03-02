@@ -105,22 +105,30 @@ public class RythmTemplate extends Template {
             }
             return s;
         } catch (RythmException e) {
+            Throwable cause = e.getCause();
+            if (null != cause && cause instanceof ClassCastException) {
+                return handleClassCastException((ClassCastException)cause, args);
+            }
             TemplateInfo t = handleRythmException(e);
             throw new TemplateExecutionException(t, t.lineNo, e.errorMessage, e);
         } catch (ClassCastException e) {
-            Integer I = refreshCounter.get();
-            if (null == I || I < 2) {
-                if (null == I) refreshCounter.set(1);
-                else refreshCounter.set(++I);
-                if (Logger.isDebugEnabled()) RythmPlugin.debug("ClassCastException detected, force refresh template class and continue...");
-                tc.refresh(true);
-                return internalRender(args);
-            } else {
-                refreshCounter.set(0);
-                throw new UnexpectedException("Too many ClassCastException encountered, please restart Play", e);
-            }
+            return handleClassCastException(e, args);
         } catch (Exception e) {
             throw new TemplateExecutionException(this, -1, e.getMessage(), e);
+        }
+    }
+    
+    String handleClassCastException(ClassCastException e, Map<String, Object> args) {
+        Integer I = refreshCounter.get();
+        if (null == I || I < 2) {
+            if (null == I) refreshCounter.set(1);
+            else refreshCounter.set(++I);
+            if (Logger.isDebugEnabled()) RythmPlugin.debug("ClassCastException detected, force refresh template class and continue...");
+            tc.refresh(true);
+            return internalRender(args);
+        } else {
+            refreshCounter.set(0);
+            throw new UnexpectedException("Too many ClassCastException encountered, please restart Play", e);
         }
     }
     

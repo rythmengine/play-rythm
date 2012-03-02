@@ -247,6 +247,12 @@ public class RythmTemplateLoader {
                 
         return tc;
     }
+    
+    static void clear() {
+        cache.clear();
+        blackList.clear();
+        whiteList.clear();
+    }
 
     public static void main(String[] args) {
         String path = "route";
