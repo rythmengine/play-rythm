@@ -1,4 +1,5 @@
 # History
+# 0.9.4g - fix bug: error compile tag when there are tag call to self
 # 0.9.4f - Further improvements on handling ClassCastException when working with Play!Framework
 # 0.9.4e - Use resource loader to resolve template name when templateClassManager cannot find it
 #          this helps to solve the problem that user load resource start from tag root instead of
@@ -29,7 +30,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 0.9.4f
+self: play -> rythm 0.9.4g
 
 require:
     - play 1.2
