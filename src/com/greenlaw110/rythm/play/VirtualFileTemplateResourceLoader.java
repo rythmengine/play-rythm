@@ -150,10 +150,10 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
     }
 
     @Override
-    public void tryLoadTag(String tagName) {
+    public TemplateClass tryLoadTag(String tagName) {
 //Logger.info(">>> try to load tag: %s", tagName);
         RythmEngine engine = RythmPlugin.engine;
-        if (engine.tags.containsKey(tagName)) return;
+        if (engine.tags.containsKey(tagName)) return null; //TODO: not consistent here
 //Logger.info(">>> try to load tag: %s, tag not found in engine registry, continue loading", tagName);
         String origName = tagName;
         tagName = tagName.replace('.', '/');
@@ -178,13 +178,18 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
                         if (null == tc) {
                             tc = new TemplateClass(tr, engine);
                         }
+                        try {
     //Logger.info(">>> try to load tag: %s, Template class found: %s", tagName, tc);
-                        ITag tag = (ITag)tc.asTemplate();
-                        if (null != tag) {
-    //Logger.info(">>> try to load tag: %s, tag found!!!", tagName);
-                            engine.registerTag(origName, tag);
-    //Logger.info(">>> try to load tag: %s, tag registered!!!", tagName);
-                            return;
+                            ITag tag = (ITag)tc.asTemplate();
+                            if (null != tag) {
+        //Logger.info(">>> try to load tag: %s, tag found!!!", tagName);
+                                engine.registerTag(origName, tag);
+        //Logger.info(">>> try to load tag: %s, tag registered!!!", tagName);
+                                return tc;
+                            }
+                        } catch (Exception e) {
+                            RythmPlugin.error(e, "error trying load tag[%s]", origName);
+                            return tc;
                         }
     //Logger.info(">>> try to load tag: %s, tag find found: %s", tagName, tagFile);
                     } catch (Exception e) {
@@ -197,6 +202,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
                 }
             }
         }
+        return null;
     }
 
 }
