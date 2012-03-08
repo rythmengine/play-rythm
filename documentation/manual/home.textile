@@ -38,15 +38,7 @@ h3. 1. Add PlayRythm into your @dependencies.conf@ file:
 
 bc. # Application dependencies
    require:
-       - com.gelinsoft -> play-rythm 0.9.4c
-   repositories:
-       - gelinsoft:
-           type: http
-           artifact: "http://gelinsoft.com/play/repo/[module]-[revision].zip"
-           contains:
-               - com.gelinsoft -> *
-
-At the moment you need to add gelinsoft repository, once PlayRythm released to Play's official repository, you just need to add one line into your @dependencies.conf@ file: @-play -> play-rythm@.
+       - play -> rythm
 
 h3. 2. Process your controller action method:
 
