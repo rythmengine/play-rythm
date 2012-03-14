@@ -24,10 +24,10 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
     public static VirtualFileTemplateResourceLoader instance = new VirtualFileTemplateResourceLoader();
 
     public static class VirtualFileTemplateResource extends TemplateResourceBase {
-        
+
         private static final long serialVersionUID = -4307922939957393745L;
         private String tagName;
-        
+
         private VirtualFile file;
 
         VirtualFileTemplateResource(VirtualFile file) {
@@ -88,7 +88,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
     public static boolean isValid(VirtualFile file) {
         return (null != file) && file.exists() && file.getRealFile().canRead();
     }
-    
+
     private VirtualFile loadFromPath_(String path) {
         VirtualFile vf = null;
         if (path.indexOf("module:") != -1) vf = VirtualFile.fromRelativePath(path);
@@ -97,7 +97,11 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
             if (!isValid(vf)) {
                 if (!path.startsWith("/")) path = "/" + path;
                 // try to attach template home and tag home
-                if (!path.startsWith(RythmPlugin.templateRoot)) {
+                if (!path.startsWith(RythmPlugin.templateRoot2)) {
+                    String path0 = RythmPlugin.templateRoot2 + path;
+                    vf = Play.getVirtualFile(path0);
+                }
+                if (!isValid(vf) && !path.startsWith(RythmPlugin.templateRoot)) {
                     String path0 = RythmPlugin.templateRoot + path;
                     vf = Play.getVirtualFile(path0);
                 }
@@ -128,7 +132,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
         // might be very well loading a extended template which is not built into BW list
         return load(vf, false);
     }
-    
+
     private ITemplateResource load(VirtualFile file, boolean checkBWList) {
         String path = file.relativePath();
         if (path.contains(".svn")) return null; // definitely we don't want to load anything inside there
@@ -144,7 +148,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
 
         return new VirtualFileTemplateResource(file);
     }
-    
+
     public ITemplateResource load(VirtualFile file) {
         return load(file, true);
     }
@@ -162,7 +166,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
                 ".json",
                 ".tag"
         };
-        String[] roots = {RythmPlugin.tagRoot, RythmPlugin.templateRoot};
+        String[] roots = {RythmPlugin.templateRoot2, RythmPlugin.tagRoot, RythmPlugin.templateRoot};
         String tagName0 = tagName;
         for (String root: roots) {
             tagName = root + "/" + tagName0;

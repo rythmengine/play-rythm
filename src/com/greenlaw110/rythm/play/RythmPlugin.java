@@ -23,6 +23,7 @@ import play.classloading.ApplicationClasses;
 import play.classloading.HotswapAgent;
 import play.exceptions.ConfigurationException;
 import play.exceptions.UnexpectedException;
+import play.libs.IO;
 import play.mvc.Scope;
 import play.templates.Template;
 import play.vfs.VirtualFile;
@@ -35,28 +36,29 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "0.9.2";
+    public static final String VERSION = "0.9.3";
+    public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
         Logger.info(msg_(msg, args));
     }
-    
+
     public static void info(Throwable t, String msg, Object... args) {
         Logger.info(t, msg_(msg, args));
     }
-    
+
     public static void debug(String msg, Object... args) {
         Logger.debug(msg_(msg, args));
     }
-    
+
     public static void debug(Throwable t, String msg, Object... args) {
         Logger.debug(t, msg_(msg, args));
     }
-    
+
     public static void trace(String msg, Object... args) {
         Logger.trace(msg_(msg, args));
     }
-    
+
     public static void trace(Throwable t, String msg, Object... args) {
         Logger.warn(t, msg_(msg, args));
     }
@@ -91,7 +93,7 @@ public class RythmPlugin extends PlayPlugin {
     }
 
     public static RythmEngine engine;
-    
+
     public static enum EngineType {
         rythm, system;
         public static EngineType parseEngineType(String s) {
@@ -107,10 +109,11 @@ public class RythmPlugin extends PlayPlugin {
     public static boolean underscoreImplicitVariableName = false;
     public static boolean refreshOnRender = true;
     public static String templateRoot = "app/views";
+    public static String templateRoot2 = R_VIEW_ROOT;
     public static String tagRoot = "app/views/tags/rythm";
-    
+
     public static List<ImplicitVariables.Var> implicitRenderArgs = new ArrayList<ImplicitVariables.Var>();
-    
+
     public static void registerImplicitRenderArg(final String name, final String type) {
         implicitRenderArgs.add(new ImplicitVariables.Var(name, type) {
             @Override
@@ -119,11 +122,29 @@ public class RythmPlugin extends PlayPlugin {
             }
         });
     }
-    
+
+    public static void loadTemplatePaths() {
+        for (VirtualFile mroot: Play.modules.values()) {
+            VirtualFile mviews = mroot.child(R_VIEW_ROOT);
+            if (mviews.exists()) {
+                Play.templatesPath.add(0, mviews);
+            }
+        }
+        VirtualFile rythm = VirtualFile.open(Play.applicationPath).child(R_VIEW_ROOT);
+        if (rythm.exists()) {
+            Play.templatesPath.add(0, rythm);
+        }
+    }
+
+    @Override
+    public void onLoad() {
+        loadTemplatePaths();
+    }
+
     @Override
     public void onConfigurationRead() {
         Properties playConf = Play.configuration;
-        
+
         // special configurations
         defaultEngine = EngineType.parseEngineType(playConf.getProperty("rythm.default.engine", "system"));
         debug("default template engine configured to: %s", defaultEngine);
@@ -135,6 +156,7 @@ public class RythmPlugin extends PlayPlugin {
         // set default configurations
         // p.put("rythm.root", new File(Play.applicationPath, "app/views"));
         // p.put("rythm.tag.root", new File(Play.applicationPath, tagRoot));
+        p.put("rythm.pluginVersion", VERSION);
         p.put("rythm.tag.autoscan", false); // we want to scan tag folder coz we have Virtual Filesystem
         p.put("rythm.classLoader.parent", Play.classloader);
         p.put("rythm.resource.refreshOnRender", "true");
@@ -200,7 +222,7 @@ public class RythmPlugin extends PlayPlugin {
             }
         }
         debug("User defined rythm properties configured");
-        
+
         // set template root
         templateRoot = p.getProperty("rythm.root", templateRoot);
         p.put("rythm.root", new File(Play.applicationPath, templateRoot));
@@ -211,7 +233,7 @@ public class RythmPlugin extends PlayPlugin {
         if (tagRoot.endsWith("/")) tagRoot = tagRoot.substring(0, tagRoot.length() - 1);
         p.put("rythm.tag.root", new File(Play.applicationPath, tagRoot));
         if (Logger.isDebugEnabled()) debug("rythm tag root set to %s", p.get("rythm.tag.root"));
-        
+
         // set tmp dir
         File tmpDir = new File(Play.tmpDir, "rythm");
         tmpDir.mkdirs();
@@ -271,7 +293,7 @@ public class RythmPlugin extends PlayPlugin {
 
         info("template engine initialized");
     }
-    
+
     @Override
     public void onApplicationStart() {
         long l = System.currentTimeMillis();
@@ -292,21 +314,21 @@ public class RythmPlugin extends PlayPlugin {
         RythmTemplateLoader.scanTagFolder();
         debug("%sms to load Rythm tags", System.currentTimeMillis() - l);
     }
-    
+
     private void registerJavaTags(RythmEngine engine) {
         // -- register application java tags
         List<ApplicationClasses.ApplicationClass> classes = Play.classes.getAssignableClasses(FastRythmTag.class);
         for (ApplicationClasses.ApplicationClass ac: classes) {
             registerJavaTag(ac.javaClass, engine);
         }
-        
+
         // -- register PlayRythm build-in tags
         Class<?>[] ca = FastRythmTags.class.getDeclaredClasses();
         for (Class<?> c: ca) {
             registerJavaTag(c, engine);
         }
     }
-    
+
     private void registerJavaTag(Class<?> jc, RythmEngine engine) {
         int flag = jc.getModifiers();
         if (Modifier.isAbstract(flag)) return;

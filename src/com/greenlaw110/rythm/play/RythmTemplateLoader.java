@@ -18,6 +18,8 @@ import play.vfs.VirtualFile;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,12 +30,12 @@ import java.util.*;
  */
 public class RythmTemplateLoader {
     private static VirtualFileTemplateResourceLoader resourceLoader = VirtualFileTemplateResourceLoader.instance;
-    static Map<String, RythmTemplate> cache = new HashMap<String, RythmTemplate>();
+    static ConcurrentMap<String, RythmTemplate> cache = new ConcurrentHashMap<String, RythmTemplate>();
 
     //TODO support system wide templates like 404.html etc
     private static Set<String> whiteList = new HashSet<String>();
     private static Set<String> blackList = new HashSet<String>();
-    
+
     static Method getActionMethod(String path) {
         // strip off /app/views
         String templateRoot = RythmPlugin.templateRoot;
@@ -69,7 +71,7 @@ public class RythmTemplateLoader {
         // it must be layout template without 'rythm' in path
         return null;
     }
-    
+
     static boolean whiteListed(String path) {
         if (RythmPlugin.defaultEngine == RythmPlugin.EngineType.rythm || path.contains("rythm")) return true;
         if (Play.mode == Play.Mode.DEV) {
@@ -93,8 +95,8 @@ public class RythmTemplateLoader {
         pos = path.lastIndexOf('.');
         if (-1 != pos) path = path.substring(0, pos);
         return whiteList.contains(path);
-    } 
-    
+    }
+
     static boolean blackListed(String path) {
         if (Play.mode == Play.Mode.DEV) {
             Method m = getActionMethod(path);
@@ -109,7 +111,7 @@ public class RythmTemplateLoader {
         }
         return blackList.contains(path);
     }
-    
+
     private static void scanTagFolder(VirtualFile root) {
         class FileTraversal {
             public final void traverse( final VirtualFile f )  {
@@ -150,7 +152,7 @@ public class RythmTemplateLoader {
         }
         new FileTraversal().traverse(root);
     }
-    
+
     static void scanTagFolder() {
         RythmPlugin.trace("start to scan tags");
         long ts = System.currentTimeMillis();
@@ -163,7 +165,7 @@ public class RythmTemplateLoader {
         ts = System.currentTimeMillis() - ts;
         RythmPlugin.trace("%sms to scan tags", ts);
     }
-    
+
     static void buildBlackWhiteList() {
         if (Play.mode == Play.Mode.DEV) return;
         RythmPlugin.trace("start to build black and white list");
@@ -212,6 +214,8 @@ public class RythmTemplateLoader {
         RythmPlugin.trace("%sms to build black and white list", ts);
     }
 
+    private static Object lock_ = new Object();
+
     public static Template loadTemplate(VirtualFile file) {
         String path = file.relativePath();
 //RythmPlugin.info("loading template from virtual file: %s", file.relativePath());
@@ -222,32 +226,39 @@ public class RythmTemplateLoader {
             rt.refresh(); // check if the resource is still valid
             return rt.isValid() ? rt : null;
         }
-        
-        // load template from the virtual file
-        ITemplateResource resource = resourceLoader.load(file);
+
+        synchronized (lock_) {
+            rt = cache.get(path);
+            if (null != rt) {
+                rt.refresh();
+                return rt.isValid() ? rt : null;
+            }
+            // load template from the virtual file
+            ITemplateResource resource = resourceLoader.load(file);
 //RythmPlugin.info("loaded template resource: %s", null == resource ? null : resource.getKey());
-        if (null == resource || !resource.isValid()) return null;
-        
-        // are we already started?
-        if (!Play.started) {
-            // we can't load real template at precompile time because we pobably needs application to
-            // register implicit variables
+            if (null == resource || !resource.isValid()) return null;
+
+            // are we already started?
+            if (!Play.started) {
+                // we can't load real template at precompile time because we pobably needs application to
+                // register implicit variables
 //RythmPlugin.info("Play not started, return void template");
-            return RythmPlugin.VOID_TEMPLATE;
-        }
+                return RythmPlugin.VOID_TEMPLATE;
+            }
 //RythmPlugin.info("Play started, template returned");
 
-        RythmTemplate tc = new RythmTemplate(resource);
-        tc.refresh(true);
-        if (tc.isValid()) {
-            cache.put(file.relativePath(), tc);
-        } else {
-            tc = null;
+            RythmTemplate tc = new RythmTemplate(resource);
+            tc.refresh(true);
+            if (tc.isValid()) {
+                cache.put(file.relativePath(), tc);
+            } else {
+                tc = null;
+            }
+
+            return tc;
         }
-                
-        return tc;
     }
-    
+
     static void clear() {
         cache.clear();
         blackList.clear();
