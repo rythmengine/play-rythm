@@ -220,6 +220,7 @@ public class RythmTemplateLoader {
         String path = file.relativePath();
 //RythmPlugin.info("loading template from virtual file: %s", file.relativePath());
         if (path.indexOf("conf/routes") != -1) return null; // we don't handle routes file at the moment
+        if (path.endsWith(".xls") || path.endsWith(".xlsx") || path.endsWith(".pdf")) return null; // we don't handle binary files
 
         RythmTemplate rt = cache.get(path);
         if (null != rt) {
