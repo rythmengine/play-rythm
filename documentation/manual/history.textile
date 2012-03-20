@@ -5,10 +5,12 @@ h2. <a name="roadmap">TODO list</a>
 * Add new dialect to attract current Groovy, Japid template users
 
 h2. <a name="v0.9.5">v0.9.5</a>
+
 * Support app/rythm as view root
 * Fix NPE when running in prod mode in rare cases
 * template class cache hash calculation take plugin version into consideration
 * Now you can call self tag inside that tag
 
 h2. <a name="v0.9">v0.9</a>
+
 * The first public beta release
