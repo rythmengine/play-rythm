@@ -4,6 +4,10 @@ h2. <a name="roadmap">TODO list</a>
 
 * Add new dialect to attract current Groovy, Japid template users
 
+h2. <a name="v0.9.6a">v0.9.6a</a>
+
+* Emergency fix to ArgsParser: line breaks stay there which makes the generated html not valid as you have line breaks before <!DOCTYPE html>
+
 h2. <a name="v0.9.6">v0.9.6</a>
 
 * Error debug UI update to play-2.0 style
