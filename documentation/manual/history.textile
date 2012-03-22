@@ -4,6 +4,10 @@ h2. <a name="roadmap">TODO list</a>
 
 * Add new dialect to attract current Groovy, Japid template users
 
+h2. <a name="v0.9.6b">v0.9.6b</a>
+
+* Fix bug: Java FastTags stop working on v0.96.
+
 h2. <a name="v0.9.6a">v0.9.6a</a>
 
 * Emergency fix to ArgsParser: line breaks stay there which makes the generated html not valid as you have line breaks before <!DOCTYPE html>
