@@ -1,4 +1,3 @@
-#{verbatim}
 @args String id, String html, String title, List<String> modules, List<String> apis, String module;
 <html>
     <head>
@@ -12,9 +11,9 @@
         <div class="wrapper">
 
             <div id="docSidebar">
-                
+
                 <div id="logo">
-                    <img src="@_u(/public/playmanual/logo.png)">                
+                    <img src="@_u(/public/playmanual/logo.png)">
                     <h2 id="version">Play ${play.version}</h2>
                 </div>
 
@@ -40,7 +39,7 @@
                     }@
                     <li id="gotoc"><a href="home">@(s)Table of contents</a></li>
                 </ul>
-                
+
                 @if (null != modules)
                     <h2>Installed modules</h2>
                     <ul>
@@ -73,4 +72,3 @@
         </div>
     </body>
 </html>
-#{/verbatim}

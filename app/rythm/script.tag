@@ -1,4 +1,3 @@
-#{verbatim}
 @*
 *{
  *  insert a script tag in the template.
@@ -41,4 +40,3 @@
     }
 }@
 <script type="text/javascript" language="javascript"@if (null != id) {id="@id"} @if (null != charset) {charset="@charset"} src="@_abs"></script>
-#{/verbatim}

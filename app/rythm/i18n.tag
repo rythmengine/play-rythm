@@ -1,4 +1,3 @@
-#{verbatim}
 @import java.util.*, play.i18n.Messages, play.i18n.Lang;
 @args String keys; // specifify a list of keys separated by ','
 
@@ -62,4 +61,3 @@ var i18n = function(code) {
 
 </script>
 }
-#{/verbatim}

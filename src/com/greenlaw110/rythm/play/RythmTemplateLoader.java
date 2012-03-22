@@ -171,6 +171,7 @@ public class RythmTemplateLoader {
         RythmPlugin.trace("start to build black and white list");
         long ts = System.currentTimeMillis();
         List<ApplicationClasses.ApplicationClass> controllers = Play.classes.getAssignableClasses(Controller.class);
+        boolean alerted = false;
         for (ApplicationClasses.ApplicationClass ac: controllers) {
             Class<?> c = ac.javaClass;
             String sCls = c.getName().replace("controllers.", "").replace('.', '/');
@@ -185,6 +186,10 @@ public class RythmTemplateLoader {
                 boolean useRythm = ar != null;
                 UseSystemTemplateEngine as = m.getAnnotation(UseSystemTemplateEngine.class);
                 boolean useSystem = as != null;
+                if ((useSystem || useRythm) && !alerted) {
+                    RythmPlugin.warn("@UseRythmTemplateEngine annotation is deprecated. To use rythm engine, just create a rythm template file in app/rythm directory. Drop the file from app/rythm directory the render process will pickup the groovy template from app/views directory automatically");
+                    alerted = true;
+                }
                 if (!useRythm && !useSystem) {
                     // no annotation found, check class annotation
                     useRythm  = c.getAnnotation(UseRythmTemplateEngine.class) != null;
@@ -240,12 +245,13 @@ public class RythmTemplateLoader {
             if (null == resource || !resource.isValid()) return null;
 
             // are we already started?
-            if (!Play.started) {
+            //if (!Play.started) {
                 // we can't load real template at precompile time because we pobably needs application to
                 // register implicit variables
 //RythmPlugin.info("Play not started, return void template");
-                return RythmPlugin.VOID_TEMPLATE;
-            }
+                //return RythmPlugin.VOID_TEMPLATE;
+                //return null;
+            //}
 //RythmPlugin.info("Play started, template returned");
 
             RythmTemplate tc = new RythmTemplate(resource);

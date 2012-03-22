@@ -25,7 +25,7 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class RythmTemplate extends Template {
-    
+
     private TemplateClass tc;
 
     RythmTemplate(ITemplateResource resource) {
@@ -38,7 +38,7 @@ public class RythmTemplate extends Template {
     private RythmEngine engine() {
         return RythmPlugin.engine;
     }
-    
+
     static class TemplateInfo extends Template {
         @Override
         public void compile() {
@@ -47,13 +47,13 @@ public class RythmTemplate extends Template {
         protected String internalRender(Map<String, Object> args) {
             return null;
         }
-        
+
         TemplateInfo(String name, String source, int lineNo) {
             this.source = source;
             this.lineNo = lineNo;
             this.name = name;
         }
-        
+
         public int lineNo = -1;
     }
 
@@ -75,6 +75,8 @@ public class RythmTemplate extends Template {
         } catch (CompileException e) {
             TemplateInfo t = handleRythmException(e);
             throw new TemplateCompilationException(t, t.lineNo, e.originalMessage);
+        } catch (RuntimeException e) {
+            throw new UnexpectedException(String.format("Unknown error when refreshing rythm template: %s", tc.getKey()), e);
         }
         if (!tc.isValid) {
             RythmTemplateLoader.cache.remove(getName());
@@ -86,7 +88,7 @@ public class RythmTemplate extends Template {
     public boolean isValid() {
         return tc.isValid;
     }
-    
+
     @Override
     public void compile() {
         refresh();
@@ -110,14 +112,18 @@ public class RythmTemplate extends Template {
                 return handleClassCastException((ClassCastException)cause, args);
             }
             TemplateInfo t = handleRythmException(e);
-            throw new TemplateExecutionException(t, t.lineNo, e.errorMessage, e);
+            if (e instanceof CompileException) {
+                throw new TemplateCompilationException(t, t.lineNo, e.getMessage());
+            } else {
+                throw new TemplateExecutionException(t, t.lineNo, e.errorMessage, e);
+            }
         } catch (ClassCastException e) {
             return handleClassCastException(e, args);
         } catch (Exception e) {
             throw new TemplateExecutionException(this, -1, e.getMessage(), e);
         }
     }
-    
+
     String handleClassCastException(ClassCastException e, Map<String, Object> args) {
         Integer I = refreshCounter.get();
         if (null == I || I < 2) {
@@ -131,7 +137,7 @@ public class RythmTemplate extends Template {
             throw new UnexpectedException("Too many ClassCastException encountered, please restart Play", e);
         }
     }
-    
+
     static TemplateInfo handleRythmException(RythmException e) {
         int line = e.templatelineNumber;
         TemplateInfo t;

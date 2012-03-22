@@ -1,4 +1,3 @@
-#{verbatim}
 @import controllers.Secure;
 @args Object arg;
 @if (session.get("username") != null) {
@@ -7,4 +6,3 @@
         @_body
     }
 }
-#{/verbatim}

@@ -1,4 +1,3 @@
-#{verbatim}
 @import play.test.Fixtures, play.Play, play.db.Model, play.exceptions.TagInternalException;
 @args String arg, Object delete, String load;
 @{
@@ -48,4 +47,3 @@ groovy implementation
     }
 %}
 *@
-#{/verbatim}

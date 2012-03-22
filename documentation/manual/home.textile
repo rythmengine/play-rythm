@@ -1,6 +1,6 @@
 h1. PlayRythm module documentation
 
-Welcome to PlayRythm module documentation. This documentation is intended for the *0.9 beta release* and may significantly differ from previous module version's documentation.
+Welcome to PlayRythm module documentation. This documentation is intended for the *0.9.6 beta release* and may significantly differ from previous module version's documentation.
 
 Check the "version history":history.
 
@@ -10,7 +10,7 @@ PlayRythm is yet another template engine plugin for Play!Framework 1.2x version:
 
 # Static and strong typed pure Java template. Yes it's like Japid and Jamon
 # Razor like syntax
-# Transparently integrated with Play!Framework. Just follow what you did with Groovy template is okay, no RythmController, no rythmview. Think PlayRythm as an unobtrusive Japid.
+# Easy to integrate with Play!Framework. There is no special controller needed at all
 # Support layout and tag, as you did in Groovy template
 # Support FastTags and JavaExtensions with constraints
 
@@ -40,22 +40,9 @@ bc. # Application dependencies
    require:
        - play -> rythm
 
-h3. 2. Process your controller action method:
+h3. 2. Create the template file in @app/rythm@ folder. The layout of the folder should be the same as your @app/views@ folder.
 
-bc. @UseRythmTemplateEngine public static void list() {
-    List<User> users = User.findAll();
-    render(users);
-}
-
-So as you can see, you don't need to rewrite your existing controller action methods, just annotate it with <code>@UseRythmTemplateEngine</code> is enough. PlayRythm will shortcut template loading process and process the template rendering before Play's default groovy template engine activated.
-
-You can also annotate <code>@UseRythmTemplateEngine</code> on Controller class declaration, which mark all action methods inside this controller to be processed by PlayRythm template engine.
-
-p(note). If you set @rythm.default.engine=rythm@ in your @application.conf@ file, then you don't need <code>@UseRythmTemplateEngine</code> annotation because all your templates will be processed by PlayRythm by default unless you have annotated <code>UseSystemTemplateEngine</code> to your controller class or action methods, which explicitly indicate the relevant rendering request shall not be processed by PlayRythm and leave it to Play's built-in template engine.
-
-h3. 3. Write your view or port your existing view using Rythm syntax.
-
-This might be the hardest part but not that hard as almost all Groovy template's keywords or facility has corresponding part provided by Rythm template engine. Please refer to "Rythm Template User Guide":user_guide for more information
+Rythm can stay with your groovy templates. Given you have controller action @Application.index()@, if you have @Application/index.html@ file put into @app/rythm@ folder, then Rythm template engine will execute it. If not then your @Application/index.html@ file in @app/views@ folder will be picked up and processed by Groovy template engine. Please refer to "Rythm Template User Guide":user_guide for more information
 
 h2. <a name="resource">See Also</a>
 

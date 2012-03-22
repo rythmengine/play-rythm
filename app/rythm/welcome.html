@@ -1,4 +1,3 @@
-#{verbatim}
 @set(title="Your application is ready !")
 
 @if ("DEV".equals(_play.mode.toString())) {
@@ -11,7 +10,7 @@
 <div class="wrapper">
 
 	<div id="docSidebar">
-		
+
 		<div id="logo">
 			<img src="/public/playmanual/logo.png">
 			<h2 id="version">Play @_play.version</h2>
@@ -109,30 +108,29 @@ db=fs</code></pre>
             <pre><code>db.url=jdbc:postgresql:database_name
 db.driver=org.postgresql.Driver
 db.user=root
-db.pass=secret</code></pre>      
+db.pass=secret</code></pre>
             <h2><a name="doc">Need more help?</a></h2>
             <p>
                 When your application run in <strong>DEV</strong> mode, you can access directly the current documentation at the
                 <a href="/@@documentation">/@@documentation</a> URL or go to <a href="http://www.playframework.org">http://www.playframework.org</a>.
             </p>
             <p>
-                The <a href="http://groups.google.com/group/play-framework">Play Google Group</a> is where Play users come to seek help, announce projects, and discuss. 
+                The <a href="http://groups.google.com/group/play-framework">Play Google Group</a> is where Play users come to seek help, announce projects, and discuss.
                 If you don't have any google account, you can still join the mailing list sending an email to
                 <br/><strong>play-framework+subscribe@@googlegroups.com</strong>.
             </p>
         </div>
     </div>
-			
+
 		</div>
 
 	</div>
 
 </div>
-	
+
 <script type="text/javascript" src="/public/playmanual/jquery-1.3.2.min.js"></script>
 <script type="text/javascript" src="/public/playmanual/navigation.js"></script>
 
 } else {
     <h1>Your application is ready!</h1>
 }
-#{/verbatim}

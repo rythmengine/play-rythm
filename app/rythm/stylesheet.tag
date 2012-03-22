@@ -1,4 +1,3 @@
-#{verbatim}
 @*
 *{
  *  create a link element for a CSS file under /public/stylesheets
@@ -40,4 +39,3 @@
 }@
 <script type="text/javascript" language="javascript"@if (null != id) {id="@id"} @if (null != charset) {charset="@charset"} src="@_abs"></script>
 <link rel="stylesheet" type="text/css"@if (null != id) {id="@id"} @if (null != title) title="@title"} href="@_abs" @if (null != media) {media="@media"} charset="@_response_encoding" ></link>
-#{/verbatim}

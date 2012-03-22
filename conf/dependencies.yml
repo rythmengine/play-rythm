@@ -1,4 +1,25 @@
 # History
+# 0.9.6  - Bug fix: https://github.com/greenlaw110/play-rythm/issues/4
+#        - Error debug UI update to play-2.0 style
+#        - Solve several issues in built-in tag/templates
+#        - Precompile now build all rythm templates (So move templates to app/rythm folder)
+#        - @UseRythmTemplateEngine and @UseSystemTemplateEngine are deprecated now
+#        - add @__exitIfNoClass__ directive to allow exit parsing process if no certain class exists
+#        - bug fix: https://github.com/greenlaw110/Rythm/issues/15
+#        - print out java source if compilation error on prod mode
+#        - bug fix: NPE while scan tags in rare cases
+#        - simplifed class reloading logic in TemplateClassLoader.detectChange(...)
+#        - more acturate template line information for debugging
+#        - https://github.com/greenlaw110/Rythm/issues/1
+#        - support {} to enclose tag body
+#        - support @{} to enclose script content.
+#        - improved compact mode handling, now "//" line will not get merged with the following line
+#        - improved debugging when error happened in the embedded class
+# 0.9.5b - Bug fixes: 
+#          > https://github.com/greenlaw110/Rythm/issues/15
+#          > https://github.com/greenlaw110/Rythm/issues/13
+#          > https://github.com/greenlaw110/play-rythm/issues/4
+# 0.9.5a - fix bug: NPE on startup in rare case
 # 0.9.5 - fix bug: NPE in multi-thread environment
 #       - support app/rythm as template root
 #       - template class cache hash calcualtion consider play-rythm plugin version
@@ -33,7 +54,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 0.9.5
+self: play -> rythm 0.9.5b
 
 require:
     - play 1.2
