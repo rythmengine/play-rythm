@@ -27,7 +27,7 @@
                 <include name="**/play.plugins"/>
             </fileset>
         </copy>
-        <jar destfile="lib/play-rythm-0.9.5.jar" basedir="tmp/classes">
+        <jar destfile="lib/play-rythm-0.9.6.jar" basedir="tmp/classes">
             <manifest>
                 <section name="Play">
                     <attribute name="Specification-Title" value="Rythm module"/>

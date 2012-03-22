@@ -9,7 +9,7 @@ By default "system" (i.e. groovy) template engine is used. Meaning without speci
 # Step 1, rewrite a groovy template using rythm syntax and put the file into the corresponding place in @app/rythm@
 # -Step 2, annotate the relevant controller action method with <code>@UseRythmTemplateEngine</code> annotation-
 
-Continue the above steps until all your controller migrated to rythm, you can annotate the controller with <code>@UseRythmTemplateEngine</code> and drop all that from action method
+Continue the above steps until all your controller migrated to rythm. -You can annotate the controller with <code>@UseRythmTemplateEngine</code> and drop all that from action method-
 
 p(note). -Tip: enclose all your rythm template with @#{verbatim}@ and @#{/verbatim}@ can help you avoid groovy compile exception and does not impact your rythm template-. This is not true. The groovy template engine will still parse the expressions. See "Resolve groovy compilation error":#conflict for workarounds.
 
