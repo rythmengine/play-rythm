@@ -17,6 +17,7 @@ import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,17 +76,17 @@ public class FastTagBridge extends JavaTagBase {
             return _body.getProperty(property);
         }
     }
-    
+
     private String nameSpace;
     private String tagName;
     private Class<?> targetClass;
-    
+
     public FastTagBridge(String namespace, String tagName, Class<?> targetClass) {
         this.nameSpace = namespace;
         this.tagName = tagName;
         this.targetClass = targetClass;
     }
-    
+
     @Override
     public String getName() {
         return (null == nameSpace || "".equals(nameSpace)) ? tagName : nameSpace + "." + tagName;
@@ -109,7 +110,7 @@ public class FastTagBridge extends JavaTagBase {
         });
         try {
             Method m = targetClass.getDeclaredMethod("_" + tagName, Map.class, Closure.class, PrintWriter.class, GroovyTemplate.ExecutableTemplate.class, int.class);
-            m.invoke(null, null == params ? null : params.asMap(), new TagBodyClosure(body), w, new RythmExecutableTemplate((TemplateBase)_caller), 0);
+            m.invoke(null, null == params ? new HashMap() : params.asMap(), new TagBodyClosure(body), w, new RythmExecutableTemplate((TemplateBase)_caller), 0);
         } catch (NoSuchMethodException e) {
             throw new UnexpectedException("cannot find fast tag method to invoke: " + tagName, e);
         } catch (InvocationTargetException e) {
@@ -124,8 +125,9 @@ public class FastTagBridge extends JavaTagBase {
         FastTagBridge bridge = new FastTagBridge(nameSpace, tagName, targetClass);
         return bridge;
     }
-    
+
     public static void registerFastTags(RythmEngine engine) {
+        Play.classloader.getAllClasses(); // ensure FastTags implementation loaded
         List<ApplicationClasses.ApplicationClass> classes = Play.classes.getAssignableClasses(FastTags.class);
         for (ApplicationClasses.ApplicationClass c: classes) {
             Class<?> jc = c.javaClass;
