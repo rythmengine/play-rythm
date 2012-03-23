@@ -65,7 +65,8 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
 
         @Override
         public String getKey() {
-            return file.relativePath();
+            String path = file.relativePath();
+            return path.replaceFirst("\\{.*?\\}", "");
         }
 
         @Override

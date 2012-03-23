@@ -4,6 +4,10 @@ h2. <a name="roadmap">TODO list</a>
 
 * Add new dialect to attract current Groovy, Japid template users
 
+h2. <a name="v0.9.6c">v0.9.6c</a>
+
+* Fix bug: Fix bug: Secure layout not found when loading the module directly in project folder instead of installing to play/modules
+
 h2. <a name="v0.9.6b">v0.9.6b</a>
 
 * Fix bug: Java FastTags stop working on v0.96.

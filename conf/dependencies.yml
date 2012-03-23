@@ -1,4 +1,6 @@
 # History
+# 0.9.6c - Fix bug: Secure layout not found when loading the module directly in project folder instead of installing to play/modules
+# 0.9.6b - Fix bug: Java FastTags stop working since 0.9.6
 # 0.9.6a - emergency fix to ArgsParser issue: line breaks stay at the end
 # 0.9.6  - Bug fix: https://github.com/greenlaw110/play-rythm/issues/4
 #        - Error debug UI update to play-2.0 style
@@ -55,7 +57,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 0.9.6a
+self: play -> rythm 0.9.6c
 
 require:
     - play 1.2
