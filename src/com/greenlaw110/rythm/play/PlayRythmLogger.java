@@ -21,12 +21,12 @@ public class PlayRythmLogger implements ILogger {
 
     @Override
     public void trace(String format, Object... args) {
-        Logger.trace(format, args);
+        RythmPlugin.trace(format, args);
     }
 
     @Override
     public void trace(Throwable t, String format, Object... args) {
-        Logger.debug(t, format, args);
+        RythmPlugin.debug(t, format, args);
     }
 
     @Override
@@ -36,12 +36,12 @@ public class PlayRythmLogger implements ILogger {
 
     @Override
     public void debug(String format, Object... args) {
-        Logger.debug(format, args);
+        RythmPlugin.debug(format, args);
     }
 
     @Override
     public void debug(Throwable t, String format, Object... args) {
-        Logger.debug(t, format, args);
+        RythmPlugin.debug(t, format, args);
     }
 
     @Override
@@ -51,12 +51,12 @@ public class PlayRythmLogger implements ILogger {
 
     @Override
     public void info(String format, Object... arg) {
-        Logger.info(format, arg);
+        RythmPlugin.info(format, arg);
     }
 
     @Override
     public void info(Throwable t, String format, Object... args) {
-        Logger.info(t, format, args);
+        RythmPlugin.info(t, format, args);
     }
 
     @Override
@@ -66,12 +66,12 @@ public class PlayRythmLogger implements ILogger {
 
     @Override
     public void warn(String format, Object... arg) {
-        Logger.warn(format, arg);
+        RythmPlugin.warn(format, arg);
     }
 
     @Override
     public void warn(Throwable t, String format, Object... args) {
-        Logger.warn(t, format, args);
+        RythmPlugin.warn(t, format, args);
     }
 
     @Override
@@ -81,11 +81,11 @@ public class PlayRythmLogger implements ILogger {
 
     @Override
     public void error(String format, Object... arg) {
-        Logger.error(format, arg);
+        RythmPlugin.error(format, arg);
     }
 
     @Override
     public void error(Throwable t, String format, Object... args) {
-        Logger.error(t, format, args);
+        RythmPlugin.error(t, format, args);
     }
 }

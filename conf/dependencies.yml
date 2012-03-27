@@ -1,4 +1,6 @@
 # History
+# 0.9.6d - Support @__logTime__ directive, enable log rendering time spent for the template
+#        - Log rythm message with RythmPlugin-[version]> prefix
 # 0.9.6c - Fix bug: Secure layout not found when loading the module directly in project folder instead of installing to play/modules
 # 0.9.6b - Fix bug: Java FastTags stop working since 0.9.6
 # 0.9.6a - emergency fix to ArgsParser issue: line breaks stay at the end
