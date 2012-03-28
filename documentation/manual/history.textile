@@ -2,7 +2,10 @@ h1. PlayRythm version history
 
 h2. <a name="roadmap">TODO list</a>
 
-* Add new dialect to attract current Groovy, Japid template users
+* -Add new dialect to attract current Groovy, Japid template users-. At least not at the moment
+* "Support cacheFor extension to expressions":https://github.com/greenlaw110/play-rythm/issues/5
+* "Support custom Java extensions":https://github.com/greenlaw110/play-rythm/issues/2
+* "Support content type based tag file pickup":https://github.com/greenlaw110/play-rythm/issues/1
 
 h2. <a name="v0.9.7">v0.9.7</a>
 

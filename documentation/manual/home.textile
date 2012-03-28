@@ -1,6 +1,6 @@
 h1. PlayRythm module documentation
 
-Welcome to PlayRythm module documentation. This documentation is intended for the *0.9.6c beta release* and may significantly differ from previous module version's documentation.
+Welcome to PlayRythm module documentation. This documentation is intended for the *0.9.7 beta release* and may significantly differ from previous module version's documentation.
 
 Check the "version history":history.
 
@@ -35,15 +35,17 @@ bc. @extends(/main.html);
 
 h2. Use PlayRythm template engine
 
-h3. 1. Add PlayRythm into your @dependencies.conf@ file:
+h4. 1. Add PlayRythm into your @dependencies.conf@ file:
 
 bc. # Application dependencies
    require:
        - play -> rythm
 
-h3. 2. Create the template file in @app/rythm@ folder. The layout of the folder should be the same as your @app/views@ folder.
+h4. 2. Create the template file in @app/rythm@ folder. 
 
-Rythm can stay with your groovy templates. Given you have controller action @Application.index()@, if you have @Application/index.html@ file put into @app/rythm@ folder, then Rythm template engine will execute it. If not then your @Application/index.html@ file in @app/views@ folder will be picked up and processed by Groovy template engine. Please refer to "Rythm Template User Guide":user_guide for more information
+The layout of the folder should be the same as your @app/views@ folder.
+
+Rythm can stay with your groovy templates. Suppose you have a controller action @Application.index()@, if you have @Application/index.html@ file put into @app/rythm@ folder, then Rythm template engine will execute it. If not then your @Application/index.html@ file in @app/views@ folder will be picked up and processed by Groovy template engine. Please refer to "Rythm Template User Guide":user_guide for more information
 
 h2. <a name="resource">See Also</a>
 

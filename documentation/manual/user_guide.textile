@@ -2,7 +2,9 @@ h1. PlayRythm User Guide
 
 PlayRythm provides an alternative template processing engine for Play!Framework. The template engine uses Java as an expression language. A powerful tag system allows you to create reusable functions.
 
-Templates are stored in @app/views@ directory, user defined tags are stored in @app/views/tags/rythm@ directory by default. But both location could be configured. See "Configuration Reference":reference#configuration
+Templates are stored in @app/rythm@ directory, -user defined tags are stored in @app/views/tags/rythm@ directory by default-. 
+
+p(note) Unlike groovy engine, there is no special place for tag file storage. Basically every template can be invoked as a tag.
 
 h2. <a name="syntax">Template Syntax</a>
 
@@ -135,6 +137,8 @@ bc. @controllers.MyPortal.welcomePanel()
 
 The above statement will invoke the controller <code>@controller.MyPortal</code>'s action method @welcomePanel@, and fill the render result content in place of the statement
 
+p(note) See "integration guide":integration#action for more detail about invoking controller action method
+
 h3. <a name="scripting">Scripting</a>
 
 Use "@{" and "}@" to include arbitrary java source code into your template:
@@ -190,7 +194,7 @@ The @main.html@ template is a standard template, but it uses the @doLayout@ tag 
 bc. <h1>Main template</h1>
  
 <div id="content">
-    @doLayout
+    @doLayout()
 </div>
 
 p(note). You can also use @renderBody@ in place of @doLayout@ to include the content, which comes from Razor
@@ -283,7 +287,7 @@ bc. @hello("Bob")
 
 h3. Invoke tag body
 
-If your tag supports a @body@, you can include it at any point in the tag code, using the <code>@_body</code> tag.
+If your tag supports a @body@, you can include it at any point in the tag code, using the <code>@_body</code> variable.
 
 For example:
 
@@ -291,7 +295,7 @@ bc. Hello @_body!
 
 And you can then pass the name as tag body:
 
-bc. @hello {
+bc. @hello() {
    Bob
 }
 
@@ -327,7 +331,7 @@ PlayRythm provides a bridge to intercept a rythm tag call to FastTags call. So y
 
 p(note). Developer cannot use all stuffs in FastTags. The constraints include @Closure@ parameter and @TagContext@ etc. 
 
-h3. <a name="rythm_java_tag">Implement Java Tag using Rythm's new Java Tag interface<a>
+h3. <a name="rythm_java_tag">Implement Java Tag using Rythm's new Java Tag interface</a>
 
 Another approach is to implement Java Tag using Rythm's new @com.greenlaw110.rythm.play.FastRythmTag@:
 

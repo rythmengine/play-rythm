@@ -21,6 +21,19 @@ h2. <a name="tag">More about tags</a>
 
 So far you can keep rythm tags file under @app/views/tags/ryth@ folder. However it is recommened not to use tags folder at all since every rythm template is a tag and can be called from any other rythm templates. E.g. suppose you have a template file @app/views/Order/list.html@, while you can use it as an ordinary template file, you also free to call it as a tag from other rythm template like: <code>@Order.list(myOrders)</code>
 
+h2. <a name="action">Invoking controller actions</a>
+
+PlayRythm 0.9.7 version released with this new feature which is first introduced in Japid template engine and people seems like it a lot. Basically you can invoke a controller action method directly from within the template and fill the place with the render result content. As with any function/tag/template invocation, action method invoke is very straghtforward. Excamples:
+
+bc. @controllers.Applicaiton.index();
+@controllers.MyPortal.newsPanel(user);
+
+Things you need to take care of:
+
+# You must use full qualified method name (including package name, class name) when you invoke controller action method
+# You must pass exactly the parameters that matches what is defined in the controller action method signature
+# The invocation is directly and will not go through the whole stack of Play's method action invocation. Meaning the @Before, @After and @Final logic will NOT be executed.
+# Cache is not supported so far but will come out soon
 
 h2. <a name="resource">See Also</a>
 
