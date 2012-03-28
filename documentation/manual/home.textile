@@ -13,6 +13,7 @@ PlayRythm is yet another template engine plugin for Play!Framework 1.2x version:
 # Easy to integrate with Play!Framework. There is no special controller needed at all
 # Support layout and tag, as you did in Groovy template
 # Support FastTags and JavaExtensions with constraints
+# Invoke controller action method directly from within your template
 
 h2. Template Syntax at a glance
 

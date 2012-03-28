@@ -30,6 +30,16 @@ You can also reverse lookup static url
 
 bc. @_u(/public/javascripts/myscript.js) 
 
+h3. <a name="_au">_au</a>
+
+Absolute reverse lookup URL.
+
+bc. @_au(Applicaiton.index)
+
+The above code is equal to the following groovy template code:
+
+bc. @@{Application.index}
+
 h3. <a name="args">args</a>
 
 The @args@ tag declare variables used in the template.

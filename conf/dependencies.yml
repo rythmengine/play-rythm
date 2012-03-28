@@ -1,4 +1,8 @@
 # History
+# 0.9.7  - Support invoke controller action method directly
+#        - Bug fix: Template clone logic is not clean, there are state retained after clone
+#        - Pass argument value from caller to tag if not set explicitly (another usability improvement)
+#        - Rythm engine version: 0.9.2c
 # 0.9.6d - Support @__logTime__ directive, enable log rendering time spent for the template
 #        - Log rythm message with RythmPlugin-[version]> prefix
 # 0.9.6c - Fix bug: Secure layout not found when loading the module directly in project folder instead of installing to play/modules
@@ -59,7 +63,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 0.9.6c
+self: play -> rythm 0.9.7
 
 require:
     - play 1.2

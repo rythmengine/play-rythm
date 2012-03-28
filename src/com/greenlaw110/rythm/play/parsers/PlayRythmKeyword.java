@@ -21,7 +21,11 @@ public enum PlayRythmKeyword implements IKeyword {
     /**
      * used for url reverse lookup
      */
-    _U;
+    _U,
+    /**
+     * invoke a controller
+     */
+    _I;
 
     private final String s;
     private PlayRythmKeyword() {

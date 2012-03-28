@@ -127,6 +127,14 @@ bc. @args Who who
 
 In the above code, rythm will not evaluate the method @hello@ of variable @who@, instead the @who.hello@ tag is invoked. 
 
+h3. <a name="invoke_action">Invoke controller action method</a>
+
+It's possible to invoke controller action method directly from within the template and fill the render result content in place:
+
+bc. @controllers.MyPortal.welcomePanel()
+
+The above statement will invoke the controller <code>@controller.MyPortal</code>'s action method @welcomePanel@, and fill the render result content in place of the statement
+
 h3. <a name="scripting">Scripting</a>
 
 Use "@{" and "}@" to include arbitrary java source code into your template:

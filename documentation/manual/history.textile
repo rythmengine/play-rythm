@@ -4,6 +4,10 @@ h2. <a name="roadmap">TODO list</a>
 
 * Add new dialect to attract current Groovy, Japid template users
 
+h2. <a name="v0.9.7">v0.9.7</a>
+
+* Support invoke controller action method in template
+
 h2. <a name="v0.9.6c">v0.9.6c</a>
 
 * Fix bug: Fix bug: Secure layout not found when loading the module directly in project folder instead of installing to play/modules

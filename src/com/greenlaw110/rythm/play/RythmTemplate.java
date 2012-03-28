@@ -10,6 +10,7 @@ import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.template.ITemplate;
 import play.Logger;
 import play.Play;
+import play.classloading.enhancers.ControllersEnhancer;
 import play.exceptions.TemplateCompilationException;
 import play.exceptions.TemplateExecutionException;
 import play.exceptions.UnexpectedException;
@@ -101,6 +102,8 @@ public class RythmTemplate extends Template {
         try {
             ITemplate t = tc.asTemplate();
             t.setRenderArgs(args);
+            // allow invoke controller method without redirect
+            ControllersEnhancer.ControllerInstrumentation.initActionCall();
             String s = t.render();
             if (!RythmPlugin.engine.isProdMode()) {
                 refreshCounter.set(0);

@@ -10,25 +10,33 @@ import com.greenlaw110.rythm.play.parsers.AbsoluteUrlReverseLookupParser;
 import com.greenlaw110.rythm.play.parsers.GroovyVerbatimTagParser;
 import com.greenlaw110.rythm.play.parsers.MessageLookupParser;
 import com.greenlaw110.rythm.play.parsers.UrlReverseLookupParser;
+import com.greenlaw110.rythm.play.utils.ActionInvokeProcessor;
 import com.greenlaw110.rythm.resource.ITemplateResource;
-import com.greenlaw110.rythm.spi.IParserFactory;
-import com.greenlaw110.rythm.spi.ITemplateClassEnhancer;
+import com.greenlaw110.rythm.spi.*;
 import com.greenlaw110.rythm.template.ITemplate;
+import com.greenlaw110.rythm.template.TemplateBase;
 import com.greenlaw110.rythm.utils.IImplicitRenderArgProvider;
 import com.greenlaw110.rythm.utils.IRythmListener;
+import com.stevesoft.pat.Regex;
 import play.Logger;
 import play.Play;
 import play.PlayPlugin;
 import play.classloading.ApplicationClasses;
 import play.classloading.HotswapAgent;
+import play.classloading.enhancers.ControllersEnhancer;
 import play.exceptions.ConfigurationException;
 import play.exceptions.UnexpectedException;
 import play.libs.IO;
+import play.mvc.Http;
 import play.mvc.Scope;
+import play.mvc.results.RenderTemplate;
+import play.mvc.results.Result;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.UnmodifiableClassException;
 import java.lang.reflect.Constructor;
@@ -36,7 +44,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "0.9.6c";
+    public static final String VERSION = "0.9.7";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -284,7 +292,29 @@ public class RythmPlugin extends PlayPlugin {
 
             IParserFactory[] factories = {new AbsoluteUrlReverseLookupParser(), new UrlReverseLookupParser(),
                     new MessageLookupParser(), new GroovyVerbatimTagParser()};
-            engine.getExtensionManager().registerUserDefinedParsers(factories);
+            engine.getExtensionManager().registerUserDefinedParsers(factories).registerTemplateExecutionExceptionHandler(new ITemplateExecutionExceptionHandler() {
+                @Override
+                public boolean handleTemplateExecutionException(Exception e, TemplateBase template) {
+                    if (e instanceof Result) {
+                        if (e instanceof RenderTemplate) {
+                            template.p(((RenderTemplate) e).getContent());
+                        } else {
+                            Http.Response resp = new Http.Response();
+                            resp.out = new ByteArrayOutputStream();
+                            ((Result)e).apply(null, resp);
+                            try {
+                                template.p(resp.out.toString("utf-8"));
+                            } catch (UnsupportedEncodingException e0) {
+                                throw new UnexpectedException("utf-8 not supported?");
+                            }
+                        }
+                        // allow next controller action call
+                        ControllersEnhancer.ControllerInstrumentation.initActionCall();
+                        return true;
+                    }
+                    return false;
+                }
+            }).registerExpressionProcessor(new ActionInvokeProcessor());
             debug("Play specific parser registered");
         } else {
             engine.init(p);
@@ -364,6 +394,14 @@ public class RythmPlugin extends PlayPlugin {
     @Override
     public void detectChange() {
         if (!refreshOnRender) engine.classLoader.detectChanges();
+    }
+
+    public static void main(String[] args) {
+        String s = "controllers.Tester.action1().cacheFor(\"1mn\").ad";
+        Regex r = new Regex("cache(?@())$");
+        if (r.search(s)) {
+            System.out.println(r.stringMatched());
+        }
     }
 
 }
