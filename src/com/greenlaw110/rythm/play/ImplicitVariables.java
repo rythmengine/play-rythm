@@ -30,7 +30,7 @@ class ImplicitVariables {
             return Scope.RenderArgs.current().get(name());
         }
     }
-    
+
     static Var[] vars = {
             new Var("error", "java.util.Map<String, java.util.List<play.data.validation.Error>>"),
             new Var("flash", "play.mvc.Scope.Flash"),
@@ -65,7 +65,19 @@ class ImplicitVariables {
                 protected Object evaluate() {
                     return Http.Response.current().encoding;
                 }
+            },
+            new Var("_rythmPlugin", "com.greenlaw110.rythm.play.RythmPlugin") {
+                @Override
+                protected Object evaluate() {
+                    return Play.plugin(RythmPlugin.class);
+                }
+            },
+            new Var("_rythm", "com.greenlaw110.rythm.RythmEngine") {
+                @Override
+                protected Object evaluate() {
+                    return RythmPlugin.engine;
+                }
             }
     };
-    
+
 }

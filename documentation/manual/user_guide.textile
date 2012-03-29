@@ -393,6 +393,8 @@ Unlike Play's Groovy template that all objects added to the renderArgs scope are
 | @request@ | The current HTTP request | "play.mvc.Http.Request":/@api/play/mvc/Http.Request.html  |  |
 | @session@ | Session scope | "play.mvc.Scope.Session":/@api/play/mvc/Scope.Session.html  | "Controllers - Session & Flash Scope":controllers#session |
 | @_response_encoding@ | encoding of the response object | "play.mvc.Http.Response":/@api/play/mvc/Http.Response.html | |
+| @_rythmPlugin@ | the RythmPlugin instance | com.greenlaw110.rythm.play.RythmPlugin | |
+| @_rythm@ | the rythm template engine instance | com.greenlaw110.rythm.RythmEngine | |
 
 So as you can see most of these implicit variables are the same as those defined in "Groovy templates":http://localhost:9000/@documentation/modules/play/user_guide#Implicitobjectsavailableinatemplate. The only exception is Groovy's implicit variable @play@ has been renamed to @_play@. The reason for this is I want to allow user to use full qualified classes in play.* package.
 

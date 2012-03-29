@@ -310,6 +310,7 @@ public class RythmPlugin extends PlayPlugin {
                         }
                         // allow next controller action call
                         ControllersEnhancer.ControllerInstrumentation.initActionCall();
+                        resetActionCallFlag();
                         return true;
                     }
                     return false;
@@ -332,6 +333,29 @@ public class RythmPlugin extends PlayPlugin {
         debug("%sms to register fast tags", System.currentTimeMillis() - l);
 
         RythmTemplateLoader.clear();
+    }
+
+    public static final String ACTION_CALL_FLAG_KEY = "__RYTHM_PLUGIN_ACTION_CALL_";
+
+    private static void resetActionCallFlag() {
+        Stack<Boolean> actionCalls = Scope.RenderArgs.current().get(ACTION_CALL_FLAG_KEY, Stack.class);
+        if (null != actionCalls) {
+            actionCalls.pop();
+        }
+    }
+
+    private static void setActionCallFlag() {
+        Stack<Boolean> actionCalls = Scope.RenderArgs.current().get(ACTION_CALL_FLAG_KEY, Stack.class);
+        if (null == actionCalls) {
+            actionCalls = new Stack<Boolean>();
+        }
+        actionCalls.push(true);
+    }
+
+    public static boolean isActionCall() {
+        Stack<Boolean> actionCalls = Scope.RenderArgs.current().get(ACTION_CALL_FLAG_KEY, Stack.class);
+        if (null == actionCalls || actionCalls.empty()) return false;
+        return true;
     }
 
     @Override

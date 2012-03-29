@@ -18,7 +18,7 @@ public class ActionInvokeProcessor implements IExpressionProcessor {
             String action = s.replaceFirst("controllers.", "");
             int pos = action.indexOf("(");
             action = action.substring(0, pos);
-            token.p("play.mvc.Http.Request.current().action=\"").p(action).p("\";\ntry{").p(s).p(";} catch (RuntimeException e) {handleTemplateExecutionException(e);}");
+            token.p("com.greenlaw110.rythm.play.RythmPlugin.setActionCallFlag();play.mvc.Http.Request.current().action=\"").p(action).p("\";\ntry{").p(s).p(";} catch (RuntimeException e) {handleTemplateExecutionException(e);}");
             token.pline();
             return true;
         }
