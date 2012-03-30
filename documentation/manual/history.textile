@@ -7,6 +7,12 @@ h2. <a name="roadmap">TODO list</a>
 * "Support custom Java extensions":https://github.com/greenlaw110/play-rythm/issues/2
 * "Support content type based tag file pickup":https://github.com/greenlaw110/play-rythm/issues/1
 
+h2. <a name="v0.9.7b">v0.9.7b</a>
+
+* Support invoke controller action method in template
+* Add two implicit variables: @_rythmPlugin@: the RythmPlugin instance; @_rythm@ the RythmEngine instance
+* Add @RythmPlugin.isActionCall()@ api to allow template author to know whether it is inside a action invocation context
+
 h2. <a name="v0.9.7">v0.9.7</a>
 
 * Support invoke controller action method in template

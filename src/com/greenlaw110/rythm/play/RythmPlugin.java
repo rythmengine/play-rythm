@@ -44,7 +44,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "0.9.7";
+    public static final String VERSION = "0.9.7a";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -344,7 +344,7 @@ public class RythmPlugin extends PlayPlugin {
         }
     }
 
-    private static void setActionCallFlag() {
+    public static void setActionCallFlag() {
         Stack<Boolean> actionCalls = Scope.RenderArgs.current().get(ACTION_CALL_FLAG_KEY, Stack.class);
         if (null == actionCalls) {
             actionCalls = new Stack<Boolean>();

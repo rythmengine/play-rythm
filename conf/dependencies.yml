@@ -1,6 +1,6 @@
 # History
 # 0.9.7a - Add @_rythmPlugin and @_rythm@ implicit variable
-#        - Add isActionCall() interface to RythmPlugin to see whether we are inside a invoke action call process
+#        - Add isActionCall() interface to RythmPlugin to see whether we are inside a action invocation context
 # 0.9.7  - Support invoke controller action method directly
 #        - Bug fix: Template clone logic is not clean, there are state retained after clone
 #        - Pass argument value from caller to tag if not set explicitly (another usability improvement)
