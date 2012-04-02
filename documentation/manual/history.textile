@@ -2,14 +2,21 @@ h1. PlayRythm version history
 
 h2. <a name="roadmap">TODO list</a>
 
-* -Add new dialect to attract current Groovy, Japid template users-. At least not at the moment
+* Add new dialect to attract current Groovy, Japid template users-. At least not at the moment
 * "Support cacheFor extension to expressions":https://github.com/greenlaw110/play-rythm/issues/5
 * "Support custom Java extensions":https://github.com/greenlaw110/play-rythm/issues/2
 * "Support content type based tag file pickup":https://github.com/greenlaw110/play-rythm/issues/1
 
-h2. <a name="v0.9.7b">v0.9.7b</a>
+h2. <a name="v0.9.8">v0.9.8</a>
 
-* Support invoke controller action method in template
+* New keyword: <code>@return()</code>: abort current template executing process and return to caller
+* Clear alias for Play specific keywords:
+** <code>@url</code>: <code>@_u</code>, url reverse lookup
+** <code>@fullUrl</code>: <code>@_au</code>, url reverse lookup with absolute path
+** <code>@msg</code>: <code>@_m</code>, i18n message lookup
+
+h2. <a name="v0.9.7a">v0.9.7a</a>
+
 * Add two implicit variables: @_rythmPlugin@: the RythmPlugin instance; @_rythm@ the RythmEngine instance
 * Add @RythmPlugin.isActionCall()@ api to allow template author to know whether it is inside a action invocation context
 

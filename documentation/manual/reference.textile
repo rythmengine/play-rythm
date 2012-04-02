@@ -2,11 +2,11 @@ h1. PlayRythm Reference
 
 h2. <a name="tags">Built-in Tags</a>
 
-h3. <a name="_m">_m</a>
+h3. <a name="msg">msg</a>
 
 Lookup message string.
 
-bc. @_m("validation.required")
+bc. @msg("validation.required")
 
 The above has the same effect of the following groovy template code:
 
@@ -14,13 +14,13 @@ bc. &('validation.required')
 
 You can also pass parameters:
 
-bc. @_m("some.message", "param1")
+bc. @msg("some.message", "param1")
 
-h3. <a name="_u">_u</a>
+h3. <a name="url">url</a>
 
 Reverse lookup URL.
 
-bc. @_u(Application.index)
+bc. @url(Application.index)
 
 The above code is equal to the following groovy template code:
 
@@ -28,13 +28,13 @@ bc. @{Applicaiton.index}
 
 You can also reverse lookup static url
 
-bc. @_u(/public/javascripts/myscript.js) 
+bc. @url(/public/javascripts/myscript.js)
 
-h3. <a name="_au">_au</a>
+h3. <a name="fullUrl">fullUrl</a>
 
 Absolute reverse lookup URL.
 
-bc. @_au(Applicaiton.index)
+bc. @fullUrl(Applicaiton.index)
 
 The above code is equal to the following groovy template code:
 
@@ -58,17 +58,17 @@ bc. @authenticityToken()
 
 Rendered as:
 
-bc. <input type="hidden" name="authenticityToken"  
+bc. <input type="hidden" name="authenticityToken"
     value="1c6d92fed96200347f06b7c5e1a3a28fa258ef7c">
 
 h3. <a name="authenticityTokenValue">authenticityTokenValue</a>
 
 Use @authenticityTokenValue@ when you want to put the authenticity token value inside a javascript code in your view:
 
-bc. $.post("@_u(User.save())", 
-    {authenticityToken: '@authenticityTokenValue()', ...}, 
+bc. $.post("@_u(User.save())",
+    {authenticityToken: '@authenticityTokenValue()', ...},
     function(data){...});
-    
+
 Rendered as:
 
 bc. $.post("/user/save",
@@ -103,7 +103,7 @@ bc. <!-- common header here -->
 </div>
 <!-- common footer here -->
 
-@doLayout@ tag has an alias called "renderBody":#renderBody 
+@doLayout@ tag has an alias called "renderBody":#renderBody
 
 See also "template inheritance":user_guide#inheritance
 
@@ -321,13 +321,13 @@ bc. @verbatim() {
 
 h2. PlayRythm Configuration
 
-PlayRythm provides all default configuration settings that cater for most common use cases. 
+PlayRythm provides all default configuration settings that cater for most common use cases.
 
 |_. configuration |_. description |_. default value|
 |@rythm.mode@|set rythm template engine to run in dev or prod mode|the value of play.mode|
 |@rythm.compactOutput@|remove redundant space and line breaks|true in prod mode and false in dev mode|
 |@rythm.enableJavaExtensions@|enable "Java extension parsing":user_guide#java_extension|true|
-|@rythm.default.engine@|Indicate which template should be used as default|system (i.e. groovy)| 
+|@rythm.default.engine@|Indicate which template should be used as default|system (i.e. groovy)|
 
 h2. <a name="resource">See Also</a>
 

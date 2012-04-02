@@ -1,6 +1,6 @@
 h1. PlayRythm module documentation
 
-Welcome to PlayRythm module documentation. This documentation is intended for the *0.9.7b beta release* and may significantly differ from previous module version's documentation.
+Welcome to PlayRythm module documentation. This documentation is intended for the *0.9.8 beta release* and may significantly differ from previous module version's documentation.
 
 Check the "version history":history.
 
@@ -41,7 +41,7 @@ bc. # Application dependencies
    require:
        - play -> rythm
 
-h4. 2. Create the template file in @app/rythm@ folder. 
+h4. 2. Create the template file in @app/rythm@ folder.
 
 The layout of the folder should be the same as your @app/views@ folder.
 

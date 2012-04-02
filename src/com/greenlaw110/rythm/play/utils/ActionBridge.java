@@ -29,8 +29,6 @@ import java.util.Map;
  * since the class is not public.
  * <p/>
  * Please check this with the original source code to find any updates to bring over.
- *
- * @author Bing Ran<bing_ran@hotmail.com>
  */
 public class ActionBridge {
 

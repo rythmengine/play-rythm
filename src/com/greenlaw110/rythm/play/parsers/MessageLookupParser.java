@@ -21,7 +21,7 @@ import com.stevesoft.pat.Regex;
  * To change this template use File | Settings | File Templates.
  */
 public class MessageLookupParser extends KeywordParserFactory {
-    
+
     @Override
     public IKeyword keyword() {
         return PlayRythmKeyword._M;
@@ -29,9 +29,9 @@ public class MessageLookupParser extends KeywordParserFactory {
 
     @Override
     protected String patternStr() {
-        return "%s%s\\s*((?@()))";
+        return "^(%s%s[\\t ]*((?@()))\\s*)";
     }
-    
+
     protected String innerPattern() {
         return "(((?@\"\")|(?@'')|[a-zA-Z_][\\w$_\\.]*)(?@())?)(,\\s*([a-zA-Z_][\\w$_\\.]*(?@())?))?";
     }
@@ -75,8 +75,7 @@ public class MessageLookupParser extends KeywordParserFactory {
     public static void main(String[] args) {
         MessageLookupParser p = new MessageLookupParser();
         Regex r = p.reg(new Rythm());
-        System.out.println(S.escapeJavaScript(S.escapeJavaScript("\"abc\"")));
-        String s = "@_m(\"abc\")";
+        String s = "@msg(\"abc\")";
         if (r.search(s)) {
             System.out.println(r.stringMatched());
             s = (r.stringMatched(1));
@@ -94,7 +93,7 @@ public class MessageLookupParser extends KeywordParserFactory {
                 System.out.println("4>>" + r.stringMatched(4));
             }
         }
-        
+
 //        s = "RythmTester.test(a.boc(), 14, '3', \"aa\")";
 //        //s = "getId()";
 //        r = new Regex("([a-zA-Z_][\\w$_\\.]*)((?@())?)");
