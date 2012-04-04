@@ -33,7 +33,7 @@ public class MessageLookupParser extends KeywordParserFactory {
     }
 
     protected String innerPattern() {
-        return "(((?@\"\")|(?@'')|[a-zA-Z_][\\w$_\\.]*)(?@())?)(,\\s*([a-zA-Z_][\\w$_\\.]*(?@())?))?";
+        return "(((?@\"\")|(?@'')|[a-zA-Z_][\\w$_\\.]*)(?@())?)((,\\s*([0-9\\.]+|[a-zA-Z_][\\w$_\\.]*(?@())?))*)";
     }
 
     @Override
@@ -44,7 +44,7 @@ public class MessageLookupParser extends KeywordParserFactory {
                 if (!r.search(remain())) return null;
                 String s = r.stringMatched();
                 step(s.length());
-                s = r.stringMatched(1);
+                s = r.stringMatched(3);
                 //strip off ( and )
                 s = s.substring(1);
                 s = s.substring(0, s.length() - 1);
@@ -52,11 +52,11 @@ public class MessageLookupParser extends KeywordParserFactory {
                 r = new Regex(innerPattern());
                 if (r.search(s)) {
                     final String msgStr = r.stringMatched(1);
-                    final String param = r.stringMatched(4);
+                    final String param = r.stringMatched(3);
                     if (S.isEmpty(param)) {
                         s = String.format("Messages.get(%s)", msgStr);
                     } else {
-                        s = String.format("Messages.get(%s, %s)", msgStr, param);
+                        s = String.format("Messages.get(%s %s)", msgStr, param);
                     }
                     ctx().getCodeBuilder().addImport("play.i18n.Messages");
                     return new CodeToken(s, ctx()){
@@ -75,10 +75,10 @@ public class MessageLookupParser extends KeywordParserFactory {
     public static void main(String[] args) {
         MessageLookupParser p = new MessageLookupParser();
         Regex r = p.reg(new Rythm());
-        String s = "@msg(\"abc\")";
+        String s = "@msg(\"abc%s, %s\", ab, true) \n";
         if (r.search(s)) {
             System.out.println(r.stringMatched());
-            s = (r.stringMatched(1));
+            s = (r.stringMatched(3));
             System.out.println(">>" + s);
             s = s.substring(1).substring(0, s.length() - 2);
             System.out.println("<<" + s);

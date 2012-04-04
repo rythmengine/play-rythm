@@ -44,7 +44,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "0.9.7a";
+    public static final String VERSION = "0.9.8";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {

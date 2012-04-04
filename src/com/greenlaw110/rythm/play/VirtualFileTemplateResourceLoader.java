@@ -177,13 +177,13 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
                 tagFile = Play.getVirtualFile(name);
                 if (null != tagFile && tagFile.getRealFile().canRead()) {
     //Logger.info(">>> try to load tag: %s, tag file found: %s", tagName, tagFile);
-                    try {
+//                    try {
                         VirtualFileTemplateResource tr = new VirtualFileTemplateResource(tagFile);
                         TemplateClass tc = engine.classes.getByTemplate(tr.getKey());
                         if (null == tc) {
                             tc = new TemplateClass(tr, engine);
                         }
-                        try {
+//                        try {
     //Logger.info(">>> try to load tag: %s, Template class found: %s", tagName, tc);
                             ITag tag = (ITag)tc.asTemplate();
                             if (null != tag) {
@@ -192,18 +192,20 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
         //Logger.info(">>> try to load tag: %s, tag registered!!!", tagName);
                                 return tc;
                             }
-                        } catch (Exception e) {
-                            RythmPlugin.error(e, "error trying load tag[%s]", origName);
-                            return tc;
-                        }
-    //Logger.info(">>> try to load tag: %s, tag find found: %s", tagName, tagFile);
-                    } catch (Exception e) {
-    //Logger.error(e, ">>> error loading tag: %s", tagName);
-                        if (e instanceof RythmException) {
-                            throw (RythmException)e;
-                        }
-                        // ignore
-                    }
+//                        } catch (Exception e) {
+//                            RythmPlugin.error(e, "error trying load tag[%s]", origName);
+//                            return tc;
+//                        }
+//                    } catch (NullPointerException e) {
+//                        throw new RythmException(e);
+//    //Logger.info(">>> try to load tag: %s, tag find found: %s", tagName, tagFile);
+//                    } catch (Exception e) {
+//    //Logger.error(e, ">>> error loading tag: %s", tagName);
+//                        if (e instanceof RythmException) {
+//                            throw (RythmException)e;
+//                        }
+//                        // ignore
+//                    }
                 }
             }
         }
