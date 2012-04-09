@@ -65,7 +65,7 @@ h3. <a name="authenticityTokenValue">authenticityTokenValue</a>
 
 Use @authenticityTokenValue@ when you want to put the authenticity token value inside a javascript code in your view:
 
-bc. $.post("@_u(User.save())",
+bc. $.post("@url(User.save())",
     {authenticityToken: '@authenticityTokenValue()', ...},
     function(data){...});
 
@@ -162,6 +162,29 @@ bc. <ul>
 }
 </ul>
 
+h3. <a name="escape">escape</a>
+
+Mark a block of template code default escape scheme:
+
+bc.@escape("JS"){
+alert("Hello Rythm");
+}
+
+The above code set the default escape to @JavaScript@. The parameter passed to @escape() could be one of the following:
+
+# RAW - do not escape. Same effect with <a href="#raw"><code>@raw()</code></a>
+# CSV - escape as csv format
+# HTML - escape as html format
+# JS | JavaScript - escape as JavaScript format
+# JAVA - escape as Java format
+# XML - escape as XML format
+
+Note
+
+* the parameter is case insensitive.
+* if no parameter is passed, then it default to HTML
+* you pass the parameter within quotation mark or not
+
 h3. <a name="extends">extends</a>
 
 Makes the template inherit another template.
@@ -214,10 +237,17 @@ The tag defines implicit variables in it's body. The variable names are prefixed
 
 bc. <ul>
 @for (Product product: products) {
-    <span class="@product_parity">@product_index. @product</span>
+    <li class="@product_parity">@product_index. @product</li>
     @(product_isLast ? "" : "-")
 }
 </ul>
+
+You can also use the second form of <code>@for</code> tag:
+
+bc.<ul>
+@for(int i = 0; i < 6; ++i) {
+    <li>the current index is @i</li>
+}
 
 h3. <a name="get">get</a>
 
@@ -310,6 +340,24 @@ bc. @sayHi("Play!framework")
 or pass argument by name:
 
 bc. @sayHi(who: "Play!framework")
+
+h3. <a name="raw">raw</a>
+
+Mark a block of template code that by default output raw data for expression:
+
+bc. @{
+String body = "<p>some news</p";
+}
+@raw() {
+@body
+}
+
+The above code basically equals to
+
+bc. @{
+String body = "<p>some news</p>";
+}
+@body.raw()
 
 h3. <a name="verbatim">verbatim</a>
 

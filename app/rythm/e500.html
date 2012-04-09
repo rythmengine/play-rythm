@@ -107,7 +107,7 @@
 @if (exception instanceof play.exceptions.PlayException) {
     <h1>@exception.getErrorTitle()</h1>
     @if ("DEV".equals(Play.mode.name())) {
-        <p id="detail">@exception.getErrorDescription()</p>
+        <p id="detail">@exception.getErrorDescription().raw()</p>
     } else if ("PROD".equals(Play.mode.name())) {
         <p>Error details are not displayed when Play! is in PROD mode. Check server logs for detail.</p>
     }
@@ -124,9 +124,9 @@
         for (int i = from; i < to; ++i) {
             lines.add(source.get(i));
         }
-    }@
+    }
     @for (String line: lines) {
-        <pre @if(exception.getLineNumber() == line_index+from) {class="error"}><span class="line">@(line_index+from)</span><span class="code">&nbsp;@com.greenlaw110.rythm.utils.S.escape(line).toString().replace("&darr;", "<strong>&darr;</strong>").replace("\000", "<em>").replace("\001", "</em>")</span></pre>
+        <pre @if(exception.getLineNumber() == line_index+from) {class="error"}><span class="line">@(line_index+from)</span><span class="code">&nbsp;@com.greenlaw110.rythm.utils.S.escape(line).toString().replace("&darr;", "<strong>&darr;</strong>").replace("\000", "<em>").replace("\001", "</em>").raw()</span></pre>
     }
     </div>
 }
