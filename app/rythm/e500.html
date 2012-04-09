@@ -126,7 +126,7 @@
         }
     }@
     @for (String line: lines) {
-        <pre @if(exception.getLineNumber() == line_index+from) {class="error"}><span class="line">@(line_index+from)</span><span class="code">&nbsp;@com.greenlaw110.rythm.utils.S.escape(line).replace("&darr;", "<strong>&darr;</strong>").replace("\000", "<em>").replace("\001", "</em>")</span></pre>
+        <pre @if(exception.getLineNumber() == line_index+from) {class="error"}><span class="line">@(line_index+from)</span><span class="code">&nbsp;@com.greenlaw110.rythm.utils.S.escape(line).toString().replace("&darr;", "<strong>&darr;</strong>").replace("\000", "<em>").replace("\001", "</em>")</span></pre>
     }
     </div>
 }
