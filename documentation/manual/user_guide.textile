@@ -2,7 +2,7 @@ h1. PlayRythm User Guide
 
 PlayRythm provides an alternative template processing engine for Play!Framework. The template engine uses Java as an expression language. A powerful tag system allows you to create reusable functions.
 
-Templates are stored in @app/rythm@ directory, -user defined tags are stored in @app/views/tags/rythm@ directory by default-. 
+Templates are stored in @app/rythm@ directory, -user defined tags are stored in @app/views/tags/rythm@ directory by default-.
 
 p(note) Unlike groovy engine, there is no special place for tag file storage. Basically every template can be invoked as a tag.
 
@@ -12,7 +12,7 @@ A template file is a text file, some parts of which have placeholders for dynami
 
 Dynamic elements are resolved during template execution. The rendered result is then sent as part of the HTTP response.
 
-p(note). All template elements are started with the '@' caret. 
+p(note). All template elements are started with the '@' caret.
 
 If you want to output a literal "<code>@</code>" character, you need to double it. E.g.
 
@@ -43,13 +43,34 @@ bc. @(1 + 5) @// print out the result of 1 + 5
 
 h4. <a name="escape">Escape an expression</a>
 
-Unlike Groovy template which all expressions are escaped by default, Rythm template won't do that due to performance concern. You must explicitly call @escape@ java object extension to escape the variable:
+-Unlike Groovy template which all expressions are escaped by default, Rythm template won't do that due to performance concern. You must explicitly call @escape@ java object extension to escape the variable:-
 
-bc. @myVar.escape()
+Start from v0.9.8, PlayRythm escape expressions automatically as html format if the template file name suffix is ".html". To output an expression by raw data, one can do:
 
-If you want to escape variables in the middle of an expression, you must call @JavaExtensions.escape@:
+bc. @myVar.raw()
 
-bc. @(JavaExtensions.escape(myVar) + "some other stuff")
+If you have a block of code that you would like to turn of the default escape behavior, you can use
+
+bc @raw() {
+...
+}
+
+In addition to HTML escape, PlayRythm provides escape to the following format as well:
+
+# CSV: escape as csv format
+# JS/JavaScript: escape as javascript format
+# Java: escape as Java format
+# XML: escape as XML format
+
+And the user can use to these format like follows:
+
+bc. @escape("XML") {
+ <a><b>foo</b></a>
+}
+
+You can also use JavaExtensions to escape variable directly
+
+bc. @myVar.escapeCsv()
 
 h3. <a name="call_build-in_function">Call built-in function</a>
 
@@ -57,13 +78,13 @@ h3. <a name="call_build-in_function">Call built-in function</a>
 
 bc. @// indicate this template extends "/main.html" template
 @extends(/main.html)
- 
+
 @// declare the java package/classes needed in this template
 @import play.util.*, play.templates.*
- 
+
 @// declare arguments used in this template
 @args String name, int score
- 
+
 @// output some information for debugging purpose
 @debug("the variable is %s", someVariable)
 
@@ -127,7 +148,7 @@ But consider another case, when you have a tag file @hello.html@ defined in a fo
 bc. @args Who who
 @who.hello() @// name conflict happened here!
 
-In the above code, rythm will not evaluate the method @hello@ of variable @who@, instead the @who.hello@ tag is invoked. 
+In the above code, rythm will not evaluate the method @hello@ of variable @who@, instead the @who.hello@ tag is invoked.
 
 h3. <a name="invoke_action">Invoke controller action method</a>
 
@@ -186,13 +207,13 @@ A template can inherit another template, i.e. it can be included as a part of an
 To inherit another template, use the <code>@extends</code> tag:
 
 bc. @extends(/main.html)
- 
+
 <h1>Some code</h1>
 
 The @main.html@ template is a standard template, but it uses the @doLayout@ tag to include the content:
 
 bc. <h1>Main template</h1>
- 
+
 <div id="content">
     @doLayout()
 </div>
@@ -211,43 +232,43 @@ bc. <!DOCTYPE html>
 ...
 </head>
 <body>
- 
+
   <div id="header">
     <h1>@get("title')</h1>
   </div>
-  
+
   <div id="sidebar">
     @renderSection("sidebar")
   </div>
-  
+
   <div id="content">
     @renderBody()
   </div>
-  
+
   <div id="footer">
     <p>Site footer - &copy; Santa Clause</p>
   </div>
-  
+
 </body>
 </html>
 
 And in your parent template, say 'index.html':
 
 bc. @extends(/main.html)
- 
+
 @set(title="Home page")
- 
+
 <h2>Welcome to my site</h2>
- 
+
 <p>This is our home page</p>
- 
+
 <p>Not super exciting is it?</p>
- 
+
 <p>Yada, Yada, Yada</p>
- 
+
 @section sidebar {
   <p>This sidebar has "Home Page" specific content</p>
- 
+
   <ul>
     <li><a href="#">Link One</a></li>
     <li><a href="#">Link Two</a></li>
@@ -272,7 +293,7 @@ h3. Retrieve tag parameters
 
 Tag parameters are exposed as template variables which declared using <code>@args</code> tag.
 
-For example: 
+For example:
 
 bc. @args String name;
 Hello @name !
@@ -329,7 +350,7 @@ h3. <a name="fast_tags">The old Play FastTags approach</a>
 
 PlayRythm provides a bridge to intercept a rythm tag call to FastTags call. So you are free to continue define FastTags as you did for Groovy template. See http://www.playframework.org/documentation/1.2.4/templates#fasttags for more details on how to create FastTags.
 
-p(note). Developer cannot use all stuffs in FastTags. The constraints include @Closure@ parameter and @TagContext@ etc. 
+p(note). Developer cannot use all stuffs in FastTags. The constraints include @Closure@ parameter and @TagContext@ etc.
 
 h3. <a name="rythm_java_tag">Implement Java Tag using Rythm's new Java Tag interface</a>
 
@@ -349,11 +370,11 @@ h4. Pros and Cons of the two approach
 
 The good side of FastTags approach is it's compatible to Groovy template, and thus should be welcome by module developers who don't need a PlayRythm copy to get their code compileds and distributed.
 
-The only tiny problem with FastTags is that it uses reflection to lookup the method to be called, which might be a little bit more time consuming than using Rythm's tag interface 
+The only tiny problem with FastTags is that it uses reflection to lookup the method to be called, which might be a little bit more time consuming than using Rythm's tag interface
 
 h2. <a name="java_extension">Java object extensions in templates</a>
 
-Rythm template provides limited support for "Java object extensions":http://www.playframework.org/documentation/1.2.4/templates#extensions. 
+Rythm template provides limited support for "Java object extensions":http://www.playframework.org/documentation/1.2.4/templates#extensions.
 
 # You are allowed to use most Java object extensions defined in Play's @play.templates.JavaExtensions.
 # Java object extensions can only be processed when they are in the end of an expression
@@ -400,7 +421,7 @@ So as you can see most of these implicit variables are the same as those defined
 
 p(note). If you have put something into your @RenderArgs@, and you didn't declare it using <code>@args</code> statement, you are still able to access it via @_properties@ variable. But please be noted that all stuff you get from @_properties@ are @Object@ type, and you need to explicitly cast them before accessing properties and methods of them:
 
-bc. @(((User)_properties.get("user")).getName()) 
+bc. @(((User)_properties.get("user")).getName())
 
 h2. Implicit import statements
 

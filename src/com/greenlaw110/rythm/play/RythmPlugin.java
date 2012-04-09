@@ -116,9 +116,9 @@ public class RythmPlugin extends PlayPlugin {
     public static EngineType defaultEngine = EngineType.system;
     public static boolean underscoreImplicitVariableName = false;
     public static boolean refreshOnRender = true;
-    public static String templateRoot = "app/views";
-    public static String templateRoot2 = R_VIEW_ROOT;
-    public static String tagRoot = "app/views/tags/rythm";
+    public static String templateRoot = R_VIEW_ROOT;
+    //public static String templateRoot2 = R_VIEW_ROOT;
+    //public static String tagRoot = "app/views/tags/rythm";
 
     public static List<ImplicitVariables.Var> implicitRenderArgs = new ArrayList<ImplicitVariables.Var>();
 
@@ -236,11 +236,11 @@ public class RythmPlugin extends PlayPlugin {
         p.put("rythm.root", new File(Play.applicationPath, templateRoot));
         if (Logger.isDebugEnabled()) debug("rythm template root set to: %s", p.get("rythm.root"));
 
-        // set tag root
-        tagRoot = p.getProperty("rythm.tag.root", tagRoot);
-        if (tagRoot.endsWith("/")) tagRoot = tagRoot.substring(0, tagRoot.length() - 1);
-        p.put("rythm.tag.root", new File(Play.applicationPath, tagRoot));
-        if (Logger.isDebugEnabled()) debug("rythm tag root set to %s", p.get("rythm.tag.root"));
+//        // set tag root
+//        tagRoot = p.getProperty("rythm.tag.root", tagRoot);
+//        if (tagRoot.endsWith("/")) tagRoot = tagRoot.substring(0, tagRoot.length() - 1);
+//        p.put("rythm.tag.root", new File(Play.applicationPath, tagRoot));
+//        if (Logger.isDebugEnabled()) debug("rythm tag root set to %s", p.get("rythm.tag.root"));
 
         // set tmp dir
         File tmpDir = new File(Play.tmpDir, "rythm");

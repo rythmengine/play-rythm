@@ -32,20 +32,20 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
 
         VirtualFileTemplateResource(VirtualFile file) {
             this.file = file;
-            String tagRoot = RythmPlugin.tagRoot;
-            if (!tagRoot.startsWith("/")) tagRoot = '/' + tagRoot;
-            String filePath = file.relativePath();
-            filePath = filePath.replaceFirst("\\{.*\\}", ""); // strip off module prefix
-            if (filePath.startsWith(tagRoot)) {
-                String tagName = filePath.substring(tagRoot.length() + 1);
-                while (tagName.startsWith("/") || tagName.startsWith("\\")) {
-                    tagName = tagName.substring(1);
-                }
-                tagName = tagName.replace('\\', '.');
-                tagName = tagName.replace('/', '.');
-                int dot = tagName.lastIndexOf(".");
-                this.tagName = tagName.substring(0, dot);
-            }
+//            String tagRoot = RythmPlugin.tagRoot;
+//            if (!tagRoot.startsWith("/")) tagRoot = '/' + tagRoot;
+//            String filePath = file.relativePath();
+//            filePath = filePath.replaceFirst("\\{.*\\}", ""); // strip off module prefix
+//            if (filePath.startsWith(tagRoot)) {
+//                String tagName = filePath.substring(tagRoot.length() + 1);
+//                while (tagName.startsWith("/") || tagName.startsWith("\\")) {
+//                    tagName = tagName.substring(1);
+//                }
+//                tagName = tagName.replace('\\', '.');
+//                tagName = tagName.replace('/', '.');
+//                int dot = tagName.lastIndexOf(".");
+//                this.tagName = tagName.substring(0, dot);
+//            }
         }
 
         @Override
@@ -98,18 +98,18 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
             if (!isValid(vf)) {
                 if (!path.startsWith("/")) path = "/" + path;
                 // try to attach template home and tag home
-                if (!path.startsWith(RythmPlugin.templateRoot2)) {
-                    String path0 = RythmPlugin.templateRoot2 + path;
-                    vf = Play.getVirtualFile(path0);
-                }
+//                if (!path.startsWith(RythmPlugin.templateRoot2)) {
+//                    String path0 = RythmPlugin.templateRoot2 + path;
+//                    vf = Play.getVirtualFile(path0);
+//                }
                 if (!isValid(vf) && !path.startsWith(RythmPlugin.templateRoot)) {
                     String path0 = RythmPlugin.templateRoot + path;
                     vf = Play.getVirtualFile(path0);
                 }
-                if (!isValid(vf) && !path.startsWith(RythmPlugin.tagRoot)) {
-                    String path0 = RythmPlugin.tagRoot + path;
-                    vf = Play.getVirtualFile(path0);
-                }
+//                if (!isValid(vf) && !path.startsWith(RythmPlugin.tagRoot)) {
+//                    String path0 = RythmPlugin.tagRoot + path;
+//                    vf = Play.getVirtualFile(path0);
+//                }
             }
         }
         return vf;
@@ -167,7 +167,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
                 ".json",
                 ".tag"
         };
-        String[] roots = {RythmPlugin.templateRoot2, RythmPlugin.tagRoot, RythmPlugin.templateRoot};
+        String[] roots = {/*RythmPlugin.templateRoot2, RythmPlugin.tagRoot, */RythmPlugin.templateRoot};
         String tagName0 = tagName;
         for (String root: roots) {
             tagName = root + "/" + tagName0;

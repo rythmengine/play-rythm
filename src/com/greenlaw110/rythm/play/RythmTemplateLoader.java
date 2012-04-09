@@ -154,16 +154,16 @@ public class RythmTemplateLoader {
     }
 
     static void scanTagFolder() {
-        RythmPlugin.trace("start to scan tags");
-        long ts = System.currentTimeMillis();
-        String s = RythmPlugin.tagRoot;
-        for (VirtualFile root: Play.roots) {
-            VirtualFile tagRoot = root.child(s);
-            if (!tagRoot.isDirectory()) continue;
-            scanTagFolder(tagRoot);
-        }
-        ts = System.currentTimeMillis() - ts;
-        RythmPlugin.trace("%sms to scan tags", ts);
+//        RythmPlugin.trace("start to scan tags");
+//        long ts = System.currentTimeMillis();
+//        String s = RythmPlugin.tagRoot;
+//        for (VirtualFile root: Play.roots) {
+//            VirtualFile tagRoot = root.child(s);
+//            if (!tagRoot.isDirectory()) continue;
+//            scanTagFolder(tagRoot);
+//        }
+//        ts = System.currentTimeMillis() - ts;
+//        RythmPlugin.trace("%sms to scan tags", ts);
     }
 
     static void buildBlackWhiteList() {
