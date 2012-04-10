@@ -1,0 +1,62 @@
+@extends("/main.html")
+@set(title: "home1")
+@args String title;
+
+<a href="@url(Application.testDefaultEscape())">test default escape</a>
+<a href="@url(Application.testRenderSection())">test render section</a>
+
+@tag sayHello(String who, int pos, String parity, int count) {
+    <p>hello @who at @pos is @parity, total: @count</p>
+}
+<ul>
+@for(int i = 0; i < 10; ++i) {
+    <li>@i</li>
+    @if (i > 6) {
+        @break()
+    }
+}
+</ul>
+
+@{
+    Map<String, List<String>> listList = new HashMap();
+    listList.put("x", Arrays.asList("xt,a324".split(",")));
+}
+
+@for (Map.Entry<String, List<String>> entry: listList.entrySet()) {
+    @for (String s: entry.getValue()) {
+        <i>@s</i><br/>
+    }
+}
+
+@{int i = 1;}@
+
+@if (i > 1) {
+    too many
+} else if (i > 0 ) {
+    just okay
+} else {
+    nothing to do
+}
+
+<h1>@("I am a string".length())</h1>
+
+@{
+    pn("about to crash!!!");
+    String s = null;
+    if (null == s) {
+        //throw new NullPointerException("s is null");
+    }
+}
+
+@{String[] nameList = {"Tom", "Jerry", "Marco"}}@
+
+@for(String : nameList) {
+    @sayHi(_, parity=_parity, pos=_index, _size)
+    @sayHello(_, _index, _parity, _size)
+    @if ("jerry".equalsIgnoreCase(_)) {
+        @break
+    }
+}
+
+@session.getId()
+

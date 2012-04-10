@@ -305,7 +305,7 @@ h3. <a name="section">section</a>
 
 Define a block of template to be output in parent template's named section.
 
-bc. @section sidebar {
+bc. @section("sidebar") {
     <ul>
         <li><a href="#">Link one</li>
         <li><a href="#">Link two</li>
