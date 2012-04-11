@@ -9,7 +9,6 @@ import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.template.ITemplate;
 import play.Logger;
-import play.Play;
 import play.classloading.enhancers.ControllersEnhancer;
 import play.exceptions.TemplateCompilationException;
 import play.exceptions.TemplateExecutionException;
@@ -142,7 +141,7 @@ public class RythmTemplate extends Template {
     }
 
     static TemplateInfo handleRythmException(RythmException e) {
-        int line = e.templatelineNumber;
+        int line = e.templateLineNumber;
         TemplateInfo t;
         if (-1 == line) {
             line = e.javaLineNumber;

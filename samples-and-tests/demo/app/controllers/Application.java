@@ -15,7 +15,7 @@ public class Application extends Controller {
     }
 
     public static void testDefaultEscape() {
-        String body = "<h1>This is the header one</h1>";
+        String body = "<h1>This is header one</h1>";
         render(body);
     }
 

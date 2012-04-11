@@ -4,7 +4,7 @@ PlayRythm provides an alternative template processing engine for Play!Framework.
 
 Templates are stored in @app/rythm@ directory, -user defined tags are stored in @app/views/tags/rythm@ directory by default-.
 
-p(note) Unlike groovy engine, there is no special place for tag file storage. Basically every template can be invoked as a tag.
+p(note). Unlike groovy engine, there is no special place for tag file storage. Basically every template can be invoked as a tag.
 
 h2. <a name="syntax">Template Syntax</a>
 

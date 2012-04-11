@@ -1,35 +1,36 @@
 @__exitIfNoClass__(controllers.Secure)
 @extends("_layout.html")
+@debug(">>> %s",play.mvc.Scope.Session.current().getAuthenticityToken())
 <div id="login">
-    <h1>@_m("secure.title")</h1>
-    <form action="@_u(authenticate())">
+    <h1>@msg("secure.title")</h1>
+    <form action="@url(authenticate())">
     @authenticityToken()
 
     @if (flash.contains("error")) {
     <p class="error">
-        @_m(flash.get("error"))
+        @msg(flash.get("error"))
     </p>
     }
     @if (flash.contains("success")) {
     <p class="success">
-        @_m(flash.get("success"))
+        @msg(flash.get("success"))
     </p>
     }
 
     <p id="username-field">
-        <label for="username">@_m("secure.username")</label>
+        <label for="username">@msg("secure.username")</label>
         <input type="text" name="username" id="username" value="@flash.get("username")" />
     </p>
     <p id="password-field">
-        <label for="password">@_m("secure.password")</label>
+        <label for="password">@msg("secure.password")</label>
         <input type="password" name="password" id="password" value="" />
     </p>
     <p id="remember-field">
         <input type="checkbox" name="remember" id="remember" value="true" @(flash.get("remember") != null ? "checked=\"true\"" : "") />
-        <label for="remember">@_m("secure.remember")</label>
+        <label for="remember">@msg("secure.remember")</label>
     </p>
     <p id="signin-field">
-        <input type="submit" id="signin" value="@_m("secure.signin")" />
+        <input type="submit" id="signin" value="@msg("secure.signin")" />
     </p>
     </form>
 </div>
