@@ -17,7 +17,7 @@ public class JavaExtensionBridge {
             super("JavaExtensions", name, String.format("JavaExtensions.%s", name));
         }
     }
-    
+
     static class PlayParameterExtension extends IJavaExtension.ParameterExtension {
         public PlayParameterExtension(String name, String signature) {
             super("JavaExtensions", name, signature, String.format("JavaExtensions.%s", name));
@@ -28,7 +28,7 @@ public class JavaExtensionBridge {
         String[] voidExtensions = {
             "enumValues",
             "asXml",
-            "capitalizeWords",
+            //"capitalizeWords",
             "eval",
             "format",
             "since",
@@ -36,12 +36,12 @@ public class JavaExtensionBridge {
             "urlEncode",
             "formatSize",
             "addSlashes",
-            "capFirst",
-            "capAll",
+            //"capFirst",
+            //"capAll",
             "pluralize",
-            "noAccents",
-            "slugify",
-            "camelCase",
+            //"noAccents",
+            //"slugify",
+            //"camelCase",
             "last"
         };
         String[] nonVoidExtensions = {

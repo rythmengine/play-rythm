@@ -32,47 +32,6 @@ public class FastRythmTags {
         }
     }
 
-    public static class cache extends FastRythmTag {
-        @Override
-        protected void call(ParameterList params, Body body) {
-            String key = params.getDefault().toString();
-            String duration = params.size() > 1 ? params.getByPosition(1).toString() : "1h";
-            Object cached = Cache.get(key);
-            if (cached != null) {
-                p(cached);
-                return;
-            }
-            String result = body.toString();
-            Cache.set(key, result, duration);
-            p(result);
-        }
-    }
-    
-    public static class cacheOnProd extends FastRythmTag {
-        @Override
-        protected void call(ParameterList params, Body body) {
-            if (Play.mode == Play.Mode.DEV) {
-                p(body);
-            } else {
-                Object o = params.getDefault();
-                String key = null == o ? null : o.toString().trim();
-                if (S.isEmpty(key)) {
-                    p(body);
-                    return;
-                }
-                String duration = params.size() > 1 ? params.getByPosition(1).toString() : "1h";
-                Object cached = Cache.get(key);
-                if (cached != null) {
-                    p(cached);
-                    return;
-                }
-                String result = body.toString();
-                Cache.set(key, result, duration);
-                p(result);
-            }
-        }
-    }
-
     public static class authenticityTokenValue extends FastRythmTag {
         @Override
         protected void call(ParameterList params, Body body) {

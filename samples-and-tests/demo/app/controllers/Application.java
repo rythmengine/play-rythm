@@ -1,7 +1,10 @@
 package controllers;
 
 import com.greenlaw110.rythm.play.UseRythmTemplateEngine;
+import org.apache.commons.lang3.StringUtils;
 import play.mvc.Controller;
+
+import java.util.Random;
 
 public class Application extends Controller {
 
@@ -21,5 +24,10 @@ public class Application extends Controller {
 
     public static void testRenderSection() {
         render();
+    }
+
+    public static void testCache() {
+        int val = new Random().nextInt(100);
+        render(val);
     }
 }

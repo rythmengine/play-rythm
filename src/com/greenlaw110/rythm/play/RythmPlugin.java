@@ -4,6 +4,7 @@ import com.greenlaw110.rythm.IByteCodeHelper;
 import com.greenlaw110.rythm.IHotswapAgent;
 import com.greenlaw110.rythm.Rythm;
 import com.greenlaw110.rythm.RythmEngine;
+import com.greenlaw110.rythm.cache.ICacheService;
 import com.greenlaw110.rythm.logger.ILogger;
 import com.greenlaw110.rythm.logger.ILoggerFactory;
 import com.greenlaw110.rythm.play.parsers.AbsoluteUrlReverseLookupParser;
@@ -15,12 +16,15 @@ import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.spi.*;
 import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.template.TemplateBase;
+import com.greenlaw110.rythm.utils.IDurationParser;
 import com.greenlaw110.rythm.utils.IImplicitRenderArgProvider;
 import com.greenlaw110.rythm.utils.IRythmListener;
 import com.stevesoft.pat.Regex;
 import play.Logger;
 import play.Play;
 import play.PlayPlugin;
+import play.cache.Cache;
+import play.cache.CacheFor;
 import play.classloading.ApplicationClasses;
 import play.classloading.HotswapAgent;
 import play.classloading.enhancers.ControllersEnhancer;
@@ -222,6 +226,61 @@ public class RythmPlugin extends PlayPlugin {
             }
         });
         debug("Implicit render variables set up");
+
+        p.put("rythm.cache.defaultTTL", 60 * 60);
+        p.put("rythm.cache.service", new ICacheService() {
+            private int defaultTTL = 60 * 60;
+            @Override
+            public void put(String key, String value, int ttl) {
+                Cache.cacheImpl.set(key, value, ttl);
+            }
+
+            @Override
+            public void put(String key, String value) {
+                Cache.cacheImpl.set(key, value, defaultTTL);
+            }
+
+            @Override
+            public String remove(String key) {
+                Object o = Cache.get(key);
+                String s = null == o ? null : o.toString();
+                Cache.delete(key);
+                return s;
+            }
+
+            @Override
+            public String get(String key) {
+                Object o = Cache.get(key);
+                return null == o ? null : o.toString();
+            }
+
+            @Override
+            public boolean contains(String key) {
+                Object o = Cache.get(key);
+                return null != o;
+            }
+
+            @Override
+            public void clean() {
+                Cache.clear();
+            }
+
+            @Override
+            public void setDefaultTTL(int ttl) {
+                defaultTTL = ttl;
+            }
+        });
+
+        p.put("rythm.cache.durationParser", new IDurationParser() {
+            @Override
+            public int parseDuration(String s) {
+                if (null == s) return RythmPlugin.engine.defaultTTL;
+                String confDuration = play.Play.configuration.getProperty(s);
+                if (null != confDuration) s = confDuration;
+                if ("never".equals(confDuration)) return -1;
+                return IDurationParser.DEFAULT_PARSER.parseDuration(s);
+            }
+        });
 
         // set user configurations - coming from application.conf
         for (String key: playConf.stringPropertyNames()) {
