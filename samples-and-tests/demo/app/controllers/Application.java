@@ -30,4 +30,10 @@ public class Application extends Controller {
         int val = new Random().nextInt(100);
         render(val);
     }
+
+    public static void testTagCache() {
+        int var = new Random().nextInt();
+        int val = 100;
+        render(val, var);
+    }
 }

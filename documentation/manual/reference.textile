@@ -77,21 +77,35 @@ bc. $.post("/user/save",
 
 h3. <a name="cache">cache</a>
 
-Caches the tag body using the @play.cache.Cache@ API, for the cache key specified by the tag parameter/
+Caches the tag body or use cached tag body
 
-bc. @cache("startTime") {
-    @(new java.util.Date())
+bc. @cache("5min") {
+    <p>This content will be cached for 5 minutes</p>
+    including calling to any tags like:
+    @myTag()
 }
 
-The body is cached indefinitely by default, but you can specify an expiration duration with the for parameter.
+Parameters:
 
-bc. @cache("currentTime", "3s") {
-    @(new java.util.Date())
+* empty parameter: the enclosed content get cached for duration defined in "rythm.cache.defaultTTL" seconds.By default it's one hour
+* first parameter: optional. specify the cache duration. Examples:
+** 5min, five minutes
+** 1h: one hour
+** 10s: ten seconds
+** 360d: three hundred and sixty days
+* rest parameters: optional. specify the parameters impact the cache key. By default cache key is calculated literally using the enclosed content. However if rest parameters presented the cached key will be calculated using the parameters as well. For example
+
+bc. @cache(null, new Random().nextInt()) {
+    <p>[@(new Date().getTime())]this content will literally looks like not cached at all because the cache argument changes every time</p>
 }
 
-h3. <a name="cacheOnProd">cacheOnProd<a>
+-h3. <a name="cacheOnProd">cacheOnProd<a>-
 
-Same as "cache":#cache, but cache happens only when @play.Play.mode@ is "@prod@".
+-Same as "cache":#cache, but cache happens only when @play.Play.mode@ is "@prod@".-
+
+p(note). @cacheOnProd@ is no longer available in v0.9.8. Use @cache instead. However
+you can configure rythm to do not cache on dev mode by using "rythm.cache.prodOnly" setting.
+By default "rythm.cache.prodOnly" is set to @true@
 
 h3. <a name="doLayout">doLayout</a>
 

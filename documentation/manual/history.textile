@@ -15,11 +15,16 @@ h2. <a name="v0.9.8">v0.9.8</a>
 ** <code>@section</code> tag usage:
 *** previously <code>@section sectionName {...}</code>
 *** now <code>@section("sectionName") {...}</code>
+* New features
 * Add "@raw() {...}":reference#raw keyword
 * Add "@escape(...) {...}":reference#escape keyword
+* Add "@cache(...)":reference#cache keyword
+* Support ".cache(...)" extension to tag invocation
 * Support <code>@for(int i = 0; i < 100; ++i)</code> loop style
 * <code>@return()</code>: abort current template executing process and return to caller
 * <code>@break()</code>: break the current loop: <code>@for(...) {... @break() ...}</code>
+* Small enhancements
+* @renderBody() now works inside a tag and output the passed in tag body
 * Clear alias for Play specific keywords:
 ** <code>@url</code>: <code>@_u</code>, url reverse lookup
 ** <code>@fullUrl</code>: <code>@_au</code>, url reverse lookup with absolute path

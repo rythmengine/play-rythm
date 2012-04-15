@@ -1,0 +1,72 @@
+@args int val, int var
+
+<h2>
+    Call tag without cache
+</h2>
+<p>
+    fixed: @testTagCacheTag(val)
+</p>
+<p>
+    variable: @testTagCacheTag(var)
+</p>
+
+<h2>
+    Call tag with cache without special parameter
+</h2>
+<p>
+    fixed: @testTagCacheTag(val).cache()
+</p>
+<p>
+    variable: @testTagCacheTag(var).cache()
+</p>
+
+<h2>
+    Call tag with cache with specified duration
+</h2>
+<p>
+    fixed: @testTagCacheTag2(val).cache("2s")
+</p>
+<p>
+    variable: @testTagCacheTag2(var).cache("2s")
+</p>
+
+<h2>Call tag with body without cache</h2>
+<p>
+    fixed: @testTagCacheTag2(val) {
+        <b>random int: @(new Random().nextInt())</b>
+    }
+</p>
+<p>
+    variable: @testTagCacheTag2(var) {
+        <b>random int: @(new Random().nextInt())</b>
+    }
+</p>
+
+<h2>Call tag with body using cache without parameter</h2>
+<p>
+    fixed: @testTagCacheTag2(val).cache() {
+        <b>random int: @(new Random().nextInt())</b>
+    }
+</p>
+<p>
+    variable: @testTagCacheTag2(var).cache() {
+        <b>random int: @(new Random().nextInt())</b>
+    }
+</p>
+
+<h2>Call tag with body cache for 3s</h2>
+<p>
+    fixed: @testTagCacheTag2(val).cache("3s") {
+    <b>random int: @(new Random().nextInt())</b>
+    }
+</p>
+<p>
+    variable: @testTagCacheTag2(var).cache("3s") {
+    <b>random int: @(new Random().nextInt())</b>
+    }
+</p>
+<p>
+    variable with fixed cache arg: @testTagCacheTag2(var).cache("3s", 100) {
+    <b>random int: @(new Random().nextInt())</b>
+    }
+</p>

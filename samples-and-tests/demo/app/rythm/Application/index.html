@@ -2,9 +2,18 @@
 @set(title: "home1")
 @args String title;
 
-<a href="@url(Application.testDefaultEscape())">test default escape</a>
-<a href="@url(Application.testRenderSection())">test render section</a>
-<a href="@url(Application.testCache())">test cache</a>
+<div>
+    <a href="@url(Application.testDefaultEscape())">test default escape</a>
+</div>
+<div>
+    <a href="@url(Application.testRenderSection())">test render section</a>
+</div>
+<div>
+    <a href="@url(Application.testCache())">test cache</a>
+</div>
+<div>
+    <a href="@url(Application.testTagCache())">test tag cache</a>
+</div>
 
 @tag sayHello(String who, int pos, String parity, int count) {
     <p>hello @who at @pos is @parity, total: @count</p>
@@ -57,6 +66,11 @@
     @if ("jerry".equalsIgnoreCase(_)) {
         @break
     }
+}
+
+    String who, int pos, String parity, int count;
+@sayHi(who="green", parity="even", pos:3, 5) {
+    sayHiBody
 }
 
 @session.getId()

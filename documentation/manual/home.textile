@@ -13,21 +13,22 @@ PlayRythm is yet another template engine plugin for Play!Framework 1.2x version:
 # Easy to integrate with Play!Framework. There is no special controller needed at all
 # Support layout and tag, as you did in Groovy template
 # Support FastTags and JavaExtensions with constraints
+# Build-in cache support
 # Invoke controller action method directly from within your template
 
 h2. Template Syntax at a glance
 
 Based on Rythm template engine, PlayRythm module provides an easy to read/write template language which is very like that is used in .Net MVC's "Razor template engine":http://razorengine.codeplex.com/. Here is one rythm template example:
 
-bc. @extends(/main.html);
-@args List<User> users;
+bc. @extends(/main.html)
+@args List<User> users
 ...
 <ul>
 @for(User user: users) {
     @if (!user.disabled()) {
         <li class="@user_parity">
             <span>@user_index</span>
-            <a href="@_u(User.show(user.getId()))">user.getName()</a>
+            <a href="@url(User.show(user.getId()))">user.getName()</a>
         </li>
     }
 }
