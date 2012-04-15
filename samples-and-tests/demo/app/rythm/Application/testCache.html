@@ -1,18 +1,68 @@
 @args int val;
 
-<p>value: @val</p>
-
+<table border="1">
+    <thead>
+    <tr>
+        <th>Code</th>
+        <th>Result</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><pre>
+@verbatim() {
 @cache() {
-    <p>cached value: @val</p>
-    <p>no parameter</p>
+    <p>cache without parameter: @val</p>
 }
-
-@cache("5s") {
-    <p>cached value: @val</p>
-    <p>cache for 5 seconds</p>
 }
-
-@cache("5s", val) {
-    <p>cached value: @val</p>
-    <p>cache for 5 seconds and associated with val</p>
+        </pre></td>
+        <td>
+@cache() {
+    <p>cache without parameter: @val</p>
 }
+        </td>
+    </tr>
+    <tr>
+        <td><pre>
+    @verbatim() {
+@cache("2s") {
+    <p>cache for "2s": @val</p>
+}
+    }
+        </pre></td>
+        <td>
+@cache("2s") {
+    <p>cache for "2s": @val</p>
+}
+        </td>
+    </tr>
+    <tr>
+        <td><pre>
+@verbatim() {
+@cache(2*2) {
+    <p>cache for 2*2: @val</p>
+}
+}
+        </pre></td>
+        <td>
+            @cache(2*2) {
+            <p>cache for 2*2: @val</p>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td><pre>
+@verbatim() {
+@cache(2*2, new Random().nextInt()) {
+    <p>cache for 2*2: @val</p>
+}
+}
+        </pre></td>
+        <td>
+            @cache(2*2, new Random().nextInt()) {
+            <p>cache for 2*2 using random int as cache parameter: @val</p>
+            }
+        </td>
+    </tr>
+    </tbody>
+</table>

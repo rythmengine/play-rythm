@@ -89,10 +89,11 @@ Parameters:
 
 * empty parameter: the enclosed content get cached for duration defined in "rythm.cache.defaultTTL" seconds.By default it's one hour
 * first parameter: optional. specify the cache duration. Examples:
-** 5min, five minutes
-** 1h: one hour
-** 10s: ten seconds
-** 360d: three hundred and sixty days
+** "5min", five minutes
+** "1h": one hour
+** "10s": ten seconds
+** "360d": three hundred and sixty days
+** 60 * 60: one hour
 * rest parameters: optional. specify the parameters impact the cache key. By default cache key is calculated literally using the enclosed content. However if rest parameters presented the cached key will be calculated using the parameters as well. For example
 
 bc. @cache(null, new Random().nextInt()) {

@@ -308,11 +308,11 @@ bc. @hello("Bob")
 
 h3. Invoke tag body
 
-If your tag supports a @body@, you can include it at any point in the tag code, using the <code>@_body</code> variable.
+If your tag supports a @body@, you can include it at any point in the tag code, using the <code>@renderBody()</code> keyword.
 
 For example:
 
-bc. Hello @_body!
+bc. Hello @renderBody()!
 
 And you can then pass the name as tag body:
 
