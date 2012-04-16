@@ -176,29 +176,7 @@ bc. @{
     p("<h1>").p(fullName).p("</h1>");
 }@
 
-You can use a script to create a structure such as an iteration in your template:
-
-bc. <h1>Client @client.name</h1>
-<ul>
-@{
-     for(Account account: client.accounts) {
-}@
-     <li>@account</li>
-@{
-     }
-}@
-</ul>
-
-However, this is not encouraged because you have much more clean and powerful @for tag to use:
-
-bc. <h1>Client @client.name</h1>
-<ul>
-@for (Account account: client.accounts) {
-    <li class="@account_parity">@account</li>
-}
-</ul>
-
-Also bear in mind that a template is not a place to do complex things. So, use a tag when you can, or move the computations into the controller or the model object.
+Bear in mind that a template is not a place to do complex things. So, use a tag when you can, or move the computations into the controller or the model object.
 
 h2. <a name="inheritance">Template inheritance</a>
 

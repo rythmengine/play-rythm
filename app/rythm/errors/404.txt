@@ -1,4 +1,4 @@
-@args Exception result;
+@args Exception result
 Not found
 
 @result.getMessage()

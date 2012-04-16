@@ -16,20 +16,20 @@ h2. <a name="v0.9.8">v0.9.8</a>
 *** previously <code>@section sectionName {...}</code>
 *** now <code>@section("sectionName") {...}</code>
 * New features
-* Add "@raw() {...}":reference#raw keyword
-* Add "@escape(...) {...}":reference#escape keyword
-* Add "@cache(...)":reference#cache keyword
-* Support ".cache(...)" extension to tag invocation
-* Support <code>@for(int i = 0; i < 100; ++i)</code> loop style
-* <code>@return()</code>: abort current template executing process and return to caller
-* <code>@break()</code>: break the current loop: <code>@for(...) {... @break() ...}</code>
+** Add "@raw() {...}":reference#raw keyword
+** Add "@escape(...) {...}":reference#escape keyword
+** Add "@cache(...)":reference#cache keyword
+** Support ".cache(...)" extension to tag invocation
+** Support <code>@for(int i = 0; i < 100; ++i)</code> loop style
+** <code>@return()</code>: abort current template executing process and return to caller
+** <code>@break()</code>: break the current loop: <code>@for(...) {... @break() ...}</code>
 * Small enhancements
-@ <code>@verbatim(){}</code> will escape html code
-* <code>@renderBody()</code> now works inside a tag and output the passed in tag body, replacing <code>@_body</code> variable
-* Clear alias for Play specific keywords:
-** <code>@url</code>: <code>@_u</code>, url reverse lookup
-** <code>@fullUrl</code>: <code>@_au</code>, url reverse lookup with absolute path
-** <code>@msg</code>: <code>@_m</code>, i18n message lookup
+** <code>@verbatim(){}</code> will escape html code
+** <code>@renderBody()</code> now works inside a tag and output the passed in tag body, replacing <code>@_body</code> variable
+** Clear alias for Play specific keywords:
+*** <code>@url</code>: <code>@_u</code>, url reverse lookup
+*** <code>@fullUrl</code>: <code>@_au</code>, url reverse lookup with absolute path
+*** <code>@msg</code>: <code>@_m</code>, i18n message lookup
 
 h2. <a name="v0.9.7a">v0.9.7a</a>
 

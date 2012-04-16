@@ -1,4 +1,4 @@
-@import play.templates.JavaExtensions, play.Play, play.utils.Utils, play.exceptions.SourceAttachment;
+@import play.templates.JavaExtensions, play.Play, play.utils.Utils, play.exceptions.SourceAttachment
 @args Exception exception
 @if (exception instanceof play.exceptions.PlayException) {
 @{

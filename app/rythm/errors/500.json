@@ -1,4 +1,4 @@
-@args Exception exception;
+@args Exception exception
 
 @{
     String message = "";

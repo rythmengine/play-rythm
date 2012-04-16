@@ -1,6 +1,5 @@
-@import play.templates.JavaExtensions, play.Play, play.utils.Utils, play.exceptions.SourceAttachment;
-@args play.exceptions.PlayException exception;
-@verbatim {
+@import play.templates.JavaExtensions, play.Play, play.utils.Utils, play.exceptions.SourceAttachment
+@args play.exceptions.PlayException exception
 <style type="text/css">
     html, body, pre {
         margin: 0;
@@ -102,7 +101,6 @@
         font-size: 12px;
     }
 </style>
-} @// verbatim
 
 @if (exception instanceof play.exceptions.PlayException) {
     <h1>@exception.getErrorTitle()</h1>
