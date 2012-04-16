@@ -45,7 +45,7 @@
                     <ul>
                         @for (String module: modules) {
                             <li>
-                                <a href="modules/@module/home">@module.capitalizeWords()</a>
+                                <a href="modules/@module/home">@(play.templates.JavaExtensions.capitalizeWords(module))</a>
                                 @if (apis.contains(module)) {
                                     — <a href="/@@api/-@module/index.html">Browse API</a>
                                 }
