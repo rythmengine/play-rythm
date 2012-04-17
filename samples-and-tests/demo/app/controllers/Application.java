@@ -13,8 +13,9 @@ public class Application extends Controller {
         render(title);
     }
 
-    public static void callTemplate() {
-        render();
+    public static void bug404xml() {
+        Exception result = new Exception("404.xml");
+        render("errors/404.xml", result);
     }
 
     public static void testDefaultEscape() {

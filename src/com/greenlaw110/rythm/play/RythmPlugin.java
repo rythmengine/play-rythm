@@ -269,6 +269,11 @@ public class RythmPlugin extends PlayPlugin {
             public void setDefaultTTL(int ttl) {
                 defaultTTL = ttl;
             }
+
+            @Override
+            public void shutdown() {
+                // doing nothing as the resource is managed by Play cache service
+            }
         });
 
         p.put("rythm.cache.durationParser", new IDurationParser() {
@@ -347,6 +352,7 @@ public class RythmPlugin extends PlayPlugin {
 //                }
 //            });
 //            debug("Template class enhancer registered");
+            Rythm.engine.cacheService.shutdown();
             Rythm.engine = engine;
 
             IParserFactory[] factories = {new AbsoluteUrlReverseLookupParser(), new UrlReverseLookupParser(),

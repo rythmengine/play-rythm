@@ -4,7 +4,6 @@
 
 # Home page
 GET     /                                       Application.index
-GET /callTemplate Application.callTemplate
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
