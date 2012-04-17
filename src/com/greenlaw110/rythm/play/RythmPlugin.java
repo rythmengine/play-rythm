@@ -338,7 +338,6 @@ public class RythmPlugin extends PlayPlugin {
                     template.setRenderArgs(m);
                 }
             });
-            debug("Implicit render variables runtime provider set up");
 //            engine.registerTemplateClassEnhancer(new ITemplateClassEnhancer() {
 //                @Override
 //                public byte[] enhance(String className, byte[] classBytes) throws  Exception {

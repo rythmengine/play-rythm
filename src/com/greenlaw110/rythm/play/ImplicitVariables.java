@@ -52,8 +52,7 @@ class ImplicitVariables {
                     return new Messages();
                 }
             },
-            // use _play instead of play to avoid name conflicting why reference class in play.** package with full
-            // qualified name
+            // use _play instead of play to avoid name conflicting why reference class in play.** package with full qualified name
             new Var("_play", "play.Play") {
                 @Override
                 protected Object evaluate() {
@@ -63,7 +62,8 @@ class ImplicitVariables {
             new Var("_response_encoding", "java.lang.String") {
                 @Override
                 protected Object evaluate() {
-                    return Http.Response.current().encoding;
+                    Http.Response resp = Http.Response.current();
+                    return null == resp ? "utf-8" : resp.encoding;
                 }
             },
             new Var("_rythmPlugin", "com.greenlaw110.rythm.play.RythmPlugin") {
