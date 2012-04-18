@@ -37,4 +37,11 @@ public class Application extends Controller {
         int val = 100;
         render(val, var);
     }
+
+    /**
+     * Freewind report _inits.html cannot be called from other template
+     */
+    public static void test_Inits() {
+        render();
+    }
 }
