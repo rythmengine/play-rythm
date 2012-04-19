@@ -196,7 +196,7 @@ bc. <h1>Main template</h1>
     @doLayout()
 </div>
 
-p(note). You can also use @renderBody@ in place of @doLayout@ to include the content, which comes from Razor
+p(note). You can also use @renderBody@ in place of @doLayout@ to include the content, which comes from Razor. @render@ or @renderSection@ without parameter also does the same thing
 
 h3. Define section and output section
 
@@ -216,11 +216,11 @@ bc. <!DOCTYPE html>
   </div>
 
   <div id="sidebar">
-    @renderSection("sidebar")
+    @render("sidebar") @// render "sidebar" section
   </div>
 
   <div id="content">
-    @renderBody()
+    @render() @// render body, could also use @doLayout()
   </div>
 
   <div id="footer">
@@ -244,7 +244,7 @@ bc. @extends(/main.html)
 
 <p>Yada, Yada, Yada</p>
 
-@section sidebar {
+@section("sidebar") { @// define "sidebar" section
   <p>This sidebar has "Home Page" specific content</p>
 
   <ul>
@@ -265,7 +265,7 @@ bc. Hello from tag!
 
 No need to configure anything. You can use the tag directly:
 
-bc. @hello
+bc. @hello() @// the brace () is a must to call a tag
 
 h3. Retrieve tag parameters
 
@@ -286,11 +286,11 @@ bc. @hello("Bob")
 
 h3. Invoke tag body
 
-If your tag supports a @body@, you can include it at any point in the tag code, using the <code>@renderBody()</code> keyword.
+If your tag supports a @body@, you can include it at any point in the tag code, using the <code>@render()</code> keyword.
 
 For example:
 
-bc. Hello @renderBody()!
+bc. Hello @render()!
 
 And you can then pass the name as tag body:
 

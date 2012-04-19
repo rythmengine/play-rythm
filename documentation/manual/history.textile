@@ -30,6 +30,7 @@ h2. <a name="v0.9.8">v0.9.8</a>
 *** <code>@url</code>: <code>@_u</code>, url reverse lookup
 *** <code>@fullUrl</code>: <code>@_au</code>, url reverse lookup with absolute path
 *** <code>@msg</code>: <code>@_m</code>, i18n message lookup
+*** <code>@render() without parameter</code> now equals to <code>@renderBody()</code>
 
 h2. <a name="v0.9.7a">v0.9.7a</a>
 

@@ -1,3 +1,4 @@
+@__exitIfNoClass__(controllers.Secure)
 @import controllers.Secure;
 @args Object arg;
 @if (session.get("username") != null) {

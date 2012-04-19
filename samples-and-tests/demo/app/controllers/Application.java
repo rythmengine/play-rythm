@@ -44,4 +44,5 @@ public class Application extends Controller {
     public static void test_Inits() {
         render();
     }
+
 }

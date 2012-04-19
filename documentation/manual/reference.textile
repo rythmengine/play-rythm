@@ -105,7 +105,7 @@ bc. @cache(null, new Random().nextInt()) {
 -Same as "cache":#cache, but cache happens only when @play.Play.mode@ is "@prod@".-
 
 p(note). @cacheOnProd@ is no longer available in v0.9.8. Use @cache instead. However
-you can configure rythm to do not cache on dev mode by using "rythm.cache.prodOnly" setting.
+you can configure rythm not to cache on dev mode by using "rythm.cache.prodOnly" setting.
 By default "rythm.cache.prodOnly" is set to @true@
 
 h3. <a name="doLayout">doLayout</a>
@@ -118,7 +118,9 @@ bc. <!-- common header here -->
 </div>
 <!-- common footer here -->
 
-@doLayout@ tag has an alias called "renderBody":#renderBody
+@doLayout@ tag is an alias of "renderBody":#renderBody tag
+
+p(note). An easier and clean way to <code>@doLayout()</code> is <code>@render()</code>
 
 See also "template inheritance":user_guide#inheritance
 
@@ -248,6 +250,7 @@ The tag defines implicit variables in it's body. The variable names are prefixed
 * @name_isFirst@, true for the first element
 * @name_isLast@, true for the last element
 * @name_parity@, alternates between @odd@ and @even@
+* @name__isOdd@, true if the current element is odd in sequence
 * @name_size@, the size of the collection
 
 bc. <ul>
@@ -308,13 +311,17 @@ h3. <a name="renderBody">renderBody</a>
 
 @renderBody@ is an alias of "doLayout":#doLayout.
 
-h3. <a name="renderSection">renderSection</a>
+h3. <a name="renderSection">renderSection|render</a>
 
 Used with template inheritance, this tag inserts the evaluated sub-template’s contents defined with "section":#section tag
 
 bc. <div id="sidebar">
     @renderSection("sidebar")
 </div>
+
+p(note). @renderSection@ can be short to @render@.
+
+p(note). When there is no parameter in @renderSection@ call, it equals to @renderBody@
 
 h3. <a name="section">section</a>
 
