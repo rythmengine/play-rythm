@@ -36,12 +36,14 @@ bc. @extends(/main.html)
 
 h2. Use PlayRythm template engine
 
-h4. 1. Add PlayRythm into your @dependencies.conf@ file:
+h4. 1. Add PlayRythm into your @conf/dependencies.yml@ file:
 
 bc. # Application dependencies
    require:
        - play -> rythm
 
+p(note). Don't forget run @play deps --sync@ to download rythm module after you updated your @conf/dependencies.yml@ file
+	   
 h4. 2. Create the template file in @app/rythm@ folder.
 
 The layout of the folder should be the same as your @app/views@ folder.

@@ -78,13 +78,13 @@ h3. <a name="call_build-in_function">Call built-in function</a>
 
 bc. @// indicate this template extends "/main.html" template
 @extends(/main.html)
-
+ 
 @// declare the java package/classes needed in this template
 @import play.util.*, play.templates.*
-
+ 
 @// declare arguments used in this template
 @args String name, int score
-
+ 
 @// output some information for debugging purpose
 @debug("the variable is %s", someVariable)
 
@@ -98,7 +98,7 @@ bc. @greenscript.js("app<jqueryui<jquery", all:true)
 
 h4. Call a tag with body
 
-To invoke tag which accept body, the user just use the common @{ }@ to include the body content:
+To invoke tag with a body, just use the common @{ }@ to include the body content:
 
 bc. @greenscript.js() {
     $(function(){
@@ -106,15 +106,42 @@ bc. @greenscript.js() {
     })
 }
 
-Rythm also support the "here document":http://en.wikipedia.org/wiki/Here_document style symbol to mark tag body:
+h5. <a name="call_tag_relative_path">Call tag using relative and import path</a>
 
-bc. @greenscript.js() <<
-    $(function(){
-        // do whatever needed
-    })
-@
+Start from v0.9.8 you were able to invoke tag use relative path and import path. So suppose you have the following file system structure:
 
-hmm... the here document style is my favorite however ;-)
+bc. \---app
+    \---rythm
+        |   tag1.html
+        |
+        +---Application
+        |   |   index.html
+        |   |   tagA.html
+        |   |
+        |   \---bar
+        |           tagB.html
+        |
+        \---foo
+            |   tag2.html
+            |
+            \---zee
+                    tag3.html
+
+Now inside your app/rythm/Application/index.html, you call those tags like follows:
+
+bc. @Application.tagA() @// full path invocation
+@Application.bar.tagB() @// full path invocation
+@tagA() @// relative path invocation
+@bar.tagB() @// relative path invocation
+
+You can also save typing by using <code>@import</code> path:
+
+bc. 
+@import foo.*
+@foo.tag2() @// full path invocation
+@foo.zee.tag3() @// full path invocation
+@tag2() @// import path invocation
+@zee.tag3() @// import path invocation
 
 h4. Passing arguments to tag
 
@@ -134,6 +161,27 @@ bc. @hello(title: "Mr.", who: "Green")
 Unlike groovy template, you are free to pass arguments to tag by position in Rythem template:
 
 bc. @hello("Mr.", "Green)
+
+h4. <a name="tag_invocation_cache">Cache tag invocation result</a>
+
+Start from v0.9.8 you can cache tag invocation result easily
+
+bc. @myTag(1, 2, "3").cache() @// cache using default TTL, which is 1 hour
+@myTag(1, 2, "3").cache("1h") @// cache invocation result for 1 hour
+@myTag(1, 2, "3").cache(60 * 60) @// cache invocation result for 1 hour
+
+The above statement invoke tag @myTag@ using parameter [1, 2, "3"] and cache the result for one hour. Within the next one hour, the tag will not be invoked, instead the cached result will be returned if the parameter passed in are still [1, 2, "3"]. 
+
+So you see Rythm is smart enough to cache tag invocation against tag name and the parameter passed in. If the tag has body, the body will also be taken into consideration when calculating the cache key.
+
+In some cases where the tag invocation result is not merely a function of the tag, parameter and body, but also some implicit variables, where you might expect different result even you have completely the same signature of tag invocation. Rythm provide way for you to take those additional implicit variable into account when calculating the cache key:
+
+bc. @{User user = User.current()}
+@myTag(1, 2, "3").cache("1h", user.isAdmin())
+
+The above statement shows how to pass additional parameter to cache extention.
+
+p(note). Also refer to <a href="reference#cache">@cache</a> keyword for more on parameters
 
 h3. <a name="nameconflict">Tag or expression?</a>
 

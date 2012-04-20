@@ -75,6 +75,16 @@ bc. $.post("/user/save",
     {authenticityToken: "1c6d92fed96200347f06b7c5e1a3a28fa258ef7c", ...},
     function(data){...});
 
+h3. <a name="break">break</a>
+
+Break to <code>@for</code> loop
+
+bc. @for(User user: users) {
+	@if(user.isAdmin()) {
+		@break()
+	}
+}
+
 h3. <a name="cache">cache</a>
 
 Caches the tag body or use cached tag body
@@ -260,10 +270,9 @@ bc. <ul>
 }
 </ul>
 
-You can also use the second form of <code>@for</code> tag:
+<a name="for_second_form">You can also use the second form of <code>@for</code> tag:</a>
 
-bc.<ul>
-@for(int i = 0; i < 6; ++i) {
+bc. @for(int i = 0; i < 6; ++i) {
     <li>the current index is @i</li>
 }
 
@@ -323,6 +332,15 @@ p(note). @renderSection@ can be short to @render@.
 
 p(note). When there is no parameter in @renderSection@ call, it equals to @renderBody@
 
+h3. <a name="return">return</a>
+
+Abort the template execution and return to caller:
+
+bc. @if(!user.isAdmin()) {
+	@return()
+}
+<p class="admin-panel">...
+
 h3. <a name="section">section</a>
 
 Define a block of template to be output in parent template's named section.
@@ -362,6 +380,8 @@ bc. @sayHi("Play!framework")
 or pass argument by name:
 
 bc. @sayHi(who: "Play!framework")
+
+p(note). <code>@tag</code> is not used to invoke a tag. Check the "user guide":user_guide#invoke_tag to see how to invoke a tag.
 
 h3. <a name="raw">raw</a>
 

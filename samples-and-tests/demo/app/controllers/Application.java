@@ -38,6 +38,14 @@ public class Application extends Controller {
         render(val, var);
     }
 
+    public static void testLoadTagByRelativePath() {
+        render();
+    }
+
+    public static void testLoadTagUsingImportPath() {
+        render();
+    }
+
     /**
      * Freewind report _inits.html cannot be called from other template
      */

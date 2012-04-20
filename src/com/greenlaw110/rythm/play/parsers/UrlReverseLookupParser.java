@@ -8,6 +8,7 @@ import com.greenlaw110.rythm.internal.parser.build_in.KeywordParserFactory;
 import com.greenlaw110.rythm.spi.IContext;
 import com.greenlaw110.rythm.spi.IKeyword;
 import com.greenlaw110.rythm.spi.IParser;
+import com.greenlaw110.rythm.spi.Token;
 import com.greenlaw110.rythm.utils.S;
 import com.greenlaw110.rythm.utils.TextBuilder;
 import com.stevesoft.pat.Regex;
@@ -80,7 +81,7 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
                 }
                 if (null != staticUrl) {
                     staticRouteMap.put(s, staticUrl);
-                    return new CodeToken(staticUrl, ctx());
+                    return new Token(staticUrl, ctx());
                 }
 
                 // now try parse action name and params

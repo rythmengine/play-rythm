@@ -1,0 +1,49 @@
+@import foo.bar.*
+
+<h1>Demonstrate Tag invoke using import path name</h1>
+<pre>
+@verbatim(){
+// import statement
+@import foo.bar.*
+}
+
+// file location:
+1. foo/bar/tag1.html
+2. foo/bar/zee/tag2.html
+</pre>
+<table border="1">
+    <thead>
+    <th>Code</th>
+    <th>Result</th>
+    </thead>
+    <tbody>
+    <tr>
+        <td><pre>
+@verbatim(){
+<b>Invoke tag using full path</b>
+@foo.bar.tag1()
+@foo.bar.zee.tag2()
+}
+            </pre></td>
+        <td>
+            <b>Invoke tag using full path</b>
+            @foo.bar.tag1()
+            @foo.bar.zee.tag2()
+        </td>
+    </tr>
+    <tr>
+        <td><pre>
+@verbatim(){
+<b>Invoke tag using import path</b>
+@tag1()
+@zee.tag2()
+}
+            </pre></td>
+        <td>
+            <b>Invoke tag using relative path</b>
+            @tag1()
+            @zee.tag2()
+        </td>
+    </tr>
+    </tbody>
+</table>

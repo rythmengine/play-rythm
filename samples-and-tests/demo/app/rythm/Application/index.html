@@ -20,6 +20,12 @@
 <div>
     <a href="@url(Application.test_Inits())">_inits.html bug</a>
 </div>
+<div>
+    <a href="@url(Application.testLoadTagByRelativePath())">load tag using relative path</a>
+</div>
+<div>
+    <a href="@url(Application.testLoadTagUsingImportPath())">load tag using import path</a>
+</div>
 
 @tag sayHello(String who, int pos, String parity, int count) {
     <p>hello @who at @pos is @parity, total: @count</p>

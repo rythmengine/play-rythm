@@ -160,23 +160,23 @@
     }
 </p>
 <p>
-    <h3>tag with body cache for 3 seconds</h3>
+    <h3>fixed tag with body cache for 3 seconds</h3>
     fixed: @testTagCacheTag2(val).cache(3) {
     <p>[@@testTagCacheTag2(val).cache(3)]</p>
     <p>random int: @(new Random().nextInt())</p>
     }
 </p>
 <p>
-    <h3>tag with body cache for "3s"</h3>
-    variable: @testTagCacheTag2(var).cache("3s") {
-    <p>[@@testTagCacheTag2(var).cache("3s")]</p>
+    <h3>fixed tag with body cache for "3s" using variable as additional cache parameter</h3>
+    fixed: @testTagCacheTag2(val).cache(3, System.currentTimeMillis()) {
+    <p>[@@testTagCacheTag2(val).cache(3, System.currentTimeMillis())]</p>
     <p>random int: @(new Random().nextInt())</p>
     }
 </p>
 <p>
-    <h3>tag with body cache for "3s" using fixed 100 as cache parameter</h3>
-    variable with fixed cache arg: @testTagCacheTag2(var).cache("3s", 100) {
-    <p>[@testTagCacheTag2(var).cache("3s", 100)]</p>
+    <h3>variable tag with body cache for "3s"</h3>
+    variable: @testTagCacheTag2(var).cache("3s") {
+    <p>[@@testTagCacheTag2(var).cache("3s")]</p>
     <p>random int: @(new Random().nextInt())</p>
     }
 </p>
@@ -191,23 +191,23 @@
                 }
                 </p>
                 <p>
-                <h3>tag with body cache for 3 seconds</h3>
+                <h3>fixed tag with body cache for 3 seconds</h3>
                 fixed: @testTagCacheTag2(val).cache(3) {
                 <p>[@@testTagCacheTag2(val).cache(3)]</p>
                 <p>random int: @(new Random().nextInt())</p>
                 }
                 </p>
                 <p>
-                <h3>tag with body cache for "3s"</h3>
-                variable: @testTagCacheTag2(var).cache("3s") {
-                <p>[@@testTagCacheTag2(var).cache("3s")]</p>
+                <h3>fixed tag with body cache for "3s" using variable as additional cache parameter</h3>
+                fixed: @testTagCacheTag2(val).cache(3, System.currentTimeMillis()) {
+                <p>[@@testTagCacheTag2(val).cache(3, System.currentTimeMillis())]</p>
                 <p>random int: @(new Random().nextInt())</p>
                 }
                 </p>
                 <p>
-                <h3>tag with body cache for "3s" using fixed 100 as cache parameter</h3>
-                variable with fixed cache arg: @testTagCacheTag2(var).cache("3s", 100) {
-                <p>[@testTagCacheTag2(var).cache("3s", 100)]</p>
+                <h3>variable tag with body cache for "3s"</h3>
+                variable: @testTagCacheTag2(var).cache("3s") {
+                <p>[@@testTagCacheTag2(var).cache("3s")]</p>
                 <p>random int: @(new Random().nextInt())</p>
                 }
                 </p>
