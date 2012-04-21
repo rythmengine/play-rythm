@@ -208,7 +208,9 @@ The above statement will invoke the controller <code>@controller.MyPortal</code>
 
 p(note). See "integration guide":integration#action for more detail about invoking controller action method
 
-p(note). Because controller action invocation are treated as tag invocation, therefore cache tag invocation result also apply to controller action invocation. Please refer to "Cache tag invocation result":user_guide#tag_invocation_cache for details
+<a name="invoke_action_cache"></a>
+
+p(note). Because controller action invocation are treated as tag invocation, therefore caching tag invocation result also applies to controller action invocation. Please refer to "Cache tag invocation result":user_guide#tag_invocation_cache for details
 
 h3. <a name="scripting">Scripting</a>
 

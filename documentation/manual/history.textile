@@ -16,18 +16,18 @@ h2. <a name="v0.9.8">v0.9.8</a>
 *** previously <code>@section sectionName {...}</code>
 *** now <code>@section("sectionName") {...}</code>
 * New features
-** Add "@raw() {...}":reference#raw keyword
-** Add "@escape(...) {...}":reference#escape keyword
-** Add "@cache(...)":reference#cache keyword
+** "Mark a template block to output raw expression":reference#raw
+** "Mark a template block to escape expression using specific type":reference#escape
+** "cache a template block":reference#cache
 ** "Cache tag invocation result":user_guide#tag_invocation_cache
-** Cache controller action invocation result
-** <a href="reference#for_second_form">Support <code>@for(int i = 0; i < 100; ++i)</code> loop style</a>
+** "Cache controller action invocation result":user_guide#invoke_action_cache
+** "Invoke tag/action call using relative path and import path":user_guide#call_tag_relative_path
 ** <a href="reference#return">Abort current template executing process and return to caller using <code>@return()</code></a>
-** <a href="reference#break">Break the current loop: <code>@for(...) {... @break() ...}</code> using <code>@break()</code>"</a>
+** <a href="reference#break">Break the current loop using <code>@break()</code>"</a>
 * Small enhancements
 ** <code>@verbatim(){}</code> will escape html code
 ** <code>@renderBody()</code> now works inside a tag and output the passed in tag body, replacing <code>@_body</code> variable
-** "Invoke tags using relative path and import path":user_guide#call_tag_relative_path
+** <a href="reference#for_second_form">Support <code>@for(int i = 0; i < 100; ++i)</code> loop style</a>
 ** Clear alias for Play specific keywords:
 *** <code>@url</code>: <code>@_u</code>, url reverse lookup
 *** <code>@fullUrl</code>: <code>@_au</code>, url reverse lookup with absolute path
