@@ -394,6 +394,7 @@ public class RythmPlugin extends PlayPlugin {
         l = System.currentTimeMillis();
         FastTagBridge.registerFastTags(engine);
         registerJavaTags(engine);
+        ActionTagBridge.registerActionTags(engine);
         debug("%sms to register fast tags", System.currentTimeMillis() - l);
 
         RythmTemplateLoader.clear();
@@ -401,7 +402,7 @@ public class RythmPlugin extends PlayPlugin {
 
     public static final String ACTION_CALL_FLAG_KEY = "__RYTHM_PLUGIN_ACTION_CALL_";
 
-    private static void resetActionCallFlag() {
+    public static void resetActionCallFlag() {
         Stack<Boolean> actionCalls = Scope.RenderArgs.current().get(ACTION_CALL_FLAG_KEY, Stack.class);
         if (null != actionCalls) {
             actionCalls.pop();

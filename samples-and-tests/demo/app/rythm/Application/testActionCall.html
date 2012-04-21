@@ -1,0 +1,42 @@
+@import controllers.*
+<h1>Call action method from view</h1>
+
+<table border="1">
+    <thead>
+    <th>code</th>
+    <th>result</th>
+    </thead>
+    <tbody>
+    <tr>
+        <td><pre>
+@verbatim() {
+@controllers.Application.timestamp()
+}
+        </pre></td>
+        <td>
+            @controllers.Application.timestamp()
+        </td>
+    </tr>
+    <tr>
+        <td><pre>
+@verbatim() {
+@controllers.Application.timestamp().cache(3)
+}
+        </pre></td>
+        <td>
+            @controllers.Application.timestamp().cache(3)
+        </td>
+    </tr>
+    <tr>
+        <td><pre>
+@verbatim() {
+@Application.timestamp()
+}
+        </pre></td>
+        <td>
+            @Application.timestamp()
+        </td>
+    </tr>
+    </tbody>
+</table>
+

@@ -3,11 +3,13 @@ package controllers;
 import com.greenlaw110.rythm.play.UseRythmTemplateEngine;
 import org.apache.commons.lang3.StringUtils;
 import play.mvc.Controller;
+import play.mvc.Util;
 
 import java.util.Random;
 
 public class Application extends Controller {
 
+    @Util
     public static void index() {
         String title = "Hello";
         render(title);
@@ -50,6 +52,19 @@ public class Application extends Controller {
      * Freewind report _inits.html cannot be called from other template
      */
     public static void test_Inits() {
+        render();
+    }
+
+    public static void timestamp() {
+        long timestamp = System.currentTimeMillis();
+        render(timestamp);
+    }
+
+    public static void testActionCall() {
+        render();
+    }
+
+    public static void testFastTag() {
         render();
     }
 

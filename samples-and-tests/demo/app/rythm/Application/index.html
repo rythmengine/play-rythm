@@ -26,6 +26,12 @@
 <div>
     <a href="@url(Application.testLoadTagUsingImportPath())">load tag using import path</a>
 </div>
+<div>
+    <a href="@url(Application.testActionCall())">call action method from view</a>
+</div>
+<div>
+    <a href="@url(Application.testFastTag())">Call fast tag</a>
+</div>
 
 @tag sayHello(String who, int pos, String parity, int count) {
     <p>hello @who at @pos is @parity, total: @count</p>

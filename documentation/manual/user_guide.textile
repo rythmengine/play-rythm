@@ -78,13 +78,13 @@ h3. <a name="call_build-in_function">Call built-in function</a>
 
 bc. @// indicate this template extends "/main.html" template
 @extends(/main.html)
- 
+
 @// declare the java package/classes needed in this template
 @import play.util.*, play.templates.*
- 
+
 @// declare arguments used in this template
 @args String name, int score
- 
+
 @// output some information for debugging purpose
 @debug("the variable is %s", someVariable)
 
@@ -136,7 +136,7 @@ bc. @Application.tagA() @// full path invocation
 
 You can also save typing by using <code>@import</code> path:
 
-bc. 
+bc.
 @import foo.*
 @foo.tag2() @// full path invocation
 @foo.zee.tag3() @// full path invocation
@@ -170,7 +170,7 @@ bc. @myTag(1, 2, "3").cache() @// cache using default TTL, which is 1 hour
 @myTag(1, 2, "3").cache("1h") @// cache invocation result for 1 hour
 @myTag(1, 2, "3").cache(60 * 60) @// cache invocation result for 1 hour
 
-The above statement invoke tag @myTag@ using parameter [1, 2, "3"] and cache the result for one hour. Within the next one hour, the tag will not be invoked, instead the cached result will be returned if the parameter passed in are still [1, 2, "3"]. 
+The above statement invoke tag @myTag@ using parameter [1, 2, "3"] and cache the result for one hour. Within the next one hour, the tag will not be invoked, instead the cached result will be returned if the parameter passed in are still [1, 2, "3"].
 
 So you see Rythm is smart enough to cache tag invocation against tag name and the parameter passed in. If the tag has body, the body will also be taken into consideration when calculating the cache key.
 
@@ -206,7 +206,9 @@ bc. @controllers.MyPortal.welcomePanel()
 
 The above statement will invoke the controller <code>@controller.MyPortal</code>'s action method @welcomePanel@, and fill the render result content in place of the statement
 
-p(note) See "integration guide":integration#action for more detail about invoking controller action method
+p(note). See "integration guide":integration#action for more detail about invoking controller action method
+
+p(note). Because controller action invocation are treated as tag invocation, therefore cache tag invocation result also apply to controller action invocation. Please refer to "Cache tag invocation result":user_guide#tag_invocation_cache for details
 
 h3. <a name="scripting">Scripting</a>
 
@@ -258,43 +260,31 @@ bc. <!DOCTYPE html>
 ...
 </head>
 <body>
-
   <div id="header">
     <h1>@get("title')</h1>
   </div>
-
   <div id="sidebar">
     @render("sidebar") @// render "sidebar" section
   </div>
-
   <div id="content">
     @render() @// render body, could also use @doLayout()
   </div>
-
   <div id="footer">
     <p>Site footer - &copy; Santa Clause</p>
   </div>
-
 </body>
 </html>
 
 And in your parent template, say 'index.html':
 
 bc. @extends(/main.html)
-
 @set(title="Home page")
-
 <h2>Welcome to my site</h2>
-
 <p>This is our home page</p>
-
 <p>Not super exciting is it?</p>
-
 <p>Yada, Yada, Yada</p>
-
 @section("sidebar") { @// define "sidebar" section
   <p>This sidebar has "Home Page" specific content</p>
-
   <ul>
     <li><a href="#">Link One</a></li>
     <li><a href="#">Link Two</a></li>
@@ -445,9 +435,9 @@ Unlike Play's Groovy template that all objects added to the renderArgs scope are
 
 So as you can see most of these implicit variables are the same as those defined in "Groovy templates":http://localhost:9000/@documentation/modules/play/user_guide#Implicitobjectsavailableinatemplate. The only exception is Groovy's implicit variable @play@ has been renamed to @_play@. The reason for this is I want to allow user to use full qualified classes in play.* package.
 
-p(note). If you have put something into your @RenderArgs@, and you didn't declare it using <code>@args</code> statement, you are still able to access it via @_properties@ variable. But please be noted that all stuff you get from @_properties@ are @Object@ type, and you need to explicitly cast them before accessing properties and methods of them:
+p(note). If you have put something into your @RenderArgs@, and you didn't declare it using <code>@args</code> statement, you are still able to access it via @getRenderArg()@ method. But please be noted that all stuff you get via @getRenderArg()@ call are @Object@ type, and you need to explicitly cast them before accessing properties and methods of them:
 
-bc. @(((User)_properties.get("user")).getName())
+bc. @(((User)getRenderArg("user")).getName())
 
 h2. Implicit import statements
 

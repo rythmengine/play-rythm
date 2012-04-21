@@ -52,6 +52,7 @@ public class FastTagBridge extends JavaTagBase {
 
         @Override
         public Object call() {
+            if (null == _body) return "";
             _body.call();
             return _body.getOut().toString();
         }
@@ -80,11 +81,17 @@ public class FastTagBridge extends JavaTagBase {
     private String nameSpace;
     private String tagName;
     private Class<?> targetClass;
+    private Method method;
 
     public FastTagBridge(String namespace, String tagName, Class<?> targetClass) {
         this.nameSpace = namespace;
         this.tagName = tagName;
         this.targetClass = targetClass;
+        try {
+            method = targetClass.getDeclaredMethod("_" + tagName, Map.class, Closure.class, PrintWriter.class, GroovyTemplate.ExecutableTemplate.class, int.class);
+        } catch (NoSuchMethodException e) {
+            throw new UnexpectedException("cannot find fast tag method to invoke:" + tagName, e);
+        }
     }
 
     @Override
@@ -109,10 +116,7 @@ public class FastTagBridge extends JavaTagBase {
             }
         });
         try {
-            Method m = targetClass.getDeclaredMethod("_" + tagName, Map.class, Closure.class, PrintWriter.class, GroovyTemplate.ExecutableTemplate.class, int.class);
-            m.invoke(null, null == params ? new HashMap() : params.asMap(), new TagBodyClosure(body), w, new RythmExecutableTemplate((TemplateBase)_caller), 0);
-        } catch (NoSuchMethodException e) {
-            throw new UnexpectedException("cannot find fast tag method to invoke: " + tagName, e);
+            method.invoke(null, null == params ? new HashMap() : params.asMap(), new TagBodyClosure(body), w, new RythmExecutableTemplate((TemplateBase)_caller), 0);
         } catch (InvocationTargetException e) {
             throw new UnexpectedException("cannot invoke fast tag method: " + tagName, e);
         } catch (IllegalAccessException e) {
