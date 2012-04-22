@@ -25,7 +25,7 @@ h3. New features
 * "Invoke tag/action call using relative path and import path":user_guide#call_tag_relative_path
 * "Include other template inline":user_guide#include. This provides a way to "reuse inline tag definitions across multiple views":user_guide#reuse_inline_tag
 * <a href="reference#return">Abort current template executing process and return to caller using <code>@return</code></a>
-* <a href="reference#break">Break the current loop using <code>@break</code>"</a>
+* <a href="reference#break">Break the current loop using <code>@break</code></a>
 * <a href="reference#continue">Continue the current loop using <code>@continue</code></a>
 
 h3. Small enhancements
@@ -38,6 +38,14 @@ h3. Small enhancements
 ** <code>@fullUrl</code>: <code>@_au</code>, url reverse lookup with absolute path
 ** <code>@msg</code>: <code>@_m</code>, i18n message lookup
 ** <code>@render() without parameter</code> now equals to <code>@renderBody()</code>
+
+h3. Issues closed
+
+* "https://github.com/greenlaw110/Rythm/issues/6":https://github.com/greenlaw110/Rythm/issues/6
+* "https://github.com/greenlaw110/Rythm/issues/21":https://github.com/greenlaw110/Rythm/issues/21
+* "https://github.com/greenlaw110/Rythm/issues/14":https://github.com/greenlaw110/Rythm/issues/14
+* "https://github.com/greenlaw110/play-rythm/issues/5":https://github.com/greenlaw110/play-rythm/issues/5
+* "https://github.com/greenlaw110/play-rythm/issues/1":https://github.com/greenlaw110/play-rythm/issues/1
 
 h2. <a name="v0.9.7a">v0.9.7a</a>
 
