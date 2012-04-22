@@ -51,16 +51,16 @@ bc. @myVar.raw()
 
 If you have a block of code that you would like to turn of the default escape behavior, you can use
 
-bc @raw() {
-...
+bc. @raw() {
+    echo @myVar @// this will not be escaped
 }
 
 In addition to HTML escape, PlayRythm provides escape to the following format as well:
 
-# CSV: escape as csv format
-# JS/JavaScript: escape as javascript format
-# Java: escape as Java format
-# XML: escape as XML format
+# @CSV@: escape as csv format
+# @JS/JavaScript@: escape as javascript format
+# @Java@: escape as Java format
+# @XML@: escape as XML format
 
 And the user can use to these format like follows:
 
@@ -78,13 +78,10 @@ h3. <a name="call_build-in_function">Call built-in function</a>
 
 bc. @// indicate this template extends "/main.html" template
 @extends(/main.html)
-
 @// declare the java package/classes needed in this template
 @import play.util.*, play.templates.*
-
 @// declare arguments used in this template
 @args String name, int score
-
 @// output some information for debugging purpose
 @debug("the variable is %s", someVariable)
 
@@ -92,7 +89,7 @@ There are about a dozen of built-in functions defined in Rythm, please go to "Re
 
 h3. <a name="invoke_tag">Invoke tag</a>
 
-Yes "@" is also used to invoke tags:
+To invoke a tag, use '@' plus tag name and brace pair:
 
 bc. @greenscript.js("app<jqueryui<jquery", all:true)
 
@@ -105,6 +102,8 @@ bc. @greenscript.js() {
         // do whatever needed
     })
 }
+
+p(note). You must append @()@ to tag name even it does not require any parameter. The only exception to this rule is <a href="reference#return"><code>@return</code></a>, <a href="reference#break"><code>@break</code></a> and <a href="reference#continue"><code>@continue</code></a>. Because all three are Java reserved words and one cannot use them for variable/method names.
 
 h4. <a name="call_tag_relative_path">Call tag using relative and import path</a>
 
@@ -157,11 +156,11 @@ or this is also good:
 
 bc. @hello(title: "Mr.", who: "Green")
 
-Unlike groovy template, you are free to pass arguments to tag by position in Rythem template:
+Unlike groovy template, you are free to pass arguments to tag by position in Rythm template:
 
 bc. @hello("Mr.", "Green)
 
-p(note). Controller action invocation is a special kind of tag invocation. However you should NOT pass arguments by name when you invoke a controller action, instead *always pass argument by position when you invoke a controller action*
+p(note). "Controller action invocation":#invoke_action is a special kind of tag invocation. However you should NOT pass arguments by name when you invoke a controller action, instead *always pass argument by position when you invoke a controller action*
 
 h4. <a name="tag_invocation_cache">Cache tag invocation result</a>
 
@@ -182,7 +181,7 @@ bc. @{User user = User.current()}
 
 The above statement shows how to pass additional parameter to cache extention.
 
-p(note). Also refer to <a href="reference#cache">@cache</a> keyword for more on parameters
+p(note). Also refer to <a href="reference#cache">@cache</a> keyword for more on cache parameters
 
 h3. <a name="nameconflict">Tag or expression?</a>
 
@@ -207,11 +206,11 @@ bc. @controllers.MyPortal.welcomePanel()
 
 The above statement will invoke the controller <code>@controller.MyPortal</code>'s action method @welcomePanel@, and fill the render result content in place of the statement
 
-p(note). See "integration guide":integration#action for more detail about invoking controller action method
-
 <a name="invoke_action_cache"></a>
 
 p(note). Because controller action invocation are treated as tag invocation, therefore caching tag invocation result also applies to controller action invocation. Please refer to "Cache tag invocation result":user_guide#tag_invocation_cache for details
+
+p(note). See "integration guide":integration#action for more detail about invoking controller action method
 
 h3. <a name="include">Include other templates</a>
 
@@ -246,11 +245,11 @@ p(note). While <code>@tag</code> provides an alternative to "Helper":http://webl
 
 h3. <a name="scripting">Scripting</a>
 
-Use "@{" and "}@" to include arbitrary java source code into your template:
+Use <code>@{...}</code> to include arbitrary java source code into your template:
 
 bc. @{
     String fullName = client.name.toUpperCase() + " " + client.forname;
-}@
+}
 <h1>Client @fullName</h1>
 
 A script can write dynamic content directly using @p()@ function:
@@ -269,13 +268,11 @@ A template can inherit another template, i.e. it can be included as a part of an
 To inherit another template, use the <code>@extends</code> tag:
 
 bc. @extends(/main.html)
-
 <h1>Some code</h1>
 
 The @main.html@ template is a standard template, but it uses the @doLayout@ tag to include the content:
 
 bc. <h1>Main template</h1>
-
 <div id="content">
     @doLayout()
 </div>
