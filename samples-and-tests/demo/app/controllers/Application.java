@@ -68,4 +68,12 @@ public class Application extends Controller {
         render();
     }
 
+    public static void testInclude() {
+        render();
+    }
+
+    public static void testBreakContinue() {
+        render();
+    }
+
 }

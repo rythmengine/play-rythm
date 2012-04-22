@@ -2,37 +2,42 @@ h1. PlayRythm version history
 
 h2. <a name="roadmap">TODO list</a>
 
-* "Support cacheFor extension to expressions":https://github.com/greenlaw110/play-rythm/issues/5
 * "Support custom Java extensions":https://github.com/greenlaw110/play-rythm/issues/2
-* "Support content type based tag file pickup":https://github.com/greenlaw110/play-rythm/issues/1
 
 h2. <a name="v0.9.8">v0.9.8</a>
 
-* Break changes
-** Automatic escape expression using escapeHtml if the template file name suffix is .html
-** "app/view" as template root are no longer supported. All rythm template files must be put into "app/rythm" folder
-** "app/view/tags/rythm" as tag root are no longer supported. Just put tag files as normal template file into "app/rythm" folder
-** <code>@section</code> tag usage:
-*** previously <code>@section sectionName {...}</code>
-*** now <code>@section("sectionName") {...}</code>
-* New features
-** "Mark a template block to output raw expression":reference#raw
-** "Mark a template block to escape expression using specific type":reference#escape
-** "cache a template block":reference#cache
-** "Cache tag invocation result":user_guide#tag_invocation_cache
-** "Cache controller action invocation result":user_guide#invoke_action_cache
-** "Invoke tag/action call using relative path and import path":user_guide#call_tag_relative_path
-** <a href="reference#return">Abort current template executing process and return to caller using <code>@return()</code></a>
-** <a href="reference#break">Break the current loop using <code>@break()</code>"</a>
-* Small enhancements
-** <code>@verbatim(){}</code> will escape html code
-** <code>@renderBody()</code> now works inside a tag and output the passed in tag body, replacing <code>@_body</code> variable
-** <a href="reference#for_second_form">Support <code>@for(int i = 0; i < 100; ++i)</code> loop style</a>
-** Clear alias for Play specific keywords:
-*** <code>@url</code>: <code>@_u</code>, url reverse lookup
-*** <code>@fullUrl</code>: <code>@_au</code>, url reverse lookup with absolute path
-*** <code>@msg</code>: <code>@_m</code>, i18n message lookup
-*** <code>@render() without parameter</code> now equals to <code>@renderBody()</code>
+h3. break changes
+
+* Automatic escape expression using escapeHtml if the template file name suffix is .html
+* @app/view@ as template root are no longer supported. All rythm template files must be put into @app/rythm@ folder
+* @app/view/tags/rythm@ as tag root are no longer supported. Just put tag files as normal template file into @app/rythm@ folder
+* <a href="reference#section"><code>@section</code></a> tag usage:
+** previously <code>@section sectionName {...}</code>
+** now <code>@section("sectionName") {...}</code>
+
+h3. New features
+
+* "Mark a template block to output raw expression":reference#raw
+* "Mark a template block to escape expression using specific type":reference#escape
+* "cache a template block":reference#cache
+* "Cache tag invocation result":user_guide#tag_invocation_cache
+* "Cache controller action invocation result":user_guide#invoke_action_cache
+* "Invoke tag/action call using relative path and import path":user_guide#call_tag_relative_path
+* "Include other template inline":user_guide#include. This provides a way to "reuse inline tag definitions across multiple views":user_guide#reuse_inline_tag
+* <a href="reference#return">Abort current template executing process and return to caller using <code>@return</code></a>
+* <a href="reference#break">Break the current loop using <code>@break</code>"</a>
+* <a href="reference#continue">Continue the current loop using <code>@continue</code></a>
+
+h3. Small enhancements
+
+* <code>@verbatim(){}</code> will escape html code
+* <code>@renderBody()</code> now works inside a tag and output the passed in tag body, replacing <code>@_body</code> variable
+* <a href="reference#for_second_form">Support <code>@for(int i = 0; i < 100; ++i)</code> loop style</a>
+* Clear alias for Play specific keywords:
+** <code>@url</code>: <code>@_u</code>, url reverse lookup
+** <code>@fullUrl</code>: <code>@_au</code>, url reverse lookup with absolute path
+** <code>@msg</code>: <code>@_m</code>, i18n message lookup
+** <code>@render() without parameter</code> now equals to <code>@renderBody()</code>
 
 h2. <a name="v0.9.7a">v0.9.7a</a>
 

@@ -8,13 +8,16 @@ h2. PlayRythm features
 
 PlayRythm is yet another template engine plugin for Play!Framework 1.2x version:
 
-# Static and strong typed pure Java template. Yes it's like Japid and Jamon
-# Razor like syntax
-# Easy to integrate with Play!Framework. There is no special controller needed at all
-# Support layout and tag, as you did in Groovy template
-# Support FastTags and JavaExtensions with constraints
-# Build-in cache support
-# Invoke controller action method directly from within your template
+# Static and strong typed pure Java template. Yes it's like "Japid":http://www.playframework.org/modules/japid and "Jamon":www.jamon.org
+# "Razor":http://weblogs.asp.net/scottgu/archive/2010/07/02/introducing-razor.aspx like syntax
+# Easy to "integrate with Play":integration. There is no special controller needed at all
+# Automatic dynamic expression escape, like "Groovy":http://www.playframework.org/documentation/1.2.4/templates and unlike "Japid":http://www.playframework.org/modules/japid-0.9.3.4/home#JavaExpressionexpressionandexpression
+# High performance at "Japid level":http://www.playframework.org/modules/japid
+# Support "layout":user_guide#inheritance and "tag":user_guide#custom_tag, you get all you have in Groovy template, actually even "more":user_guide#inline_tag
+# Support "FastTags":user_guide#fast_tags and "JavaExtensions":user_guide#java_extension with constraints
+# Cache "tag invocation":user_guide#tag_invocation_cache and "template blocks":reference#cache
+# "Invoke controller action method":user_guide#invoke_action directly from within your template
+# "Include other template inline":user_guide#include (not the same as tag invocation)
 
 h2. Template Syntax at a glance
 
@@ -43,7 +46,7 @@ bc. # Application dependencies
        - play -> rythm
 
 p(note). Don't forget run @play deps --sync@ to download rythm module after you updated your @conf/dependencies.yml@ file
-	   
+
 h4. 2. Create the template file in @app/rythm@ folder.
 
 The layout of the folder should be the same as your @app/views@ folder.

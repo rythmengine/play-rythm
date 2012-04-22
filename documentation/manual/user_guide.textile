@@ -4,7 +4,7 @@ PlayRythm provides an alternative template processing engine for Play!Framework.
 
 Templates are stored in @app/rythm@ directory, -user defined tags are stored in @app/views/tags/rythm@ directory by default-.
 
-p(note). Unlike groovy engine, there is no special place for tag file storage. Basically every template can be invoked as a tag.
+p(note). Unlike groovy engine, there is no special place for tag file storage. Basically every template can be "invoked as a tag":#invoke_tag.
 
 h2. <a name="syntax">Template Syntax</a>
 
@@ -106,7 +106,7 @@ bc. @greenscript.js() {
     })
 }
 
-h5. <a name="call_tag_relative_path">Call tag using relative and import path</a>
+h4. <a name="call_tag_relative_path">Call tag using relative and import path</a>
 
 Start from v0.9.8 you were able to invoke tag use relative path and import path. So suppose you have the following file system structure:
 
@@ -127,7 +127,7 @@ bc. \---app
             \---zee
                     tag3.html
 
-Now inside your app/rythm/Application/index.html, you call those tags like follows:
+Now inside your @app/rythm/Application/index.html@, you call those tags like follows:
 
 bc. @Application.tagA() @// full path invocation
 @Application.bar.tagB() @// full path invocation
@@ -136,8 +136,7 @@ bc. @Application.tagA() @// full path invocation
 
 You can also save typing by using <code>@import</code> path:
 
-bc.
-@import foo.*
+bc. @import foo.*
 @foo.tag2() @// full path invocation
 @foo.zee.tag3() @// full path invocation
 @tag2() @// import path invocation
@@ -161,6 +160,8 @@ bc. @hello(title: "Mr.", who: "Green")
 Unlike groovy template, you are free to pass arguments to tag by position in Rythem template:
 
 bc. @hello("Mr.", "Green)
+
+p(note). Controller action invocation is a special kind of tag invocation. However you should NOT pass arguments by name when you invoke a controller action, instead *always pass argument by position when you invoke a controller action*
 
 h4. <a name="tag_invocation_cache">Cache tag invocation result</a>
 
@@ -211,6 +212,37 @@ p(note). See "integration guide":integration#action for more detail about invoki
 <a name="invoke_action_cache"></a>
 
 p(note). Because controller action invocation are treated as tag invocation, therefore caching tag invocation result also applies to controller action invocation. Please refer to "Cache tag invocation result":user_guide#tag_invocation_cache for details
+
+h3. <a name="include">Include other templates</a>
+
+Rythm support include other template inline:
+
+bc. @include("foo.bar")
+
+The above statement will put the content of template @foo.bar@ in place. "foo.bar" is translate into file name following "tag invocation":#call_tag_relative_path convention.
+
+The difference between <code>@include("foo.bar")</code> a tag and call the tag via <code>@foo.bar()</code> is the former put the content of the template into the current template inline, while the latter invoke the template specified. It is some how like @#include@ vs. function call in c language.
+
+<h4><a name="reuse_inline_tag">Reuse inline tag across multiple views</a></h4>
+
+A good feature provided with <code>@include</code> is that you can import the "inline tag":#inline_tag definition from the template been included into the current template:
+
+Suppose you have created a template named "app/rythm/util.html" with a set of inline tags:
+
+bc. @tag hi (String who) {
+    Hi @who
+}
+@tag bye (String who) {
+    Bye @who
+}
+
+Now in your normal template you can import all the inline tags [hi, bye] and call them like a local function:
+
+bc. @include("util")
+@hi("rythm")
+@bye("rythm")
+
+p(note). While <code>@tag</code> provides an alternative to "Helper":http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx in Razor, the <code>@include</code> provides an alternative to _*Reusing @helpers across multiple views*_. See Scott's "blog":http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx and search for "reusing @helpers across multiple views"
 
 h3. <a name="scripting">Scripting</a>
 
@@ -432,8 +464,8 @@ Unlike Play's Groovy template that all objects added to the renderArgs scope are
 | @request@ | The current HTTP request | "play.mvc.Http.Request":/@api/play/mvc/Http.Request.html  |  |
 | @session@ | Session scope | "play.mvc.Scope.Session":/@api/play/mvc/Scope.Session.html  | "Controllers - Session & Flash Scope":controllers#session |
 | @_response_encoding@ | encoding of the response object | "play.mvc.Http.Response":/@api/play/mvc/Http.Response.html | |
-| @_rythmPlugin@ | the RythmPlugin instance | com.greenlaw110.rythm.play.RythmPlugin | |
-| @_rythm@ | the rythm template engine instance | com.greenlaw110.rythm.RythmEngine | |
+| @_rythmPlugin@ | the RythmPlugin instance | @com.greenlaw110.rythm.play.RythmPlugin@ | |
+| @_rythm@ | the rythm template engine instance | @com.greenlaw110.rythm.RythmEngine@ | |
 
 So as you can see most of these implicit variables are the same as those defined in "Groovy templates":http://localhost:9000/@documentation/modules/play/user_guide#Implicitobjectsavailableinatemplate. The only exception is Groovy's implicit variable @play@ has been renamed to @_play@. The reason for this is I want to allow user to use full qualified classes in play.* package.
 

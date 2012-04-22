@@ -1,0 +1,34 @@
+<h1>Test Include</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Code</th>
+        <th>Result</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><pre>
+@verbatim() {
+@include(tags.bar)
+}
+        </pre></td>
+        <td>
+            @include(tags.bar)
+        </td>
+    </tr>
+    <tr>
+        <td><pre>
+@verbatim() {
+@include(tags.helper)
+@sayHi("green")
+}
+        </pre></td>
+        <td>
+            @include(tags.helper)
+            @hi("green")
+        </td>
+    </tr>
+    </tbody>
+</table>

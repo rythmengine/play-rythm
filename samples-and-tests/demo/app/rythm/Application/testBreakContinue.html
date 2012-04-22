@@ -1,0 +1,107 @@
+<h1>Test Break Continue</h1>
+<table border="1">
+    <thead>
+    <th>code</th>
+    <th>result</th>
+    </thead>
+    <tbody>
+    <tr>
+        <td><pre>
+@verbatim() {
+@for (int i = 0; i < 5; ++i) {
+   <p>current number is: @i</p>
+   @if (i > 2) {
+       @break
+   }
+   <p>next number is :@(i + 1)</p>
+}
+}
+        </pre></td>
+        <td>
+            @for (int i = 0; i < 5; ++i) {
+                <p>current number is: @i</p>
+                @if (i > 2) {
+                    @break
+                }
+                <p>next number is :@(i + 1)</p>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td><pre>
+@verbatim() {
+@for (int i = 0; i < 5; ++i) {
+   <p>current number is: @i</p>
+   @if (i < 2) {
+       @continue
+   }
+   <p>next number is :@(i + 1)</p>
+}
+}
+        </pre></td>
+        <td>
+            @for (int i = 0; i < 5; ++i) {
+                <p>current number is: @i</p>
+                @if (i < 2) {
+                    @continue
+                }
+                <p>next number is :@(i + 1)</p>
+            }
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+@{Integer[] ia = {1, 2, 3, 4, 5}}
+<table border="1">
+    <thead>
+    <th>code</th>
+    <th>result</th>
+    </thead>
+    <tbody>
+    <tr>
+        <td><pre>
+@verbatim() {
+@for (Integer i : ia) {
+   <p>current number is: @i</p>
+    @if (i > 2) {
+        @break
+    }
+    <p>next number is :@(i + 1)</p>
+}
+}
+        </pre></td>
+        <td>
+            @for (Integer i : ia) {
+            <p>current number is: @i</p>
+            @if (i > 2) {
+            @break
+            }
+            <p>next number is :@(i + 1)</p>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td><pre>
+@verbatim() {
+@for (Integer i : ia) {
+   <p>current number is: @i</p>
+    @if (i < 2) {
+        @continue
+    }
+    <p>next number is :@(i + 1)</p>
+}
+}
+        </pre></td>
+        <td>
+            @for (Integer i : ia) {
+            <p>current number is: @i</p>
+            @if (i < 2) {
+            @continue
+            }
+            <p>next number is :@(i + 1)</p>
+            }
+        </td>
+    </tr>
+    </tbody>
+</table>
