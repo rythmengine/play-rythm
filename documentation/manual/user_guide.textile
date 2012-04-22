@@ -226,7 +226,7 @@ The difference between <code>@include("foo.bar")</code> a tag and call the tag v
 
 A good feature provided with <code>@include</code> is that you can import the "inline tag":#inline_tag definition from the template been included into the current template:
 
-Suppose you have created a template named "app/rythm/util.html" with a set of inline tags:
+Suppose you have created a template named @app/rythm/util.html@ with a set of inline tags:
 
 bc. @tag hi (String who) {
     Hi @who
@@ -257,7 +257,7 @@ A script can write dynamic content directly using @p()@ function:
 bc. @{
     String fullName = client.name.toUpperCase() + " " + client.forname;
     p("<h1>").p(fullName).p("</h1>");
-}@
+}
 
 Bear in mind that a template is not a place to do complex things. So, use a tag when you can, or move the computations into the controller or the model object.
 
