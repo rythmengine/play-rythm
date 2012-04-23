@@ -133,15 +133,9 @@ h2. <a name="invoke_tag">Tag invocation</a>
 **Tag** is a powerful tool to reuse your template definition in Rythm. To invoke a tag, use '@' plus tag name and brace pair
 
 bc. @greenscript.js("app<jqueryui<jquery", all:true)
-
-h3. Call a tag with body
-
-To invoke tag with a body, just use the common @{ }@ to include the body content:
-
-bc. @greenscript.js() {
-    $(function(){
-        // do whatever needed
-    })
+@verbatim() {
+    the content within verbatim body will not get parsed by Rythm
+    @foo.bar()
 }
 
 p(note). You must append @()@ to tag name even it does not require any parameter. The only exception to this rule is <a href="reference#return"><code>@return</code></a>, <a href="reference#break"><code>@break</code></a> and <a href="reference#continue"><code>@continue</code></a>. Because all three are Java reserved words and one cannot use them for variable/method names.
@@ -182,7 +176,7 @@ bc. @import foo.*
 @tag2() @// import path invocation
 @zee.tag3() @// import path invocation
 
-h3. Passing arguments to tag
+h3. <a name="pass_parameter_to_tag">Passing arguments to tag</a>
 
 Suppose you have defined a tag file hello.html:
 
@@ -202,6 +196,16 @@ Unlike groovy template, you are free to pass arguments to tag by position in Ryt
 bc. @hello("Mr.", "Green)
 
 p(note). "Controller action invocation":#invoke_action is a special kind of tag invocation. However you should NOT pass arguments by name when you invoke a controller action, instead *always pass argument by position when you invoke a controller action*
+
+h3. <a name="invoke_tag_with_body">Call a tag with body</a>
+
+To invoke tag with a body, just use the common @{ }@ to include the body content:
+
+bc. @greenscript.js() {
+    $(function(){
+        // do whatever needed
+    })
+}
 
 h3. <a name="tag_invocation_cache">Cache tag invocation result</a>
 
@@ -254,7 +258,7 @@ p(note). Because controller action invocation are treated as tag invocation, the
 
 p(note). See "integration guide":integration#action for more detail about invoking controller action method
 
-h3. <a name="include">Include other templates</a>
+h2. <a name="include">Include other templates</a>
 
 Rythm support include other template inline:
 
@@ -270,10 +274,10 @@ Things you can achieve with <code>@include</code> but not tag invocation:
 
 Things you can achieve with tag invocation but not <code>@include</code>
 
-* Passing parameters
-* Layout management via template inheritance
+* "Passing parameters":#pass_parameter_to_tag
+* Layout management via "template inheritance":#inheritance
 
-p(note). If you switch tag invocation to <code>@include</code> and found something has changed even there is no parameter call it must due to you have <code>@extended</code> layout template in the tag template. <code>include</code> will NOT be able to include the layout template parts
+p(note). If you switch tag invocation to <code>@include</code> and found something has changed even there is no parameter call it might because you have <code>@extended</code> layout template in the tag template. <code>include</code> will NOT be able to include the layout template parts
 
 p(note). Because <code>@include</code> are parsed at compile time therefore it's not possible to include template dynamically as shown below:
 
@@ -285,7 +289,7 @@ bc. @// spec could be one of facebook, google
 }
 
 
-<h4><a name="reuse_inline_tag">Reuse inline tag across multiple views</a></h4>
+h3. <a name="reuse_inline_tag">Reuse inline tag across multiple views</a>
 
 A good feature provided with <code>@include</code> is that you can import the "inline tag":#inline_tag definition from the template been included into the current template:
 
@@ -308,14 +312,13 @@ p(note). While <code>@tag</code> provides an alternative to "Helper":http://webl
 
 h2. <a name="inheritance">Template inheritance</a>
 
-A template can inherit another template, i.e. it can be included as a part of an other template.
+Template inheritance is a good way to implement template layout management.
 
-To inherit another template, use the <code>@extends</code> tag:
-
-bc. @extends(/main.html)
+bc. @// this type of extended template declaration is deprecated: @extends("main.html")
+@extends("main")
 <h1>Some code</h1>
 
-The @main.html@ template is a standard template, but it uses the @doLayout@ tag to include the content:
+The @main@ template is the layout template, you can use the @doLayout@ tag to include the content of the declaring template:
 
 bc. <h1>Main template</h1>
 <div id="content">
@@ -324,11 +327,31 @@ bc. <h1>Main template</h1>
 
 p(note). You can also use @renderBody@ in place of @doLayout@ to include the content, which comes from Razor. @render@ or @renderSection@ without parameter also does the same thing
 
+h3. <a name="extended_template_path">Extended template lookup</a>
+
+Before PlayRythm v0.9.8 you follow the same rule as groovy @#extends@ tag, i.e. you need to pass the full path to extended template file starting from @app/rythm@ folder: <code>@extends("main.html")</code>
+
+Since v0.9.8 you have a clean and simple way to declare extended template, i.e. the way to declare a tag invocation. For example, if you want to extend @app/rythm/layout/foo/bar.html@, you can declare the extend statement as <code>@extends("layout.foo.bar")</code>.
+
+The "relative path and include path declaration":user_guide#call_tag_relative_path feature are also available:
+
+bc. @import layout.foo.*
+@extends("bar")
+
+See "Call tag using relative and import path":user_guide#call_tag_relative_path for more information on path lookup
+
+p(note). Because extends are parsed statically you can omit the quotation mark when declaring extended templates:
+
+bc. @extends(main)
+@extends(layout.foo.bar)
+@extends(main.html)
+...
+
 h3. Define section and output section
 
 Like Razor, Rythm provides a section concept to enable you to define sections in sub templates and output them in parent template.
 
-In your parent template, say 'main.html':
+In your layout template, say @main.html@:
 
 bc. <!DOCTYPE html>
 <html>
@@ -369,7 +392,7 @@ bc. @extends(/main.html)
 }
 
 
-h2. <a name="custom_tag">Custom Tags</a>
+h2. <a name="custom_tag">Create tags</a>
 
 You can easily create specific tags for your application. A tag is a simple template file, stored in the @app/views/tags/rythm@ directory. The template’s file name is used as the tag name.
 
@@ -398,7 +421,7 @@ or to pass parameter by position:
 
 bc. @hello("Bob")
 
-h3. Invoke tag body
+h3. <a name="callback_tag_body">Invoke tag body</a>
 
 If your tag supports a @body@, you can include it at any point in the tag code, using the <code>@render()</code> keyword.
 
@@ -412,13 +435,38 @@ bc. @hello() {
    Bob
 }
 
-Format-specific tags
+h3. <a name="content-negotiation">Pickup tag file based on content format</a>
 
-In play's groovy template, you can have different versions of tag for different "content types":http://www.playframework.org/documentation/1.2.4/routes#content-types. This is not supported in PlayRythm yet. There is a "plan":https://github.com/greenlaw110/play-rythm/issues/1 to add the support to content type based tag selection.
+Like groovy template, you can have different versions of tag for different "content types":http://www.playframework.org/documentation/1.2.4/routes#content-types:
+
+bc. // javascript code to request a html page
+$.get("/ui/userManager", function(data) {
+   $('#manager-panel').html(data);
+})
+// javascript code to request a JSON data
+$.getJSON("/data/userList", function(data)) {
+   model.users = ko.mapping.fromJS(data);
+}
+
+Suppose both request will result in a tag invocation <code>@user.list()</code> in the template code as below:
+
+bc. //@ template code
+@args List<User> users
+...
+@user.list()
+...
+
+When you have normal html page request, Rythm will try to look for @app/rythm/user/list.html@ file when doing the tag invocation. If the request is for a json data, Rythm will pickup @app/rythm/user/list.json@ first. If the preferred tag file cannot be found, then Rythm look for tag file for other formats in the following sequence:
+
+# *.html
+# *.json
+# *.xml
+# *.csv
+# *.tag
 
 h2. <a name="inline_tag">Define inline tags</a>
 
-There is no inline tag concept in Groovy (The #{set...} and #{get ..} tag could be used to implement static content include). Rythm provides inline tag definition to achieve a lightweight and light speed reuse method in one template.
+Rythm provides inline tag definition to achieve a lightweight and light speed reuse method in one template.
 
 bc. @tag sayHello(String who, String title) {
   <p>Hello, @title @who</p>
@@ -430,7 +478,7 @@ bc. @for (User user: users) {
   @sayHello(user.name, user.title)
 }
 
-Inline tag definition is some how like "helper":http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx tool in Razor engine. At the moment Rythm does not support reuse inline tags across templates. With the support of "@include":https://github.com/greenlaw110/Rythm/issues/6 tag implemented, reusing inline tags across templates will be very easy.
+Inline tag definition is some how like "helper":http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx tool in Razor engine. With the <a href="#include"><code>@include</code></code></a> you can easily "reuse inline tag definition across multiple templates":#reuse_inline_tag
 
 h2. <a name="java_tags">Custom Java tags</a>
 
