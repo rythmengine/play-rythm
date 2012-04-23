@@ -42,15 +42,17 @@ public class ActionTagBridge extends JavaTagBase {
         Object[] oa = new Object[paramNumber];
         try {
             for (int i = 0; i < paramNumber; ++i) {
-                oa[i] = params.get(i);
+                oa[i] = params.get(i).value;
             }
         } catch (IndexOutOfBoundsException e) {
             throw new RuntimeException("Action call failed: parameter number does not match");
         }
 
         RythmPlugin.setActionCallFlag();
+        Http.Request request = Http.Request.current();
+        String oldAction = request.action;
+        request.action = name.replaceFirst("controllers.", "");
         try {
-            play.mvc.Http.Request.current().action = name.replaceFirst("controllers.", "");
             method.invoke(null, oa);
         } catch (IllegalAccessException e) {
             throw new UnexpectedException("Unknown error calling action method");
@@ -75,6 +77,8 @@ public class ActionTagBridge extends JavaTagBase {
             } else {
                 throw new RuntimeException(t);
             }
+        } finally {
+            request.action = oldAction;
         }
     }
 

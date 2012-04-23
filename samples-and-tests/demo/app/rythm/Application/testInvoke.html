@@ -1,0 +1,57 @@
+@import controllers.*, foo.bar.*
+<h1>Test @@invoke</h1>
+
+<table border="1">
+    <thead>
+    <th>code</th>
+    <th>result</th>
+    </thead>
+    <tbody>
+    <tr>
+        <td><pre>
+@verbatim() {
+@invoke("Application.timestamp")
+}
+        </pre></td>
+        <td>
+            @invoke("Application.timestamp")
+        </td>
+    </tr>
+    <tr>
+        <td><pre>
+@verbatim() {
+@invoke("controllers.Application.timestamp").cache(3)
+}
+        </pre></td>
+        <td>
+            @invoke("controllers.Application.timestamp").cache(3)
+        </td>
+    </tr>
+    <tr>
+        <td><pre>
+@verbatim() {
+@{String sn = "facebook"}
+@invoke("foo.bar." + sn, new Date().getTime()).cache("3s")
+}
+        </pre></td>
+        <td>
+            @{String sn = "facebook"; long ts = new Date().getTime()}
+            @invoke("foo.bar." + sn, ts).cache("3s")
+        </td>
+    </tr>
+    <tr>
+        <td><pre>
+@verbatim() {
+@{String sn = "non_exists"}
+@invoke("foo.bar." + sn, new Date().getTime()).cache("3s").ignoreNonExistsTag()
+}
+        </pre></td>
+        <td>
+            @{sn = "non_exists"; ts = new Date().getTime()}
+            @invoke("foo.bar." + sn, ts).cache("3s").ignoreNonExistsTag()
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+

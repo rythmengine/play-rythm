@@ -335,6 +335,14 @@ bc. @include("common.utils")
 
 See "Include other templates":user_guide#include section for details
 
+h3. <a name="invoke">invoke</a>
+
+Enable dynamic tag invocation:
+
+bc. @invoke("designer." + platform).ignoreNonExistsTag()
+
+See "Dynamic tag invocation":user_guide#dynamic_tag_invocation section for details
+
 h3. <a name="renderBody">renderBody</a>
 
 @renderBody@ is an alias of "doLayout":#doLayout.

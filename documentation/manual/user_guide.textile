@@ -87,13 +87,54 @@ bc. @// indicate this template extends "/main.html" template
 
 There are about a dozen of built-in functions defined in Rythm, please go to "Reference":reference for details
 
-h3. <a name="invoke_tag">Invoke tag</a>
+h3. <a name="call_tag">Call user defined tag</a>
 
-To invoke a tag, use '@' plus tag name and brace pair:
+Again "@" can be used to call a user defined tag:
+
+bc. @greenscript("app<jqueryui<jquery", all:true)
+
+See "Tag invocation"#invoke_tag for detail.
+
+h3. <a name="nameconflict">Tag or expression?</a>
+
+Because Rythm template engine use the same caret <code>@</code> for both expression evaluation and tag invocation, there might be name conflict between invoking a tag and evaluating an expression. However in most cases this conflict could avoid. Suppose you have a tag file named @hello.html@, and you have a template defined with @hello@ variable declared:
+
+bc. @args String hello;
+@hello  @// this will evaluate the hello variable
+@hello() @// this will invoke hello tag
+
+But consider another case, when you have a tag file @hello.html@ defined in a folder named @who@, and you happened to have a variable named @who@ in a type @Who@ which has a method named @hello@, then
+
+bc. @args Who who
+@who.hello() @// name conflict happened here!
+
+In the above code, rythm will not evaluate the method @hello@ of variable @who@, instead the @who.hello@ tag is invoked.
+
+h3. <a name="scripting">Scripting</a>
+
+Use <code>@{...}</code> to include arbitrary java source code into your template:
+
+bc. @{
+    String fullName = client.name.toUpperCase() + " " + client.forname;
+}
+<h1>Client @fullName</h1>
+
+A script can write dynamic content directly using @p()@ function:
+
+bc. @{
+    String fullName = client.name.toUpperCase() + " " + client.forname;
+    p("<h1>").p(fullName).p("</h1>");
+}
+
+Bear in mind that a template is not a place to do complex things. So, use a tag when you can, or move the computations into the controller or the model object.
+
+h2. <a name="invoke_tag">Tag invocation</a>
+
+**Tag** is a powerful tool to reuse your template definition in Rythm. To invoke a tag, use '@' plus tag name and brace pair
 
 bc. @greenscript.js("app<jqueryui<jquery", all:true)
 
-h4. Call a tag with body
+h3. Call a tag with body
 
 To invoke tag with a body, just use the common @{ }@ to include the body content:
 
@@ -105,7 +146,7 @@ bc. @greenscript.js() {
 
 p(note). You must append @()@ to tag name even it does not require any parameter. The only exception to this rule is <a href="reference#return"><code>@return</code></a>, <a href="reference#break"><code>@break</code></a> and <a href="reference#continue"><code>@continue</code></a>. Because all three are Java reserved words and one cannot use them for variable/method names.
 
-h4. <a name="call_tag_relative_path">Call tag using relative and import path</a>
+h3. <a name="call_tag_relative_path">Call tag using relative and import path</a>
 
 Start from v0.9.8 you were able to invoke tag use relative path and import path. So suppose you have the following file system structure:
 
@@ -141,7 +182,7 @@ bc. @import foo.*
 @tag2() @// import path invocation
 @zee.tag3() @// import path invocation
 
-h4. Passing arguments to tag
+h3. Passing arguments to tag
 
 Suppose you have defined a tag file hello.html:
 
@@ -162,7 +203,7 @@ bc. @hello("Mr.", "Green)
 
 p(note). "Controller action invocation":#invoke_action is a special kind of tag invocation. However you should NOT pass arguments by name when you invoke a controller action, instead *always pass argument by position when you invoke a controller action*
 
-h4. <a name="tag_invocation_cache">Cache tag invocation result</a>
+h3. <a name="tag_invocation_cache">Cache tag invocation result</a>
 
 Start from v0.9.8 you can cache tag invocation result easily
 
@@ -183,20 +224,21 @@ The above statement shows how to pass additional parameter to cache extention.
 
 p(note). Also refer to <a href="reference#cache">@cache</a> keyword for more on cache parameters
 
-h3. <a name="nameconflict">Tag or expression?</a>
+h3. <a name="dynamic_tag_invocation">Dynamic tag invocation</a>
 
-Because Rythm template engine use the same caret <code>@</code> for both expression evaluation and tag invocation, there might be name conflict between invoking a tag and evaluating an expression. However in most cases this conflict could avoid. Suppose you have a tag file named @hello.html@, and you have a template defined with @hello@ variable declared:
+Dynamic tag invocation means the tag to be invoked is determined by a runtime variable, in this case, one can use <code>@invoke</code> keyword as shown below:
 
-bc. @args String hello;
-@hello  @// this will evaluate the hello variable
-@hello() @// this will invoke hello tag
+bc. @args String platform @// could be pc, iphone, ipad ...
+...
+@invoke("designer." + platform)
 
-But consider another case, when you have a tag file @hello.html@ defined in a folder named @who@, and you happened to have a variable named @who@ in a type @Who@ which has a method named @hello@, then
+So when @platform@ is iphone, the above case has the same effect as calling <code>@designer.iphone()</code>.
 
-bc. @args Who who
-@who.hello() @// name conflict happened here!
+Usually when a tag been invoked cannot be found, Rythm will report an error. Sometimes it is expected that certain template/tag does not exists, in which case one can use @.ignoreNonExistsTag()@ extension with <code>@invoke@</code> keyword:
 
-In the above code, rythm will not evaluate the method @hello@ of variable @who@, instead the @who.hello@ tag is invoked.
+p(note). <a href="call_tag_relative_path">Relative path/import path invocation</a> and <a href="tag_invocation_cache">cache</a> features also available to <code>@invoke</code> tag invocation
+
+bc. @invoke("designer." + platform).ignoreNonExistsTag()
 
 h3. <a name="invoke_action">Invoke controller action method</a>
 
@@ -220,7 +262,28 @@ bc. @include("foo.bar")
 
 The above statement will put the content of template @foo.bar@ in place. "foo.bar" is translate into file name following "tag invocation":#call_tag_relative_path convention.
 
-The difference between <code>@include("foo.bar")</code> a tag and call the tag via <code>@foo.bar()</code> is the former put the content of the template into the current template inline, while the latter invoke the template specified. It is some how like @#include@ vs. function call in c language.
+The difference between <code>@include("foo.bar")</code> a tag and call the tag via <code>@foo.bar()</code> is the former put the content of the template into the current template inline, while the latter invoke the template specified. It is some how like @#include@ vs. function call in c language. <code>@include</code> is super fast to reuse part of template because it suppress the function invocation at runtime. It's a **inline** function call if you speak c++.
+
+Things you can achieve with <code>@include</code> but not tag invocation:
+
+* Reuse "inline tag":inline_tag definition
+
+Things you can achieve with tag invocation but not <code>@include</code>
+
+* Passing parameters
+* Layout management via template inheritance
+
+p(note). If you switch tag invocation to <code>@include</code> and found something has changed even there is no parameter call it must due to you have <code>@extended</code> layout template in the tag template. <code>include</code> will NOT be able to include the layout template parts
+
+p(note). Because <code>@include</code> are parsed at compile time therefore it's not possible to include template dynamically as shown below:
+
+bc. @// spec could be one of facebook, google
+@args String spec
+@include("page." + spec) //@ THIS WON'T WORK
+@{
+    p(Rythm.render("path/to/page/" + spec + ".html") // THIS WORKS!
+}
+
 
 <h4><a name="reuse_inline_tag">Reuse inline tag across multiple views</a></h4>
 
@@ -242,24 +305,6 @@ bc. @include("util")
 @bye("rythm")
 
 p(note). While <code>@tag</code> provides an alternative to "Helper":http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx in Razor, the <code>@include</code> provides an alternative to _*Reusing @helpers across multiple views*_. See Scott's "blog":http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx and search for "reusing @helpers across multiple views"
-
-h3. <a name="scripting">Scripting</a>
-
-Use <code>@{...}</code> to include arbitrary java source code into your template:
-
-bc. @{
-    String fullName = client.name.toUpperCase() + " " + client.forname;
-}
-<h1>Client @fullName</h1>
-
-A script can write dynamic content directly using @p()@ function:
-
-bc. @{
-    String fullName = client.name.toUpperCase() + " " + client.forname;
-    p("<h1>").p(fullName).p("</h1>");
-}
-
-Bear in mind that a template is not a place to do complex things. So, use a tag when you can, or move the computations into the controller or the model object.
 
 h2. <a name="inheritance">Template inheritance</a>
 

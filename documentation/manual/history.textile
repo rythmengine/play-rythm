@@ -23,6 +23,7 @@ h3. New features
 * "Cache tag invocation result":user_guide#tag_invocation_cache
 * "Cache controller action invocation result":user_guide#invoke_action_cache
 * "Invoke tag/action call using relative path and import path":user_guide#call_tag_relative_path
+* "Dynamic tag invocation with @invoke keyword":user_guide#dynamic_tag_invocation
 * "Include other template inline":user_guide#include. This provides a way to "reuse inline tag definitions across multiple views":user_guide#reuse_inline_tag
 * <a href="reference#return">Abort current template executing process and return to caller using <code>@return</code></a>
 * <a href="reference#break">Break the current loop using <code>@break</code></a>
