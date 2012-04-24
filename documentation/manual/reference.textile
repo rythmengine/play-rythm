@@ -204,7 +204,7 @@ h3. <a name="escape">escape</a>
 
 Mark a block of template code default escape scheme:
 
-bc.@escape("JS"){
+bc. @escape("JS"){
 alert("Hello Rythm");
 }
 
@@ -227,11 +227,11 @@ h3. <a name="extends">extends</a>
 
 Makes the template inherit another template.
 
-bc. @extends(/main.html)
+bc. @extends(main)
 
 or
 
-bc. @extends("/main.html")
+bc. @extends("main")
 
 You can pass parameter to extended template if the there are arguments declared.
 
@@ -244,11 +244,11 @@ bc. @args String style;
 
 And in your extending template, you pass the argument style as:
 
-bc. @extends(panel.html, style: "span4")
+bc. @extends(panel, style: "span4")
 
 or pass by position:
 
-bc. @extends(panel.html, "span4")
+bc. @extends(panel, "span4")
 
 h3. <a name="debug">debug<a>
 
@@ -258,7 +258,7 @@ bc. @debug("this is a debug message for %s", myvar)
 
 h3. <a name="for">for</a>
 
-Use @for@ to iterate a collection of objects. The synatx is the same as for loop in Java language:
+Use @for@ to iterate a collection of objects. The syntax is the same as for loop in Java language:
 
 bc. <ul>
 @for (Product product: products) {
