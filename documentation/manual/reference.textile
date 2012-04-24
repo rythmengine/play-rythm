@@ -355,6 +355,19 @@ bc. <div id="sidebar">
     @renderSection("sidebar")
 </div>
 
+<a name="default_section_content"></a>
+
+Start from v0.9.8 Rythm support define default content for section:
+
+bc. <div id="footer">
+    @renderSection("footer") {
+        @// here we define default content for footer section
+        @// if sub template failed to supply this section then
+        @// the default content will be output instead
+        <p>Site footer - &copy; Santa Clause</p>
+    }
+</div>
+
 p(note). @renderSection@ can be short to @render@.
 
 p(note). When there is no parameter in @renderSection@ call, it equals to @renderBody@

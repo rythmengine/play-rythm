@@ -347,7 +347,7 @@ bc. @extends(main)
 @extends(main.html)
 ...
 
-h3. Define section and output section
+h3. <a name="define_section">Define section and output section</a>
 
 Like Razor, Rythm provides a section concept to enable you to define sections in sub templates and output them in parent template.
 
@@ -363,18 +363,24 @@ bc. <!DOCTYPE html>
     <h1>@get("title')</h1>
   </div>
   <div id="sidebar">
-    @render("sidebar") @// render "sidebar" section
+    @// render "sidebar" section
+    @render("sidebar")
   </div>
   <div id="content">
     @render() @// render body, could also use @doLayout()
   </div>
   <div id="footer">
-    <p>Site footer - &copy; Santa Clause</p>
+    @render("footer") {
+        @// here we define default content for footer section
+        @// if sub template failed to supply this section then
+        @// the default content will be output instead
+        <p>Site footer - &copy; Santa Clause</p>
+    }
   </div>
 </body>
 </html>
 
-And in your parent template, say 'index.html':
+And in your working template, say 'index.html':
 
 bc. @extends(/main.html)
 @set(title="Home page")
@@ -391,6 +397,7 @@ bc. @extends(/main.html)
   </ul>
 }
 
+<a name="default_section">In the above example people with sharp eyes can notice that the @footer@ section render in the layout template is different from the @sidebar@ section in that we supplied a default content to the former. So if user did not define the @footer@ section in the sub template, the default content will be output instead. This is an new feature available in v0.9.8</a>
 
 h2. <a name="custom_tag">Create tags</a>
 

@@ -1,10 +1,15 @@
 @extends(main)
 
 <h1>Section A</h1>
-@renderSection("sectionA")
+@render("sectionA")
 
 <h1>Section B</h1>
-@renderSection(sectionB)
+@render("sectionB")
+
+<h1>Section C with default content</h1>
+@render("sectionC") {
+<p>section C's default content</p>
+}
 
 <h1>Body</h1>
 @renderBody

@@ -33,6 +33,7 @@ h3. Small enhancements
 
 * <code>@verbatim(){}</code> will escape html code
 * <code>@renderBody()</code> now works inside a tag and output the passed in tag body, replacing <code>@_body</code> variable
+* <code>@renderSection()</code> now accept <a href="reference#default_section_content">default content block</a>
 * <a href="reference#for_second_form">Support <code>@for(int i = 0; i < 100; ++i)</code> loop style</a>
 * Clear alias for Play specific keywords:
 ** <code>@url</code>: <code>@_u</code>, url reverse lookup
