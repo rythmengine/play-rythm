@@ -45,16 +45,21 @@ public class FastTagBridge extends JavaTagBase {
 
     public static class TagBodyClosure extends Closure {
         private Body _body;
-        public TagBodyClosure(Body body) {
+        private PrintWriter pw;
+        public TagBodyClosure(Body body, PrintWriter pw) {
             super(null);
             _body = body;
+            this.pw = pw;
         }
 
         @Override
         public Object call() {
             if (null == _body) return "";
-            _body.call();
-            return _body.getOut().toString();
+            StringBuilder sb = new StringBuilder();
+            _body.render(sb);
+            String s = sb.toString();
+            if (null != pw) pw.print(s);
+            return s;
         }
 
         @Override
@@ -69,11 +74,18 @@ public class FastTagBridge extends JavaTagBase {
 
         @Override
         public void setProperty(String property, Object newValue) {
+            if ("out".equals(property)) {
+                pw = (PrintWriter)newValue;
+                return;
+            }
             _body.setProperty(property, newValue);
         }
 
         @Override
         public Object getProperty(String property) {
+            if ("out".equals(property)) {
+                return pw;
+            }
             return _body.getProperty(property);
         }
     }
@@ -116,7 +128,7 @@ public class FastTagBridge extends JavaTagBase {
             }
         });
         try {
-            method.invoke(null, null == params ? new HashMap() : params.asMap(), new TagBodyClosure(body), w, new RythmExecutableTemplate((TemplateBase)_caller), 0);
+            method.invoke(null, null == params ? new HashMap() : params.asMap(), new TagBodyClosure(body, w), w, new RythmExecutableTemplate((TemplateBase)_caller), 0);
         } catch (InvocationTargetException e) {
             throw new UnexpectedException("cannot invoke fast tag method: " + tagName, e);
         } catch (IllegalAccessException e) {

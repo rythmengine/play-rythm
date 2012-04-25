@@ -80,4 +80,40 @@ public class Application extends Controller {
         render();
     }
 
+    public static void testExtendsWithParams() {
+        render();
+    }
+
+    public static void testExtendsWithOutParams() {
+        render();
+    }
+
+    public static void callExtendedTag(){
+        render();
+    }
+
+    public static void escapeTagInvocation() {
+        render();
+    }
+
+    public static void testTagInvokeCallBack() {
+        render();
+    }
+
+    public static void testAssign() {
+        render();
+    }
+
+    public static void testChain() {
+        render();
+    }
+
+    public static void testMisc() {
+        render();
+    }
+
+    public static void testSimple() {
+        render();
+    }
+
 }

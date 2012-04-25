@@ -1,0 +1,28 @@
+@import foo.bar.*
+<h1>Test chained extension</h1>
+
+<table border="1">
+    <thead>
+    <th>code</th>
+    <th>result</th>
+    </thead>
+    <tbody>
+    <tr>
+        <td><pre>
+@verbatim() {
+@chain().raw().cache(3).assign("r1") {
+    <p>chained content: @(new Date().getTime())</p>
+}
+the result is @r1
+}
+        </pre></td>
+        <td>
+            @chain().raw().cache(3).assign("r1") {
+            <p>chained content: @(new Date().getTime())</p>
+            }
+            the result is @r1
+        </td>
+    </tr>
+    </tbody>
+</table>
+

@@ -18,6 +18,6 @@ import java.util.Map;
 public class MyFastTags extends FastTags {
     public static void _foo(Map<?, ?> args, Closure body, PrintWriter out, GroovyTemplate.ExecutableTemplate template, int fromLine) {
         out.println("inside fasttags:foo(), timestamp:" + System.currentTimeMillis());
-        out.print(body.call());
+        body.call();
     }
 }

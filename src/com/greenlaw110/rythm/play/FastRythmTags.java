@@ -84,7 +84,7 @@ public class FastRythmTags {
                 body.setProperty("error_isLast", (i+1) == count);
                 body.setProperty("error_isFirst", i == 0);
                 body.setProperty("error_parity", (i+1)%2==0?"even":"odd");
-                body.call();
+                body.render(getOut());
             }
         }
     }

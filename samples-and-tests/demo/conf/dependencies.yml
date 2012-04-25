@@ -2,7 +2,6 @@
 
 require:
     - com.gelinsoft -> betterlogs 1.2g
-    - play -> menu 1.1a
     - play-rythm -> play-rythm
 
 repositories:

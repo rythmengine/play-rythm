@@ -2,6 +2,7 @@
 @set(title: "home1")
 @args String title;
 
+@cache() {
 <div>
     <a href="@url(Application.testDefaultEscape())">test default escape</a>
 </div>
@@ -41,64 +42,28 @@
 <div>
     <a href="@url(Application.testInvoke())">test dynamic tag dispatch</a>
 </div>
-
-@tag sayHello(String who, int pos, String parity, int count) {
-    <p>hello @who at @pos is @parity, total: @count</p>
+<div>
+    <a href="@url(Application.testExtendsWithParams())">test extends layout template with params</a>
+</div>
+<div>
+    <a href="@url(Application.testExtendsWithOutParams())">test extends layout template with out params</a>
+</div>
+<div>
+    <a href="@url(Application.callExtendedTag())">Call tags that extending other templates</a>
+</div>
+<div>
+    <a href="@url(Application.testTagInvokeCallBack())">Test tag invoke with callback</a>
+</div>
+<div>
+    <a href="@url(Application.testAssign())">Test assignment</a>
+</div>
+<div>
+    <a href="@url(Application.testChain())">Test chained extension</a>
+</div>
+<div>
+    <a href="@url(Application.testMisc())">Misc tests</a>
+</div>
+<div>
+    <a href="@url(Application.testSimple())">tests simple template</a>
+</div>
 }
-<ul>
-@for(int i = 0; i < 10; ++i) {
-    <li>@i</li>
-    @if (i > 6) {
-        @break()
-    }
-}
-</ul>
-
-@{
-    Map<String, List<String>> listList = new HashMap();
-    listList.put("x", Arrays.asList("xt,a324".split(",")));
-}
-
-@for (Map.Entry<String, List<String>> entry: listList.entrySet()) {
-    @for (String s: entry.getValue()) {
-        <i>@s</i><br/>
-    }
-}
-
-@{int i = 1;}@
-
-@if (i > 1) {
-    too many
-} else if (i > 0 ) {
-    just okay
-} else {
-    nothing to do
-}
-
-<h1>@("I am a string".length())</h1>
-
-@{
-    pn("about to crash!!!");
-    String s = null;
-    if (null == s) {
-        //throw new NullPointerException("s is null");
-    }
-}
-
-@{String[] nameList = {"Tom", "Jerry", "Marco"}}@
-
-@for(String : nameList) {
-    @sayHi(_, parity=_parity, pos=_index, _size)
-    @sayHello(_, _index, _parity, _size)
-    @if ("jerry".equalsIgnoreCase(_)) {
-        @break
-    }
-}
-
-    String who, int pos, String parity, int count;
-@sayHi(who="green", parity="even", pos:3, 5) {
-    sayHiBody
-}
-
-@session.getId()
-

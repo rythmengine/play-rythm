@@ -196,22 +196,25 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
             if (!S.isEqual(s, defSuffix)) sl.add(s);
         }
 
+        List<String> roots = new ArrayList<String>();
+        roots.add(RythmPlugin.templateRoot);
+
+        // call tag with import path
+        if (null != templateClass.importPaths) {
+            for (String s: templateClass.importPaths) {
+                roots.add(RythmPlugin.templateRoot + "/" + s.replace('.', '/'));
+            }
+        }
+
+        String tagName0 = tagName;
         // call tag using relative path
         String currentPath = templateClass.getKey();
         int pos = currentPath.lastIndexOf("/");
         currentPath = currentPath.substring(0, pos);
         if (currentPath.startsWith("/")) currentPath = currentPath.substring(1);
         if (!currentPath.startsWith(RythmPlugin.templateRoot)) currentPath = RythmPlugin.templateRoot + "/" + currentPath;
-
-        List<String> roots = new ArrayList<String>();
-        roots.add(RythmPlugin.templateRoot);
         roots.add(currentPath);
-        if (null != templateClass.importPaths) {
-            for (String s: templateClass.importPaths) {
-                roots.add(RythmPlugin.templateRoot + "/" + s.replace('.', '/'));
-            }
-        }
-        String tagName0 = tagName;
+
         for (String root : roots) {
             tagName = root + "/" + tagName0;
             VirtualFile tagFile = null;

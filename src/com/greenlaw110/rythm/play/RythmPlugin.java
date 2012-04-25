@@ -40,6 +40,7 @@ import play.vfs.VirtualFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.UnmodifiableClassException;
@@ -231,27 +232,26 @@ public class RythmPlugin extends PlayPlugin {
         p.put("rythm.cache.service", new ICacheService() {
             private int defaultTTL = 60 * 60;
             @Override
-            public void put(String key, String value, int ttl) {
+            public void put(String key, Serializable value, int ttl) {
                 Cache.cacheImpl.set(key, value, ttl);
             }
 
             @Override
-            public void put(String key, String value) {
+            public void put(String key, Serializable value) {
                 Cache.cacheImpl.set(key, value, defaultTTL);
             }
 
             @Override
-            public String remove(String key) {
+            public Serializable remove(String key) {
                 Object o = Cache.get(key);
-                String s = null == o ? null : o.toString();
                 Cache.delete(key);
-                return s;
+                return null == o ? null : (o instanceof Serializable ? (Serializable)o : o.toString());
             }
 
             @Override
-            public String get(String key) {
+            public Serializable get(String key) {
                 Object o = Cache.get(key);
-                return null == o ? null : o.toString();
+                return null == o ? null : (o instanceof Serializable ? (Serializable)o : o.toString());
             }
 
             @Override

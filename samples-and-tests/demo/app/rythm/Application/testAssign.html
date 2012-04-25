@@ -1,0 +1,40 @@
+@import foo.bar.*
+<h1>Test assignment</h1>
+
+<table border="1">
+    <thead>
+    <th>code</th>
+    <th>result</th>
+    </thead>
+    <tbody>
+    <tr>
+        <td><pre>
+@verbatim() {
+@tag1().assign("r1")
+the result is @r1
+}
+        </pre></td>
+        <td>
+            @tag1().assign("r1")
+            the result is @r1
+        </td>
+    </tr>
+    <tr>
+        <td><pre>
+@verbatim() {
+@assign("r2") {
+<p>to be assigned</p>
+}
+the result is @r2
+}
+        </pre></td>
+        <td>
+            @assign("r2") {
+            <p>to be assigned</p>
+            }
+            the result is @r2
+        </td>
+    </tr>
+    </tbody>
+</table>
+
