@@ -11,12 +11,14 @@ PlayRythm is yet another template engine plugin for Play!Framework 1.2x version:
 # Static and strong typed pure Java template. Yes it's like "Japid":http://www.playframework.org/modules/japid and "Jamon":www.jamon.org
 # "Razor":http://weblogs.asp.net/scottgu/archive/2010/07/02/introducing-razor.aspx like syntax
 # Easy to "integrate with Play":integration. There is no special controller needed at all
-# Automatic dynamic expression escape, like "Groovy":http://www.playframework.org/documentation/1.2.4/templates and unlike "Japid":http://www.playframework.org/modules/japid-0.9.3.4/home#JavaExpressionexpressionandexpression
+# Automatic "escape":user_guide#escape expression output, like "Groovy":http://www.playframework.org/documentation/1.2.4/templates and unlike "Japid":http://www.playframework.org/modules/japid-0.9.3.4/home#JavaExpressionexpressionandexpression
 # High performance at "Japid level":http://www.playframework.org/modules/japid
 # Support "layout":user_guide#inheritance and "tag":user_guide#custom_tag, you get all you have in Groovy template, actually even "more":user_guide#inline_tag
 # Support "FastTags":user_guide#fast_tags and "JavaExtensions":user_guide#java_extension with constraints
 # Cache "tag invocation":user_guide#tag_invocation_cache and "template blocks":reference#cache
 # Assign "tag invocation":user_guide#tag_invocation_assign and "template blocks":reference#assign to a template variable for further process or delayed output
+# "Chain tag invocation extensions together":user_guide#chain_tag_invocation_extension
+# "Chain block output extensions together":reference#chain
 # "Invoke controller action method":user_guide#invoke_action directly from within your template
 # "Include other template inline":user_guide#include (not the same as tag invocation)
 

@@ -4,7 +4,7 @@ h2. <a name="roadmap">TODO list</a>
 
 * "Support custom Java extensions":https://github.com/greenlaw110/play-rythm/issues/2
 
-h2. <a name="v0.9.8">v0.9.8</a>
+h2. <a name="v1.0">v1.0</a>
 
 h3. break changes
 

@@ -45,7 +45,7 @@ h4. <a name="escape">Escape an expression</a>
 
 -Unlike Groovy template which all expressions are escaped by default, Rythm template won't do that due to performance concern. You must explicitly call @escape@ java object extension to escape the variable:-
 
-Start from v0.9.8, PlayRythm escape expressions automatically as html format if the template file name suffix is ".html". To output an expression by raw data, one can do:
+Start from v1.0, PlayRythm escape expressions automatically as html format if the template file name suffix is ".html". To output an expression by raw data, one can do:
 
 bc. @myVar.raw()
 
@@ -142,7 +142,7 @@ p(note). You must append @()@ to tag name even it does not require any parameter
 
 h3. <a name="call_tag_relative_path">Call tag using relative and import path</a>
 
-Start from v0.9.8 you were able to invoke tag use relative path and import path. So suppose you have the following file system structure:
+Start from v1.0 you were able to invoke tag use relative path and import path. So suppose you have the following file system structure:
 
 bc. \---app
     \---rythm
@@ -241,7 +241,7 @@ The above code makes sure all expressions output within @myTag@ call will be esc
 
 h3. <a name="tag_invocation_cache">Cache tag invocation result</a>
 
-Start from v0.9.8 you can cache tag invocation result easily
+Start from v1.0 you can cache tag invocation result easily
 
 bc. @myTag(1, 2, "3").cache() @// cache using default TTL, which is 1 hour
 @myTag(1, 2, "3").cache("1h") @// cache invocation result for 1 hour
@@ -375,13 +375,22 @@ bc. <h1>Main template</h1>
     @doLayout()
 </div>
 
-p(note). You can also use @renderBody@ in place of @doLayout@ to include the content, which comes from Razor. @render@ or @renderSection@ without parameter also does the same thing
+p(note). -You can also use @renderBody@ in place of @doLayout@ to include the content, which comes from Razor.- @render@ or @renderSection@ without section name specified does the same thing with <code>@doLayout()</code>
+
+You can even specify the default content if the sub template does not have any content provided:
+
+bc. <h1>Main template</h1>
+<div id="content">
+    @render() {
+        default content
+    }
+</div>
 
 h3. <a name="extended_template_path">Extended template lookup</a>
 
-Before PlayRythm v0.9.8 you follow the same rule as groovy @#extends@ tag, i.e. you need to pass the full path to extended template file starting from @app/rythm@ folder: <code>@extends("main.html")</code>
+Before PlayRythm v1.0 you follow the same rule as groovy @#extends@ tag, i.e. you need to pass the full path to extended template file starting from @app/rythm@ folder: <code>@extends("main.html")</code>
 
-Since v0.9.8 you have a clean and simple way to declare extended template, i.e. the way to declare a tag invocation. For example, if you want to extend @app/rythm/layout/foo/bar.html@, you can declare the extend statement as <code>@extends("layout.foo.bar")</code>.
+Since v1.0 you have a clean and simple way to declare extended template, i.e. the way to declare a tag invocation. For example, if you want to extend @app/rythm/layout/foo/bar.html@, you can declare the extend statement as <code>@extends("layout.foo.bar")</code>.
 
 The "relative path and include path declaration":user_guide#call_tag_relative_path feature are also available:
 
@@ -447,7 +456,7 @@ bc. @extends(/main.html)
   </ul>
 }
 
-<a name="default_section">In the above example people with sharp eyes can notice that the @footer@ section render in the layout template is different from the @sidebar@ section in that we supplied a default content to the former. So if user did not define the @footer@ section in the sub template, the default content will be output instead. This is an new feature available in v0.9.8</a>
+<a name="default_section">In the above example people with sharp eyes can notice that the @footer@ section render in the layout template is different from the @sidebar@ section in that we supplied a default content to the former. So if user did not define the @footer@ section in the sub template, the default content will be output instead. This is an new feature available in v1.0</a>
 
 h2. <a name="custom_tag">Create tags</a>
 
