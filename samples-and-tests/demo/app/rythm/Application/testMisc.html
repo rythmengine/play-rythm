@@ -1,4 +1,3 @@
-@import foo.bar.*
 <h1>Arbitrary Tests</h1>
 
 <table border="1">
@@ -17,6 +16,26 @@
             Now is @ts()
         </td>
     </tr>
+    <tr>
+        <td><pre>
+@verbatim() {
+        @{Object html = "<p>abcd</p>"}
+            @raw() {
+    @html
+}
+}
+        </pre></td>
+        <td>
+        @{Object html = "<p>abcd</p>"}
+            @raw() {
+            @html
+            }
+        </td>
+    </tr>
     </tbody>
 </table>
+<h3>Code</h3>
+<pre>
+@(getTemplateClass(true).javaSource.raw())
+</pre>
 

@@ -29,6 +29,10 @@ public class Application extends Controller {
         render();
     }
 
+    public static void testDefaultLayoutContent() {
+        render();
+    }
+
     public static void testCache() {
         int val = new Random().nextInt(100);
         render(val);

@@ -4,7 +4,7 @@ h2. <a name="tags">Built-in Tags</a>
 
 h3. <a name="msg">msg</a>
 
-Lookup message string.
+PlayMorphia specific tag. Lookup message string.
 
 bc. @msg("validation.required")
 
@@ -18,7 +18,7 @@ bc. @msg("some.message", "param1")
 
 h3. <a name="url">url</a>
 
-Reverse lookup URL.
+PlayMorphia specific tag. Reverse lookup URL.
 
 bc. @url(Application.index)
 
@@ -32,13 +32,30 @@ bc. @url(/public/javascripts/myscript.js)
 
 h3. <a name="fullUrl">fullUrl</a>
 
-Absolute reverse lookup URL.
+PlayMorphia specific tag. Absolute reverse lookup URL.
 
 bc. @fullUrl(Applicaiton.index)
 
 The above code is equal to the following groovy template code:
 
 bc. @@{Application.index}
+
+h3. <a name="assign">assign</a>
+
+Assign the enclosed block into a variable.
+
+bc. @assign("roleSelector") {
+<select>
+@for(Role role: Role.findAll()){
+<option value="@role.getId()">role.toString()</option>
+}
+</select>
+}
+...
+<label>select role</label>
+@roleSelector.raw()
+
+p(note). The variable name specified in <code>@assign</code> must be unique across the context where <code>@assign</code> is put in. Otherwise you will expect a compilation exception
 
 h3. <a name="args">args</a>
 
@@ -52,7 +69,7 @@ You can have any arbitrary number of @args@ statement in any where of your templ
 
 h3. <a name="authenticityToken">authenticityToken</a>
 
-This is a clone of the "authenticityToken":http://www.playframework.org/documentation/1.2.4/tags#authenticityToken tag in Play's groovy template.
+PlayMorphia specific tag. This is a clone of the "authenticityToken":http://www.playframework.org/documentation/1.2.4/tags#authenticityToken tag in Play's groovy template.
 
 bc. @authenticityToken()
 
@@ -63,7 +80,7 @@ bc. <input type="hidden" name="authenticityToken"
 
 h3. <a name="authenticityTokenValue">authenticityTokenValue</a>
 
-Use @authenticityTokenValue@ when you want to put the authenticity token value inside a javascript code in your view:
+PlayMorphia specific tag. Use @authenticityTokenValue@ when you want to put the authenticity token value inside a javascript code in your view:
 
 bc. $.post("@url(User.save())",
     {authenticityToken: '@authenticityTokenValue()', ...},
@@ -114,9 +131,56 @@ bc. @cache(null, new Random().nextInt()) {
 
 -Same as "cache":#cache, but cache happens only when @play.Play.mode@ is "@prod@".-
 
-p(note). @cacheOnProd@ is no longer available in v0.9.8. Use @cache instead. However
+p(note). @cacheOnProd@ is no longer available in v1.0. Use @cache instead. However
 you can configure rythm not to cache on dev mode by using "rythm.cache.prodOnly" setting.
 By default "rythm.cache.prodOnly" is set to @true@
+
+h3. <a name="callback">callback</a>
+
+@callback@ is a unique tag in that it cannot used independently. It can only be attached to a tag invocation to mark the tag body argument list:
+
+bc. @tagX().callback(String name) {
+    hello @name
+}
+
+And inside @tagX@ you have
+
+bc. renderBody(name: "Motorola")
+
+or by position
+
+bc. renderBody("Motorola")
+
+h3. <a name="chain">chain</a>
+
+Chain the following extensions together:
+
+# "cache":#cache
+# "escape":#escape
+# "raw":#raw
+# "callback":#callback
+# "assign":#assign
+
+In the example of "assign":#assign, you found that it always needs to call <a href="#raw">@raw()@</a> when you want to use the variable get assigned, by using @chain@ you can do it at one time:
+
+bc. @chain.raw().assign("roleSelector") {
+<select>
+@for(Role role: Role.findAll()){
+<option value="@role.getId()">role.toString()</option>
+}
+</select>
+}
+...
+<label>select role</label>
+@roleSelector @// no longer need raw() extension any more
+
+And you even add @cache()@ into the chain:
+
+bc. @chain.raw().assign("roleSelector").cache() {
+...
+}
+
+The order of the chained function doesn't matter as they are orthogonal concerns.
 
 h3. <a name="continue">continue</a>
 
@@ -139,7 +203,7 @@ bc. <!-- common header here -->
 </div>
 <!-- common footer here -->
 
-@doLayout@ tag is an alias of "renderBody":#renderBody tag
+@doLayout@ tag is an alias of "render":#renderSection tag
 
 p(note). An easier and clean way to <code>@doLayout()</code> is <code>@render()</code>
 
@@ -147,7 +211,7 @@ See also "template inheritance":user_guide#inheritance
 
 h3. <a name="error">error</a>
 
-Outputs the validation error message, if present, for the field specified by the tag parameter.
+PlayMorphia specific tag. Outputs the validation error message, if present, for the field specified by the tag parameter.
 
 bc. @error("user.name")
 
@@ -159,7 +223,7 @@ bc. @error("contact.street", "contact.address")
 
 h3. <a name="errorClass">errorClass</a>
 
-Outputs the text @hasError@ if there is a validation error for the field specified by the tag parameter. This is useful for setting a CSS class for input fields with errors:
+PlayMorphia specific tag. Outputs the text @hasError@ if there is a validation error for the field specified by the tag parameter. This is useful for setting a CSS class for input fields with errors:
 
 bc. <input name="name" class="@errorClass("name")">
 
@@ -345,15 +409,29 @@ See "Dynamic tag invocation":user_guide#dynamic_tag_invocation section for detai
 
 h3. <a name="renderBody">renderBody</a>
 
-@renderBody@ is an alias of "doLayout":#doLayout.
+AKA @doBody@, @renderBody@ -is an alias of "doLayout":#doLayout.- is used to render the tag body.
 
-h3. <a name="renderSection">renderSection|render</a>
+bc. @renderBody()
 
-Used with template inheritance, this tag inserts the evaluated sub-template’s contents defined with "section":#section tag
+<a name="renderBody_with_params">If tag body is supplied along with <a href="#callback">@callback@</a> extension, then you can pass parameters into @renderBody@ call:</a>
+
+bc. @renderBody(user.role)
+
+or by name:
+
+bc. @renderBody(role: user.role)
+
+h3. <a name="render">render</a>
+
+AKA @renderSection@ and @doLayout@, used with template inheritance, this tag inserts the evaluated sub-template’s contents defined with <a href="#section">@section@</a> tag
 
 bc. <div id="sidebar">
-    @renderSection("sidebar")
+    @render("sidebar")
 </div>
+
+When no section name specified this tag output the layout content:
+
+bc. @render() @// same effect as groovy's #{doLayout/}
 
 <a name="default_section_content"></a>
 
@@ -367,10 +445,6 @@ bc. <div id="footer">
         <p>Site footer - &copy; Santa Clause</p>
     }
 </div>
-
-p(note). @renderSection@ can be short to @render@.
-
-p(note). When there is no parameter in @renderSection@ call, it equals to @renderBody@
 
 h3. <a name="return">return</a>
 
@@ -441,6 +515,12 @@ String body = "<p>some news</p>";
 }
 @body.raw()
 
+h3. <a name="ts">ts</a>
+
+Output timestamp in place
+
+bc. now is @ts()
+
 h3. <a name="verbatim">verbatim</a>
 
 Define a block of code that not to be parsed by Rythm.
@@ -448,6 +528,10 @@ Define a block of code that not to be parsed by Rythm.
 bc. @verbatim() {
     OK, anything inside this block is not parsed: @someTag, @someExpression, etc
 }
+
+h3. <a name="__simple__">__simple__</a>
+
+Mark the current template as a **simple** template. A simple template does not contain implicit arguments and is slightly faster than normal template
 
 h2. PlayRythm Configuration
 

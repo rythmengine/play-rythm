@@ -16,6 +16,7 @@ PlayRythm is yet another template engine plugin for Play!Framework 1.2x version:
 # Support "layout":user_guide#inheritance and "tag":user_guide#custom_tag, you get all you have in Groovy template, actually even "more":user_guide#inline_tag
 # Support "FastTags":user_guide#fast_tags and "JavaExtensions":user_guide#java_extension with constraints
 # Cache "tag invocation":user_guide#tag_invocation_cache and "template blocks":reference#cache
+# Assign "tag invocation":user_guide#tag_invocation_assign and "template blocks":reference#assign to a template variable for further process or delayed output
 # "Invoke controller action method":user_guide#invoke_action directly from within your template
 # "Include other template inline":user_guide#include (not the same as tag invocation)
 

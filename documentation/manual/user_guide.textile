@@ -207,6 +207,38 @@ bc. @greenscript.js() {
     })
 }
 
+With the introduction of <a href="reference#callback">@callback@</a> extension, Rythm make it possible to pass in parameters when callback tag body:
+
+bc. @lookupRole(permission: "superuser").callback(List<Role> roleList) {
+    <ul>superusers
+    @for(Role role: roleList) {
+        <li>role.getName()</li>
+    }
+    </ul>
+}
+
+and in your @lookupRole@ tag:
+
+bc. @args String permission
+@{
+    List<Role> roles = Role.find("permission", permission).asList()
+}
+renderBody(roles)
+
+h3. <a name="tag_invocation_escape">Escape tag invocation result</a>
+
+It is possible to escape tag invocation result using specific format
+
+bc. @myTag().escape("csv")
+
+p(note). escape tag invocation result is different from escape a template block contain the tag invocation.
+
+bc. @escape("csv") {
+    @myTag()
+}
+
+The above code makes sure all expressions output within @myTag@ call will be escaped using "csv" format, while <code>@myTag().escape("csv")</code> ensure the tag invocation result itself get escaped.
+
 h3. <a name="tag_invocation_cache">Cache tag invocation result</a>
 
 Start from v0.9.8 you can cache tag invocation result easily
@@ -227,6 +259,24 @@ bc. @{User user = User.current()}
 The above statement shows how to pass additional parameter to cache extention.
 
 p(note). Also refer to <a href="reference#cache">@cache</a> keyword for more on cache parameters
+
+h3. <a name="tag_invocation_assign">Assign tag invocation result</a>
+
+With @.assign()@ extension it can assign the tag invocation result to a template variable for further processing or delayed output:
+
+bc. @tagX().assign("xResult")
+
+Now you have a template variable @xResult@ contains the content of @tagX@ tag. You can process it and output it later on:
+
+bc. @xResult.toLowerCase().raw()
+
+h3. <a name="chain_tag_invocation_extension">Chain tag invocation extension functions</a>
+
+It is possible to chain tag invocation extension functions in one statement:
+
+bc. @tagX().raw().cache("1h").assign("xResult").callback(String name) {
+    echo @name
+}
 
 h3. <a name="dynamic_tag_invocation">Dynamic tag invocation</a>
 
