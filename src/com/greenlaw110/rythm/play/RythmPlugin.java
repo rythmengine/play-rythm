@@ -107,18 +107,6 @@ public class RythmPlugin extends PlayPlugin {
 
     public static RythmEngine engine;
 
-    public static enum EngineType {
-        rythm, system;
-        public static EngineType parseEngineType(String s) {
-            if ("rythm".equalsIgnoreCase(s)) return rythm;
-            else if ("system".equalsIgnoreCase(s) || "groovy".equalsIgnoreCase(s)) return system;
-            else {
-                throw new ConfigurationException(String.format("unrecongized engine type[%s] found, please use either \"rythm\" or \"system\"", s));
-            }
-        }
-    }
-
-    public static EngineType defaultEngine = EngineType.system;
     public static boolean underscoreImplicitVariableName = false;
     public static boolean refreshOnRender = true;
     public static String templateRoot = R_VIEW_ROOT;
@@ -159,8 +147,6 @@ public class RythmPlugin extends PlayPlugin {
         Properties playConf = Play.configuration;
 
         // special configurations
-        defaultEngine = EngineType.parseEngineType(playConf.getProperty("rythm.default.engine", "system"));
-        debug("default template engine configured to: %s", defaultEngine);
         underscoreImplicitVariableName = Boolean.parseBoolean(playConf.getProperty("rythm.implicitVariable.underscore", "false"));
         refreshOnRender = Boolean.parseBoolean(playConf.getProperty("rythm.resource.refreshOnRender", "true"));
 
@@ -393,9 +379,11 @@ public class RythmPlugin extends PlayPlugin {
         }
         l = System.currentTimeMillis();
         FastTagBridge.registerFastTags(engine);
+        debug("%sms to register play fast tags", System.currentTimeMillis() - l);
+        l = System.currentTimeMillis();
         registerJavaTags(engine);
+        debug("%sms to register rythm java tags", System.currentTimeMillis() - l);
         ActionTagBridge.registerActionTags(engine);
-        debug("%sms to register fast tags", System.currentTimeMillis() - l);
 
         RythmTemplateLoader.clear();
     }
@@ -426,9 +414,6 @@ public class RythmPlugin extends PlayPlugin {
     @Override
     public void onApplicationStart() {
         long l = System.currentTimeMillis();
-        RythmTemplateLoader.buildBlackWhiteList();
-        debug("%sms to built up black/white list", System.currentTimeMillis() - l);
-        l = System.currentTimeMillis();
         RythmTemplateLoader.scanTagFolder();
         debug("%sms to load Rythm tags", System.currentTimeMillis() - l);
     }

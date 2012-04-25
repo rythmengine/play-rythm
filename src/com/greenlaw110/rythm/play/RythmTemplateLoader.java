@@ -32,10 +32,6 @@ public class RythmTemplateLoader {
     private static VirtualFileTemplateResourceLoader resourceLoader = VirtualFileTemplateResourceLoader.instance;
     static ConcurrentMap<String, RythmTemplate> cache = new ConcurrentHashMap<String, RythmTemplate>();
 
-    //TODO support system wide templates like 404.html etc
-    private static Set<String> whiteList = new HashSet<String>();
-    private static Set<String> blackList = new HashSet<String>();
-
     static Method getActionMethod(String path) {
         // strip off /app/views
         String templateRoot = RythmPlugin.templateRoot;
@@ -70,46 +66,6 @@ public class RythmTemplateLoader {
         //throw new UnexpectedException("oops, how can I come here without Controller action invocation?");
         // it must be layout template without 'rythm' in path
         return null;
-    }
-
-    static boolean whiteListed(String path) {
-        if (RythmPlugin.defaultEngine == RythmPlugin.EngineType.rythm || path.contains("rythm")) return true;
-        if (Play.mode == Play.Mode.DEV) {
-            Method m = getActionMethod(path);
-            if (null != m) {
-                if (m.getAnnotation(UseSystemTemplateEngine.class) != null) return false;
-                if (m.getAnnotation(UseRythmTemplateEngine.class) != null) return true;
-                Class<?> c = m.getDeclaringClass();
-                if (c.getAnnotation(UseSystemTemplateEngine.class) != null) return false;
-                if (c.getAnnotation(UseRythmTemplateEngine.class) != null) return true;
-            }
-            return false;
-        }
-        // strip off /app/views
-        String templateRoot = RythmPlugin.templateRoot;
-        int pos = path.indexOf(templateRoot);
-        if (-1 != pos) path = path.substring(pos + templateRoot.length());
-        // strip off leading slash
-        while (path.startsWith("/") || path.startsWith("\\")) path = path.substring(1);
-        // strip off file extension
-        pos = path.lastIndexOf('.');
-        if (-1 != pos) path = path.substring(0, pos);
-        return whiteList.contains(path);
-    }
-
-    static boolean blackListed(String path) {
-        if (Play.mode == Play.Mode.DEV) {
-            Method m = getActionMethod(path);
-            if (null != m) {
-                if (m.getAnnotation(UseSystemTemplateEngine.class) != null) return true;
-                if (m.getAnnotation(UseRythmTemplateEngine.class) != null) return false;
-                Class<?> c = m.getDeclaringClass();
-                if (c.getAnnotation(UseSystemTemplateEngine.class) != null) return true;
-                if (c.getAnnotation(UseRythmTemplateEngine.class) != null) return false;
-            }
-            return false;
-        }
-        return blackList.contains(path);
     }
 
     private static void scanTagFolder(VirtualFile root) {
@@ -166,59 +122,6 @@ public class RythmTemplateLoader {
 //        RythmPlugin.trace("%sms to scan tags", ts);
     }
 
-    static void buildBlackWhiteList() {
-        if (Play.mode == Play.Mode.DEV) return;
-        RythmPlugin.trace("start to build black and white list");
-        long ts = System.currentTimeMillis();
-        List<ApplicationClasses.ApplicationClass> controllers = Play.classes.getAssignableClasses(Controller.class);
-        boolean alerted = false;
-        for (ApplicationClasses.ApplicationClass ac: controllers) {
-            Class<?> c = ac.javaClass;
-            String sCls = c.getName().replace("controllers.", "").replace('.', '/');
-            Method[] ma = c.getMethods();
-            for (Method m: ma) {
-                int flag = m.getModifiers();
-                if (!Modifier.isStatic(flag) || Modifier.isAbstract(flag) || !m.getReturnType().equals(Void.TYPE)) {
-                    // action method is non-abstract static void
-                    continue;
-                }
-                UseRythmTemplateEngine ar = m.getAnnotation(UseRythmTemplateEngine.class);
-                boolean useRythm = ar != null;
-                UseSystemTemplateEngine as = m.getAnnotation(UseSystemTemplateEngine.class);
-                boolean useSystem = as != null;
-                if ((useSystem || useRythm) && !alerted) {
-                    RythmPlugin.warn("@UseRythmTemplateEngine annotation is deprecated. To use rythm engine, just create a rythm template file in app/rythm directory. Drop the file from app/rythm directory the render process will pickup the groovy template from app/views directory automatically");
-                    alerted = true;
-                }
-                if (!useRythm && !useSystem) {
-                    // no annotation found, check class annotation
-                    useRythm  = c.getAnnotation(UseRythmTemplateEngine.class) != null;
-                    useSystem = c.getAnnotation(UseSystemTemplateEngine.class) != null;
-
-                    if (!useRythm && !useSystem) continue; // no annotation found on class either, use RythmPlugin default configuration
-                    if (useRythm && useSystem) {
-                        Logger.warn("Both UseRythmTemplateEngine and UseSystemTemplateEngine found on class [%s]. You should choose only one. System template engine will be used", c.getName());
-                        useRythm = false;
-                    }
-                }
-                if (useRythm && useSystem) {
-                    Logger.warn("Both UseRythmTemplateEngine and UseSystemTemplateEngine found on method [%s]. You should choose only one. System template engine will be used", m.toString());
-                    useRythm = false;
-                }
-                String path = sCls + "/" + m.getName();
-                if (useRythm) {
-                    RythmPlugin.trace("adding %s to white list", path);
-                    whiteList.add(path);
-                } else {
-                    RythmPlugin.trace("adding %s to black list", path);
-                    blackList.add(path);
-                }
-            }
-        }
-        ts = System.currentTimeMillis() - ts;
-        RythmPlugin.trace("%sms to build black and white list", ts);
-    }
-
     private static Object lock_ = new Object();
 
     public static Template loadTemplate(VirtualFile file) {
@@ -269,8 +172,6 @@ public class RythmTemplateLoader {
 
     static void clear() {
         cache.clear();
-        blackList.clear();
-        whiteList.clear();
     }
 
     public static void main(String[] args) {

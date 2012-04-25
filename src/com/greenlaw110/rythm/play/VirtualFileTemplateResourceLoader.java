@@ -140,16 +140,6 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
     private ITemplateResource load(VirtualFile file, boolean checkBWList) {
         String path = file.relativePath();
         if (path.contains(".svn")) return null; // definitely we don't want to load anything inside there
-        if (checkBWList) {
-            if (RythmPlugin.defaultEngine == RythmPlugin.EngineType.system) {
-                // by default use groovy template unless it's in the white list
-                if (!RythmTemplateLoader.whiteListed(path)) return null;
-            } else {
-                // by default use rythm template unless it's in the black list
-                if (RythmTemplateLoader.blackListed(path)) return null;
-            }
-        }
-
         return new VirtualFileTemplateResource(file);
     }
 
