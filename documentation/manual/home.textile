@@ -34,7 +34,7 @@ bc. @extends(main)
     @if (!user.disabled()) {
         <li class="@user_parity">
             <span>@user_index</span>
-            <a href="@url(User.show(user.getId()))">user.getName()</a>
+            <a href="@url(User.show(user.getId()))">@user.getName()</a>
         </li>
     }
 }
