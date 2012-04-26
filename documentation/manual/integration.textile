@@ -33,7 +33,7 @@ Things you need to take care of:
 # Start form v1.0 controller invocation is eligible to the following tag invocation extensions:
 ## "Cache":user_guide#tag_invocation_cache: <code>@controllers.Application.index().cache("1h")</code>
 ## "Invoke with relative path/import path":user_guide#call_tag_relative_path: <code>@import controllers.*; @Application.index()</code>
-## "Assign to a variable":user_guide#tag_invocation_assign: <code>@controllers.Application.index().cache("1h").assign("indexPage")</code>
+## "Assign to a variable":user_guide#tag_invocation_assign: <code>@controllers.Application.index().cache("1h").assign("indexPage")</code>. And you can use it as a normal template variable later on: <code>@indexPage.raw()</code>
 ## "Escape/un-escape render result":user_guide#tag_invocation_escape: <code>@controllers.Application.index().raw()</code>
 
 h2. <a name="resource">See Also</a>

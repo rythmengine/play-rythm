@@ -26,7 +26,7 @@ h2. Template Syntax at a glance
 
 Based on Rythm template engine, PlayRythm module provides an easy to read/write template language which is very like that is used in .Net MVC's "Razor template engine":http://razorengine.codeplex.com/. Here is one rythm template example:
 
-bc. @extends(/main.html)
+bc. @extends(main)
 @args List<User> users
 ...
 <ul>
