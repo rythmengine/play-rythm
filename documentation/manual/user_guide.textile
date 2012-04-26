@@ -136,6 +136,15 @@ bc. @{
 
 Bear in mind that a template is not a place to do complex things. So, use a tag when you can, or move the computations into the controller or the model object.
 
+h2. <a name="template_content_decoration">Process template content with decoration functions</a>
+
+Rythm 1.0 provides a useful feature to allow you to further process template content using decoration functions:
+
+* "Mark a template block to output raw expression":reference#raw
+* "Mark a template block to escape expression using specific type":reference#escape
+* "assign a block of template content into a variable":reference#assign
+* "cache a template block":reference#cache
+
 h2. <a name="invoke_tag">Tag invocation</a>
 
 **Tag** is a powerful tool to reuse your template definition in Rythm. To invoke a tag, use '@' plus tag name and brace pair
@@ -215,6 +224,10 @@ bc. @greenscript.js() {
     })
 }
 
+p(note). Passing body to a "controller action invocation":#invoke_action has no effect.
+
+h4. <a name="tag_invocation_callback">Pass body callback parameter spec to tag call</a>
+
 With the introduction of <a href="reference#callback">@callback@</a> extension, Rythm make it possible to pass in parameters when callback tag body:
 
 bc. @lookupRole(permission: "superuser").callback(List<Role> roleList) {
@@ -232,6 +245,22 @@ bc. @args String permission
     List<Role> roles = Role.find("permission", permission).asList()
 }
 renderBody(roles)
+
+p(note). Although @callback@ could be used with a "controller action invocation":#invoke_action, however since there will be no way to callback a tag body, it will not function anyway
+
+h3. <a name="tag_invoke_decoration">Tag invocation decoration</a>
+
+Rythm 1.0 add a feature called tag invocation decoration which allows you to manipulate the tag invocation result:
+
+* "Escape tag invocation result":#tag_invocation_escape
+* "Cache tag invocation result":#tag_invocation_cache
+* "Assign tag invocation result to a template variable":#tag_invocation_assign
+* "Pass body callback spec to tag call":#tag_invocation_callback
+* "Chain tag invocation decoration together":#chain_tag_invocation_decoration
+
+p(note). Tag invocation decoration feature is also available to an arbitrary template block via the <a href="reference#chain"><code>@chain</code></a> built-int tag
+
+p(note). Tag invocation decoration features only process runtime result and thus is NOT available to <a href="reference#include"><code>@include</code></a> built-in tag because it is evaluated at parsing time and executed at code generating time.
 
 h3. <a name="tag_invocation_escape">Escape tag invocation result</a>
 
@@ -278,7 +307,7 @@ Now you have a template variable @xResult@ contains the content of @tagX@ tag. Y
 
 bc. @xResult.toLowerCase().raw()
 
-h3. <a name="chain_tag_invocation_extension">Chain tag invocation extension functions</a>
+h3. <a name="chain_tag_invocation_decoration">Chain tag invocation decoration functions</a>
 
 It is possible to chain tag invocation extension functions in one statement:
 
@@ -464,7 +493,7 @@ bc. @extends(main)
   </ul>
 }
 
-<a name="default_section">In the above example people with sharp eyes can notice that the @footer@ section render in the layout template is different from the @sidebar@ section in that we supplied a default content to the former. So if user did not define the @footer@ section in the sub template, the default content will be output instead. This is an new feature available in v1.0</a>
+<a name="default_section"></a>In the above example people with sharp eyes can notice that the @footer@ section render in the layout template is different from the @sidebar@ section in that we supplied a default content to the former. So if user did not define the @footer@ section in the sub template, the default content will be output instead. This is an new feature available in v1.0
 
 h2. <a name="custom_tag">Create tags</a>
 

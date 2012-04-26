@@ -143,7 +143,9 @@ public class FastTagBridge extends JavaTagBase {
     }
 
     public static void registerFastTags(RythmEngine engine) {
+        long l = System.currentTimeMillis();
         Play.classloader.getAllClasses(); // ensure FastTags implementation loaded
+        RythmPlugin.debug("%sms to load all application classes (in order to register FastTags)", System.currentTimeMillis() - l);
         List<ApplicationClasses.ApplicationClass> classes = Play.classes.getAssignableClasses(FastTags.class);
         for (ApplicationClasses.ApplicationClass c: classes) {
             Class<?> jc = c.javaClass;

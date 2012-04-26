@@ -9,7 +9,7 @@ h2. <a name="v1.0">v1.0.0-RC1</a>
 h3. break changes
 
 * <a href="reference#renderBody"><code>@renderBody()</code></a> does not do layout content now. It's specific to render tag body, instead, please use <a href="reference#render"><code>@render()</code></a> (render without section name) to render layout content
-* Automatic escape expression using escapeHtml if the template file name suffix is .html
+* Automatic escape expression using escapeHtml if the template file name suffix is .html. If your code breaks, try to use <a href="reference#raw"><code>@raw()</code></a> tag to surround relevant template part or export your variable with <code>.raw()</code> extension.
 * @app/view@ as template root are no longer supported. All rythm template files must be put into @app/rythm@ folder
 * @app/view/tags/rythm@ as tag root are no longer supported. Just put tag files as normal template file into @app/rythm@ folder
 * <a href="reference#section"><code>@section</code></a> tag usage:
@@ -18,14 +18,16 @@ h3. break changes
 
 h3. New features
 
-* "Mark a template block to output raw expression":reference#raw
-* "Mark a template block to escape expression using specific type":reference#escape
-* "assign a block of template content into a variable":reference#assign
-* "cache a template block":reference#cache
-* The magic <a href="reference#chain"><code>@chain</code></a> to bring em together
-* "Cache tag invocation result":user_guide#tag_invocation_cache
-* "Cache controller action invocation result":user_guide#invoke_action_cache
-* "Invoke tag/action call using relative path and import path":user_guide#call_tag_relative_path
+* "Tag invocation decorations":user_guide#tag_invoke_decoration and "chain":user_guide#chain_tag_invocation_decoration them together
+** "Cache tag invocation result":user_guide#tag_invocation_cache
+** "Cache controller action invocation result":user_guide#invoke_action_cache
+** "Invoke tag/action call using relative path and import path":user_guide#call_tag_relative_path
+** "Specify body callback parameter spec":user_guide#tag_invocation_callback
+* "Template content decorations":user_guide#template_content_decoration and "chain":reference#chain them together
+** "Mark a template block to output raw expression":reference#raw
+** "Mark a template block to escape expression using specific type":reference#escape
+** "assign a block of template content into a variable":reference#assign
+** "cache a template block":reference#cache
 * "Dynamic tag invocation with @invoke keyword":user_guide#dynamic_tag_invocation
 * "Call tag body with parameter":reference#renderBody_with_params
 * "Include other template inline":user_guide#include. This provides a way to "reuse inline tag definitions across multiple views":user_guide#reuse_inline_tag
@@ -79,25 +81,25 @@ h2. <a name="v0.9.6">v0.9.6</a>
 * Error debug UI update to play-2.0 style
 * Solve several issues in built-in tag/templates
 * Precompile now build all rythm templates (So move templates to app/rythm folder)
-* @UseRythmTemplateEngine and @UseSystemTemplateEngine are deprecated now
-* add @__exitIfNoClass__ directive to allow exit parsing process if no certain class exists
-* bug fix: https://github.com/greenlaw110/Rythm/issues/15
+* <code>@UseRythmTemplateEngine</code> and <code>@UseSystemTemplateEngine</code> annotation are deprecated now
+* add <code>@__exitIfNoClass__</code> directive to allow exit parsing process if no certain class exists
+* bug fix: "https://github.com/greenlaw110/Rythm/issues/15":https://github.com/greenlaw110/Rythm/issues/15
 * print out java source if compilation error on prod mode
 * bug fix: NPE while scan tags in rare cases
-* simplifed class reloading logic in TemplateClassLoader.detectChange(...)
-* more acturate template line information for debugging
-* https://github.com/greenlaw110/Rythm/issues/1
-* support {} to enclose tag body
-* support @{} to enclose script content.
-* improved compact mode handling, now "//" line will not get merged with the following line
+* simplified class reloading logic in <code>TemplateClassLoader.detectChange(...)</code>
+* improved template line number report in error screen
+* buf fix: "https://github.com/greenlaw110/Rythm/issues/1":https://github.com/greenlaw110/Rythm/issues/1
+* support <code>{}</code> to enclose tag body
+* support <code>@{}</code> to enclose script content.
+* improved space/line break compact handling, now "//" line will not get merged with the following line
 * improved debugging when error happened in the embedded class
 
 h2. <a name="v0.9.5b">v0.9.5b</a>
 
 * Bug fixes
-** https://github.com/greenlaw110/Rythm/issues/15
-** https://github.com/greenlaw110/Rythm/issues/13
-** https://github.com/greenlaw110/play-rythm/issues/4
+** "https://github.com/greenlaw110/Rythm/issues/15":https://github.com/greenlaw110/Rythm/issues/15
+** "https://github.com/greenlaw110/Rythm/issues/13":https://github.com/greenlaw110/Rythm/issues/13
+** "https://github.com/greenlaw110/play-rythm/issues/4":https://github.com/greenlaw110/play-rythm/issues/4
 * Add @__exitIfNoClass__ instruction to enable exit from parsing process if no class found
 
 h2. <a name="v0.9.5a">v0.9.5a</a>

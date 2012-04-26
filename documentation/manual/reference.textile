@@ -127,6 +127,8 @@ bc. @cache(null, new Random().nextInt()) {
     <p>[@(new Date().getTime())]this content will literally looks like not cached at all because the cache argument changes every time</p>
 }
 
+p(note). Be cautious when you use <code>@cache()</code> with template blocks contains <code>@include()</code>. Cache key is calculated at parsing time, while <code>@include()</code> content is appended to template at code generating time when cache key calculating already done. Thus Rythm cannot differentiate the differences among included content. The rule of thumb is: **if include content varies dynamically, do not cache it**
+
 -h3. <a name="cacheOnProd">cacheOnProd<a>-
 
 -Same as "cache":#cache, but cache happens only when @play.Play.mode@ is "@prod@".-
@@ -153,7 +155,7 @@ bc. renderBody("Motorola")
 
 h3. <a name="chain">chain</a>
 
-Chain the following extensions together:
+Chain the following decoration functions together:
 
 # "cache":#cache
 # "escape":#escape
