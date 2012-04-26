@@ -4,22 +4,17 @@ h2. <a name="migrate">Migrate your current project from Groovy template engine t
 
 PlayRythm is designed to support smooth migrating from Groovy template engine.
 
-By default "system" (i.e. groovy) template engine is used. Meaning without special annotation, controller's render request will be handled by groovy template engine. And this give developer a good base to move to Rythm template step by step.
-
-# Step 1, rewrite a groovy template using rythm syntax and put the file into the corresponding place in @app/rythm@
-# -Step 2, annotate the relevant controller action method with <code>@UseRythmTemplateEngine</code> annotation-
-
-Continue the above steps until all your controller migrated to rythm. -You can annotate the controller with <code>@UseRythmTemplateEngine</code> and drop all that from action method-
+PlayRythm hijack the template rendering process if it found the corresponding template exists in the @app/rythm@ folder. Otherwise it quit silently and leave groovy engine to handle it. So what you need to do is just create an new template file using Rythm syntax and put it into the @app/rythm@ folder. Before your new rythm template available your existing groovy template works like a charm, and after the rythm template created, Rythm will take over
 
 p(note). -Tip: enclose all your rythm template with @#{verbatim}@ and @#{/verbatim}@ can help you avoid groovy compile exception and does not impact your rythm template-. This is not true. The groovy template engine will still parse the expressions. See "Resolve groovy compilation error":#conflict for workarounds.
 
 h2. <a name="conflict">Resolve groovy compilation error</a>
 
-Because groovy template engine does not provide a way to skip parsing any part of the template file, the rythm template file might cause compilation error during precompile process, where rythm has no way to identify some files been a rythm template or groovy template, e.g. some json generation template. Start from version 0.9.5 it's suggest to move all rythm templates or at least those compilation error causing templates to @app/rythm@ folder from @app/views@ folder. Start from version 0.9.8 @app/views@ folder as template root as no longer supported, please move all rythm view files into @app/rythm@ folder
+Because groovy template engine does not provide a way to skip parsing any part of the template file, the rythm template file might cause compilation error during precompile process, where rythm has no way to identify some files been a rythm template or groovy template, e.g. some json generation template. Start from version 0.9.5 it's suggest to move all rythm templates or at least those compilation error causing templates to @app/rythm@ folder from @app/views@ folder. Start from version 1.0.0 @app/views@ folder as template root as no longer supported, please move all rythm view files into @app/rythm@ folder
 
 h2. <a name="tag">More about tags</a>
 
--So far you can keep rythm tags file under @app/views/tags/rythm@ folder. However it is recommened not to use tags folder at all since every rythm template is a tag and can be called from any other rythm templates.- Start from v0.9.8, @app/views/tags/rythm@ folder as tag root are no longer supported. Please just use @app/rythm@ folder as template root and also the tag root.
+-So far you can keep rythm tags file under @app/views/tags/rythm@ folder. However it is recommened not to use tags folder at all since every rythm template is a tag and can be called from any other rythm templates.- Start from v1.0.0, @app/views/tags/rythm@ folder as tag root are no longer supported. Please just use @app/rythm@ folder as template root and also the tag root.
 
 E.g. suppose you have a template file @app/views/Order/list.html@, while you can use it as an ordinary template file, you also free to call it as a tag from other rythm template like: <code>@Order.list(myOrders)</code>
 
@@ -34,11 +29,14 @@ Things you need to take care of:
 
 # You must use full qualified method name (including package name, class name) when you invoke controller action method
 # You must pass exactly the parameters that matches what is defined in the controller action method signature
-# The invocation is directly and will not go through the whole stack of Play's method action invocation. Meaning the @Before, @After and @Final logic will NOT be executed.
-# Cache is not supported so far but will come out soon
+# The invocation is directly and will not go through the whole stack of Play's method action invocation. Meaning the <code>@Before</code>, <code>@After</code> and <code>@Final</code> logic will NOT be executed.
+# Start form v1.0 controller invocation is eligible to the following tag invocation extensions:
+## "Cache":user_guide#tag_invocation_cache: <code>@controllers.Application.index().cache("1h")</code>
+## "Invoke with relative path/import path":user_guide#call_tag_relative_path: <code>@import controllers.*; @Application.index()</code>
+## "Assign to a variable":user_guide#tag_invocation_assign: <code>@controllers.Application.index().cache("1h").assign("indexPage")</code>
+## "Escape/un-escape render result":user_guide#tag_invocation_escape: <code>@controllers.Application.index().raw()</code>
 
 h2. <a name="resource">See Also</a>
 
 # %(next)"Rythm Template User guide":user_guide%
 # "Reference manual":reference
- 

@@ -64,20 +64,28 @@ In addition to HTML escape, PlayRythm provides escape to the following format as
 
 And the user can use to these format like follows:
 
-bc. @escape("XML") {
- <a><b>foo</b></a>
+bc. @{String s = "<a><b>foo</b></a>"}
+@escape("XML") {
+ @s
 }
 
 You can also use JavaExtensions to escape variable directly
 
-bc. @myVar.escapeCsv()
+bc. @s.escapeXml()
+
+Corresponding JavaExtension methods to escape formats are:
+
+# @CSV@: @escapeCsv()@
+# @HTML@: @escapeHtml()@
+# @Java@: @escapeJava()@
+# @JavaScript@: @escapeJavaScript()@
 
 h3. <a name="call_build-in_function">Call built-in function</a>
 
 "@" is also used to invoke built-in functions. Built-in function could be treated as special type of tags. From the user's perspective there is no difference between calling a built-in function and calling a tag (either built-in or custom)
 
 bc. @// indicate this template extends "/main.html" template
-@extends(/main.html)
+@extends(main)
 @// declare the java package/classes needed in this template
 @import play.util.*, play.templates.*
 @// declare arguments used in this template
@@ -441,7 +449,7 @@ bc. <!DOCTYPE html>
 
 And in your working template, say 'index.html':
 
-bc. @extends(/main.html)
+bc. @extends(main)
 @set(title="Home page")
 <h2>Welcome to my site</h2>
 <p>This is our home page</p>
@@ -487,19 +495,29 @@ or to pass parameter by position:
 
 bc. @hello("Bob")
 
-h3. <a name="callback_tag_body">Invoke tag body</a>
+h3. <a name="callback_tag_body">Callback tag body</a>
 
-If your tag supports a @body@, you can include it at any point in the tag code, using the <code>@render()</code> keyword.
+If your tag supports a @body@, you can include it at any point in the tag code, using the <a href="reference#renderBody"><code>@renderBody()</code></a> keyword.
 
 For example:
 
-bc. Hello @render()!
+bc. Hello @renderBody()!
 
 And you can then pass the name as tag body:
 
 bc. @hello() {
    Bob
 }
+
+h4. <a name="callback_tag_body_with_params">Callback tag body with parameters</a>
+
+Rythm v1.0 support a new feature to callback tag body with parameters:
+
+bc. @renderBody("superuser")
+
+See "Invoke tag with body":#invoke_tag_with_body to see how to invoke a tag which will callback body with parameters
+
+p(note). Invoking a tag is different from callback tag body. The former is used by app developer (tag consumer) and the latter is used by tag developer (tag producer)
 
 h3. <a name="content-negotiation">Pickup tag file based on content format</a>
 

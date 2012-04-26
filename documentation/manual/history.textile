@@ -4,7 +4,7 @@ h2. <a name="roadmap">TODO list</a>
 
 * "Support custom Java extensions":https://github.com/greenlaw110/play-rythm/issues/2
 
-h2. <a name="v1.0">v1.0</a>
+h2. <a name="v1.0">v1.0.0-RC1</a>
 
 h3. break changes
 
@@ -22,6 +22,7 @@ h3. New features
 * "Mark a template block to escape expression using specific type":reference#escape
 * "assign a block of template content into a variable":reference#assign
 * "cache a template block":reference#cache
+* The magic <a href="reference#chain"><code>@chain</code></a> to bring em together
 * "Cache tag invocation result":user_guide#tag_invocation_cache
 * "Cache controller action invocation result":user_guide#invoke_action_cache
 * "Invoke tag/action call using relative path and import path":user_guide#call_tag_relative_path
