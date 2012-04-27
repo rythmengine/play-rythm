@@ -1,0 +1,21 @@
+@args boolean enableCache
+@extends(main)
+
+<form action="@url(Application.testCache4)">
+    <input type="hidden" name="enableCache" value="@(!enableCache)"/>
+    <p>
+        <span>Currently cache4 is @(enableCache ? "enabled" : "disabled")</span>
+        <button type="submit">@(enableCache ? "Disable" : "Enable") cache</button>
+    </p>
+    <p>Note enable cache and click refresh button below you will notice the iframe timestamp will remain unchanged within 3 seconds</p>
+</form>
+
+<button id="refresh">Refresh</button>
+<hr/>
+<iframe id="check" src="@url(Application.cachedTS())"></iframe>
+
+<script type="text/javascript">
+    $('#refresh').click(function(){
+        window.frames.check.location.reload();
+    })
+</script>

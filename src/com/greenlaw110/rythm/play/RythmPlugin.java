@@ -19,6 +19,7 @@ import com.greenlaw110.rythm.template.TemplateBase;
 import com.greenlaw110.rythm.utils.IDurationParser;
 import com.greenlaw110.rythm.utils.IImplicitRenderArgProvider;
 import com.greenlaw110.rythm.utils.IRythmListener;
+import com.greenlaw110.rythm.utils.S;
 import com.stevesoft.pat.Regex;
 import play.Logger;
 import play.Play;
@@ -45,6 +46,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.UnmodifiableClassException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
@@ -214,6 +216,7 @@ public class RythmPlugin extends PlayPlugin {
         });
         debug("Implicit render variables set up");
 
+        p.put("rythm.cache.prodOnly", "true");
         p.put("rythm.cache.defaultTTL", 60 * 60);
         p.put("rythm.cache.service", new ICacheService() {
             private int defaultTTL = 60 * 60;
@@ -268,7 +271,7 @@ public class RythmPlugin extends PlayPlugin {
                 if (null == s) return RythmPlugin.engine.defaultTTL;
                 String confDuration = play.Play.configuration.getProperty(s);
                 if (null != confDuration) s = confDuration;
-                if ("never".equals(confDuration)) return -1;
+                if ("forever".equals(confDuration)) return -1;
                 return IDurationParser.DEFAULT_PARSER.parseDuration(s);
             }
         });
@@ -468,6 +471,46 @@ public class RythmPlugin extends PlayPlugin {
     @Override
     public void detectChange() {
         if (!refreshOnRender) engine.classLoader.detectChanges();
+    }
+
+    @Override
+    public void beforeActionInvocation(Method actionMethod) {
+        if (Play.mode.isDev() && Boolean.valueOf(Play.configuration.getProperty("rythm.cache.prodOnly", "true"))) {
+            return;
+        }
+        Http.Request request = Http.Request.current();
+        if ((request.method.equals("GET") || request.method.equals("HEAD")) && actionMethod.isAnnotationPresent(Cache4.class)) {
+            String cacheKey = actionMethod.getAnnotation(Cache4.class).id();
+            if (S.isEmpty(cacheKey)) {
+                cacheKey = "rythm-urlcache:" + request.url + request.querystring;
+            }
+            request.args.put("rythm-urlcache-key", cacheKey);
+            request.args.put("rythm-urlcache-actionMethod", actionMethod);
+            Result result = (Result) play.cache.Cache.get(cacheKey);
+            if (null == result) return;
+            if (!(result instanceof Cache4.CacheResult)) {
+                result = new Cache4.CacheResult(result);
+            }
+            throw result;
+        }
+    }
+
+    @Override
+    public void onActionInvocationResult(Result result) {
+        if (result instanceof Cache4.CacheResult) return;
+        Object o = Http.Request.current().args.get("rythm-urlcache-key");
+        if (null == o) return;
+        String cacheKey = o.toString();
+        Method actionMethod = (Method)Http.Request.current().args.get("rythm-urlcache-actionMethod");
+        String duration = actionMethod.getAnnotation(Cache4.class).value();
+        if (S.isEmpty(duration)) duration = "1h";
+        if (duration.startsWith("cron.")) {
+            duration = Play.configuration.getProperty(duration, "1h");
+        }
+        if ("forever".equals(duration)) {
+            duration = "99999d";
+        }
+        play.cache.Cache.set(cacheKey, result, duration);
     }
 
     public static void main(String[] args) {

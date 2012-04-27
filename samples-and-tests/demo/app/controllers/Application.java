@@ -1,7 +1,10 @@
 package controllers;
 
+import com.greenlaw110.rythm.play.Cache4;
+import com.greenlaw110.rythm.play.RythmPlugin;
 import com.greenlaw110.rythm.play.UseRythmTemplateEngine;
 import org.apache.commons.lang3.StringUtils;
+import play.Play;
 import play.mvc.Controller;
 import play.mvc.Util;
 
@@ -118,6 +121,22 @@ public class Application extends Controller {
 
     public static void testSimple() {
         render();
+    }
+
+    @Cache4("cron.testCache4")
+    public static void cachedTS(String param) {
+        long ts = System.currentTimeMillis();
+        renderText(String.valueOf(ts));
+    }
+
+    public static void testCache4(boolean enableCache) {
+        Play.configuration.setProperty("cron.testCache4", "3s");
+        if (enableCache) {
+            Play.configuration.setProperty("rythm.cache.prodOnly", "false");
+        } else {
+            Play.configuration.setProperty("rythm.cache.prodOnly", "true");
+        }
+        render(enableCache);
     }
 
 }

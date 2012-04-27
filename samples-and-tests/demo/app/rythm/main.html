@@ -11,17 +11,17 @@
     @render('moreScripts')
 </head>
 <body>
-@render()
+@doLayout()
 <h3>Template Source</h3>
 <pre>
 @render("tmpl_src") {
-@(getTemplateClass(false).getTemplateSource())
+    template source not provided
 }
 </pre>
 <h3>Java Source</h3>
 <pre>
 @render("java_src") {
-@(getTemplateClass(false).javaSource)
+    java source not provided
 }
 </pre>
 </body>

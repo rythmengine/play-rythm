@@ -34,6 +34,7 @@ h3. New features
 * <a href="reference#return">Abort current template executing process and return to caller using <code>@return</code></a>
 * <a href="reference#break">Break the current loop using <code>@break</code></a>
 * <a href="reference#continue">Continue the current loop using <code>@continue</code></a>
+* New <a href="integration#cache4">@Cache4@</a> annotation to mark on controller action method
 * <code>@ts()</code> output timestamp in place
 * <code>@__simple__</code> mark the current template as simple template without implicit variables and does not extend other template
 
