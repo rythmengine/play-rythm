@@ -53,19 +53,11 @@ public class ActionBridge {
     public Router.ActionDefinition invokeMethod(String actionString, Object param) {
         try {
 
-            String controllerName = Http.Request.current().controller;
-            // forms: Controller.action, action, package.Controller.action
             String action = actionString;
-//			String methodName = actionString;
-            if (actionString.indexOf(".") > 0) {
-                int lastIndexOf = actionString.lastIndexOf('.');
-//				methodName = actionString.substring(lastIndexOf + 1);
-                controllerName = actionString.substring(0, lastIndexOf);
-                // fell spec with controller name
-            } else {
-                action = controllerName + "." + actionString;
+            if (actionString.indexOf(".") <= 0) {
+                action = Http.Request.current().controller + "." + actionString;
             }
-
+            
             Map<String, Object> r = new HashMap<String, Object>();
             Method actionMethod = (Method) ActionInvoker.getActionMethod(action)[1];
             String[] names = (String[]) actionMethod
