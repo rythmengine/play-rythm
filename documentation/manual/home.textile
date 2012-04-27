@@ -17,7 +17,7 @@ PlayRythm is yet another template engine plugin for Play!Framework 1.2x version:
 # Support "FastTags":user_guide#fast_tags and "JavaExtensions":user_guide#java_extension with constraints
 # "Tag invocation decorations":user_guide#tag_invoke_decoration and "chain":user_guide#chain_tag_invocation_decoration them together
 # "Template content decorations":user_guide#template_content_decoration and "chain":reference#chain them together
-# "Invoke controller action method":user_guide#invoke_action directly from within your template
+# (Play specific)"Invoke controller action method":user_guide#invoke_action directly from within your template
 # "Include other template inline":user_guide#include (not the same as tag invocation)
 
 h2. Template Syntax at a glance
@@ -38,7 +38,7 @@ bc. @extends(main)
 }
 </ul>
 
-h2. Use PlayRythm template engine
+h2. Use PlayRythm template engine (Play specific)
 
 h4. 1. Add PlayRythm into your @conf/dependencies.yml@ file:
 

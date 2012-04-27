@@ -4,7 +4,7 @@ h2. <a name="tags">Built-in Tags</a>
 
 h3. <a name="msg">msg</a>
 
-PlayMorphia specific tag. Lookup message string.
+PlayRythm specific tag. Lookup message string.
 
 bc. @msg("validation.required")
 
@@ -18,7 +18,7 @@ bc. @msg("some.message", "param1")
 
 h3. <a name="url">url</a>
 
-PlayMorphia specific tag. Reverse lookup URL.
+PlayRythm specific tag. Reverse lookup URL.
 
 bc. @url(Application.index)
 
@@ -32,7 +32,7 @@ bc. @url(/public/javascripts/myscript.js)
 
 h3. <a name="fullUrl">fullUrl</a>
 
-PlayMorphia specific tag. Absolute reverse lookup URL.
+PlayRythm specific tag. Absolute reverse lookup URL.
 
 bc. @fullUrl(Applicaiton.index)
 
@@ -69,7 +69,7 @@ You can have any arbitrary number of @args@ statement in any where of your templ
 
 h3. <a name="authenticityToken">authenticityToken</a>
 
-PlayMorphia specific tag. This is a clone of the "authenticityToken":http://www.playframework.org/documentation/1.2.4/tags#authenticityToken tag in Play's groovy template.
+PlayRythm specific tag. This is a clone of the "authenticityToken":http://www.playframework.org/documentation/1.2.4/tags#authenticityToken tag in Play's groovy template.
 
 bc. @authenticityToken()
 
@@ -80,7 +80,7 @@ bc. <input type="hidden" name="authenticityToken"
 
 h3. <a name="authenticityTokenValue">authenticityTokenValue</a>
 
-PlayMorphia specific tag. Use @authenticityTokenValue@ when you want to put the authenticity token value inside a javascript code in your view:
+PlayRythm specific tag. Use @authenticityTokenValue@ when you want to put the authenticity token value inside a javascript code in your view:
 
 bc. $.post("@url(User.save())",
     {authenticityToken: '@authenticityTokenValue()', ...},
@@ -213,7 +213,7 @@ See also "template inheritance":user_guide#inheritance
 
 h3. <a name="error">error</a>
 
-PlayMorphia specific tag. Outputs the validation error message, if present, for the field specified by the tag parameter.
+PlayRythm specific tag. Outputs the validation error message, if present, for the field specified by the tag parameter.
 
 bc. @error("user.name")
 
@@ -225,7 +225,7 @@ bc. @error("contact.street", "contact.address")
 
 h3. <a name="errorClass">errorClass</a>
 
-PlayMorphia specific tag. Outputs the text @hasError@ if there is a validation error for the field specified by the tag parameter. This is useful for setting a CSS class for input fields with errors:
+PlayRythm specific tag. Outputs the text @hasError@ if there is a validation error for the field specified by the tag parameter. This is useful for setting a CSS class for input fields with errors:
 
 bc. <input name="name" class="@errorClass("name")">
 

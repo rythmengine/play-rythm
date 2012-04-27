@@ -1,5 +1,7 @@
 h1. Integration Guide
 
+p(note). This section is PlayRythm specific content, pure Rythm user should skip this section
+
 h2. <a name="migrate">Migrate your current project from Groovy template engine to Rythm</a>
 
 PlayRythm is designed to support smooth migrating from Groovy template engine.
