@@ -2,7 +2,7 @@ h1. PlayRythm User Guide
 
 PlayRythm provides an alternative template processing engine for Play!Framework. The template engine uses Java as an expression language. A powerful tag system allows you to create reusable functions.
 
-Templates are stored in @app/rythm@ directory. -user defined tags are stored in @app/views/tags/rythm@ directory by default-.
+Templates are stored in @app/rythm@ directory.
 
 p(note). Unlike groovy engine, there is no special place for tag file storage. Basically every template can be "invoked as a tag":#invoke_tag.
 
@@ -93,7 +93,7 @@ bc. @// indicate this template extends "/main.html" template
 @// output some information for debugging purpose
 @debug("the variable is %s", someVariable)
 
-There are about a dozen of built-in functions defined in Rythm, please go to "Reference":reference for details
+There are more than a dozen of built-in functions defined in Rythm, please go to "Reference":reference for details
 
 h3. <a name="call_tag">Call user defined tag</a>
 
@@ -101,7 +101,7 @@ Again "@" can be used to call a user defined tag:
 
 bc. @greenscript("app<jqueryui<jquery", all:true)
 
-See "Tag invocation":#invoke_tag for detail.
+p(note). The "tag" in Rythm is called "macro" in Velocity and WebMacro, however Rythm tag facility are more powerful than macro in Velocity and FreeMarker. See "Tag invocation":#invoke_tag for more information.
 
 h3. <a name="nameconflict">Tag or expression?</a>
 
