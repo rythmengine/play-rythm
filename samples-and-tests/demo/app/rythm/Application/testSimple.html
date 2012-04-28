@@ -1,6 +1,15 @@
 @__simple__
 
-@{String code = getTemplateClass(false).javaSource}
+@{
+    String javaSrc = getTemplateClass(false).javaSource;
+    String tmplSrc = getTemplateClass(false).getTemplateSource()
+}
+<h3>Template Source</h3>
 <pre>
-@code.raw()
+@tmplSrc
+</pre>
+
+<h3>Java Source</h3>
+<pre>
+@javaSrc
 </pre>

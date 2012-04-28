@@ -1,16 +1,24 @@
 package controllers;
 
+import com.greenlaw110.rythm.logger.Logger;
 import com.greenlaw110.rythm.play.Cache4;
 import com.greenlaw110.rythm.play.RythmPlugin;
 import com.greenlaw110.rythm.play.UseRythmTemplateEngine;
 import org.apache.commons.lang3.StringUtils;
 import play.Play;
+import play.cache.Cache;
+import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Util;
 
+import java.util.Properties;
 import java.util.Random;
 
 public class Application extends Controller {
+    @Before(unless = {"testCache4","cachedTS"})
+    public static void enableCacheOnDev() {
+        Play.configuration.setProperty("rythm.cache.prodOnly", "false");
+    }
 
     @Util
     public static void index() {
@@ -123,6 +131,10 @@ public class Application extends Controller {
         render();
     }
 
+    public static void testInlineTag() {
+        render();
+    }
+
     @Cache4("cron.testCache4")
     public static void cachedTS(String param) {
         long ts = System.currentTimeMillis();
@@ -130,13 +142,42 @@ public class Application extends Controller {
     }
 
     public static void testCache4(boolean enableCache) {
-        Play.configuration.setProperty("cron.testCache4", "3s");
+        if (!Play.configuration.contains("cron.testCache4")) {
+            Play.configuration.setProperty("cron.testCache4", "3s");
+        }
         if (enableCache) {
             Play.configuration.setProperty("rythm.cache.prodOnly", "false");
         } else {
             Play.configuration.setProperty("rythm.cache.prodOnly", "true");
         }
         render(enableCache);
+    }
+
+    public static void testCache4WithSessionData() {
+        Properties c = Play.configuration;
+
+        if (!c.containsKey("cron.testCache4")) {
+            c.setProperty("cron.testCache4", "1mn");
+        }
+        c.setProperty("rythm.cache.prodOnly", "false");
+        String cacheTime = c.getProperty("cron.testCache4");
+        render(cacheTime);
+    }
+
+    public static void setCacheTime(String time) {
+        Play.configuration.setProperty("cron.testCache4", time);
+        renderText(time);
+    }
+
+    public static void reset() {
+        session.clear();
+        response.removeCookie("rememberme");
+        Cache.clear();
+    }
+
+    public static void login() {
+        session.put("username", "tester");
+        ok();
     }
 
 }

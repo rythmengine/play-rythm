@@ -34,6 +34,8 @@ import play.exceptions.UnexpectedException;
 import play.libs.IO;
 import play.mvc.Http;
 import play.mvc.Scope;
+import play.mvc.results.NotFound;
+import play.mvc.results.Redirect;
 import play.mvc.results.RenderTemplate;
 import play.mvc.results.Result;
 import play.templates.Template;
@@ -480,9 +482,13 @@ public class RythmPlugin extends PlayPlugin {
         }
         Http.Request request = Http.Request.current();
         if ((request.method.equals("GET") || request.method.equals("HEAD")) && actionMethod.isAnnotationPresent(Cache4.class)) {
-            String cacheKey = actionMethod.getAnnotation(Cache4.class).id();
+            Cache4 cache4 = actionMethod.getAnnotation(Cache4.class);
+            String cacheKey = cache4.id();
             if (S.isEmpty(cacheKey)) {
                 cacheKey = "rythm-urlcache:" + request.url + request.querystring;
+                if (cache4.useSessionData()) {
+                    cacheKey = cacheKey + Scope.Session.current().toString();
+                }
             }
             request.args.put("rythm-urlcache-key", cacheKey);
             request.args.put("rythm-urlcache-actionMethod", actionMethod);
@@ -497,7 +503,21 @@ public class RythmPlugin extends PlayPlugin {
 
     @Override
     public void onActionInvocationResult(Result result) {
-        if (result instanceof Cache4.CacheResult) return;
+        if (result instanceof Cache4.CacheResult) {
+            // it's already a cached result
+            return;
+        }
+        if (result instanceof Redirect) {
+            Redirect r = (Redirect)result;
+            if (r.code != Http.StatusCode.MOVED) {
+                // not permanent redirect, don't cache it
+                return;
+            }
+        }
+        if (result instanceof NotFound || result instanceof play.mvc.results.Error) {
+            // might recover later, so don't cache it
+            return;
+        }
         Object o = Http.Request.current().args.get("rythm-urlcache-key");
         if (null == o) return;
         String cacheKey = o.toString();
@@ -510,7 +530,7 @@ public class RythmPlugin extends PlayPlugin {
         if ("forever".equals(duration)) {
             duration = "99999d";
         }
-        play.cache.Cache.set(cacheKey, result, duration);
+        play.cache.Cache.set(cacheKey, new Cache4.CacheResult(result), duration);
     }
 
     public static void main(String[] args) {

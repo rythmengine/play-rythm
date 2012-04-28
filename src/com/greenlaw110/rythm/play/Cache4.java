@@ -24,9 +24,34 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Cache4 {
+    /**
+     * Cache time, See play.libs.Time
+     *
+     * In addition, it also understand time configuration start with "cron."
+     *
+     * A special value "forever" also accept
+     *
+     * @return
+     */
     String value() default "1h";
+
+    /**
+     * Define the cache key. Leave it empty if you want system to generate key from request automatically
+     *
+     * @return
+     */
     String id() default "";
 
+    /**
+     * Whether use session data to generate key
+     *
+     * @return
+     */
+    boolean useSessionData() default false;
+
+    /**
+     * Wrap action result so that system know whether it comes out from cache or a real execution result
+     */
     public static class CacheResult extends Result {
         private Result cached;
 

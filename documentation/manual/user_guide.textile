@@ -101,7 +101,7 @@ Again "@" can be used to call a user defined tag:
 
 bc. @greenscript("app<jqueryui<jquery", all:true)
 
-See "Tag invocation"#invoke_tag for detail.
+See "Tag invocation":#invoke_tag for detail.
 
 h3. <a name="nameconflict">Tag or expression?</a>
 
@@ -224,6 +224,8 @@ bc. @greenscript.js() {
     })
 }
 
+Tag body is called "nested content" in FreeMarker.
+
 p(note). Passing body to a "controller action invocation":#invoke_action has no effect.
 
 h4. <a name="tag_invocation_callback">Pass body callback parameter spec to tag call</a>
@@ -260,7 +262,7 @@ Rythm 1.0 add a feature called tag invocation decoration which allows you to man
 
 p(note). Tag invocation decoration feature is also available to an arbitrary template block via the <a href="reference#chain"><code>@chain</code></a> built-int tag
 
-p(note). Tag invocation decoration features only process runtime result and thus is NOT available to <a href="reference#include"><code>@include</code></a> built-in tag because it is evaluated at parsing time and executed at code generating time.
+p(note). Tag invocation decoration features only process runtime result and thus is NOT available to <a href="reference#include"><code>@include</code></a> built-in tag because it is evaluated at parsing time and executed at code generating time. For the same reason they are not applicable to <a href="#inline_tag">Inline tags</a> because inline tags are actually member functions of the underline template class, calling to inline tag are static linked.
 
 h3. <a name="tag_invocation_escape">Escape tag invocation result</a>
 
@@ -592,6 +594,25 @@ bc. @for (User user: users) {
 }
 
 Inline tag definition is some how like "helper":http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx tool in Razor engine. With the <a href="#include"><code>@include</code></code></a> you can easily "reuse inline tag definition across multiple templates":#reuse_inline_tag
+
+p(note). Normal "tag invocation decoration":#tag_invoke_decoration functions cannot be used on inline tag directly. But there are corresponding workaround for each decoration function to use:
+
+bc. @myInlineTag().cache("3h") @// this is NOT okay
+@// the following is good
+@cache("3h") {
+    @myInlineTag()
+}
+
+bc. @myInlineTag().raw().assign("myResult") @// this is NOT okay
+@// the following is good
+@chain().raw().assign("myResult") {
+    @myInlineTag()
+}
+
+p(note). You cannot pass argument by name when invoking inline tag. Use pass by position instead:
+
+bc. @myInlineTag(varName: "value") @// this will cause compilation error
+@myInlineTag("value") @// this is okay
 
 h2. <a name="java_tags">Custom Java tags</a>
 

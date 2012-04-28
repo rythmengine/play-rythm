@@ -58,7 +58,9 @@ In your @conf/application.conf@:
 bc. ...
 cron.top10.cache=5mn
 
-p(note). Unlike <code>@play.cache.CacheFor</code>, with the new <code>@Cache4</code>, if the action result get from cache, then the @Before and @After filters will not be executed. Also it might break the state of other plugins if they were using @beforeActionInvocation()@ and @onActionInvocationResult()@ pair
+You can set @useSessionData@ attribute to @true@
+
+p(note). Unlike <code>@play.cache.CacheFor</code>, with the new <code>@Cache4</code>, if the action result get from cache, then the @Before and @After filters will not be executed. Also it might break the state of other plugins if they were using @beforeActionInvocation()@ and @onActionInvocationResult()@ pair. Rule of thumb: if you expect each request be handled through some filters, e.g. secure gate, DO NOT use <code>@Cache4</code>
 
 p(note). <code>@Cache4</code> does not require you to use Rythm template, it works with any controller action methods
 

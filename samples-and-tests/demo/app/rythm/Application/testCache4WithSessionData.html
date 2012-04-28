@@ -1,0 +1,71 @@
+@extends(main)
+@args String cacheTime
+
+<style>
+    iframe {
+        width: 500px;
+        height: 300px;
+    }
+</style>
+
+<h1>Test Cache4 with session data</h1>
+
+<p>
+    Note, zone A controller is marked with <code>@@Cache4("cron.testCache4")</code>; zone B controller is marked with
+    <code>@@Cache4(useSessionData = true, value = "cron.testCache4")</code>.
+</p>
+<p>
+    As a result zone B is sensitive to session data changes,
+    e.g. user login/logout will cause cache invalidate, while zone A is only sensitive to request itself, user logout will
+    not cause the content change in zone A
+</p>
+
+<p>
+    <button id="setCacheTime">set</button> cache time to <input type="text" name="cacheTime" id="cacheTime" value="@cacheTime">
+</p>
+
+<p>By clicking <button id="login" type="button">Log in</button> you set a username into the session data. You should be able to see "now is: xxxx" message in both iframes</p>
+<p>By clicking <button id="logout" type="button">Log out</button> you clean the session data, and you should see a login screen is zone b, but zone a still remain unchanged</p>
+<p>By clicking <button id="refresh">Refresh</button> you refresh the current page and watch the change in the two iframes</p>
+<p>By clicking <button id="reset">Reset</button> you reset server status and clear all caches</p>
+
+<hr/>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Zone A</th>
+        <th>Zone B</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <iframe id="zoneA" src="@url(SecureApp.zoneA())"></iframe>
+        </td>
+        <td>
+            <iframe id="zoneB" src="@url(SecureApp.zoneB())"></iframe>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    function reloadIFrame() {
+        location.reload();
+    }
+    $('#refresh').click(reloadIFrame);
+    $('#logout').click(function(){
+        $.post('@url(SecureApp.logout())', reloadIFrame);
+    });
+    $('#login').click(function(){
+        $.post('@url(Application.login())', reloadIFrame);
+    });
+    $('#reset').click(function(){
+        $.post("@url(Application.reset())", function(){
+            location.reload();
+        });
+    });
+    $('#setCacheTime').click(function(){
+        $.post('@url(Application.setCacheTime())', {time: $('#cacheTime').val()});
+    });
+</script>
