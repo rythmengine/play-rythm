@@ -193,6 +193,13 @@ bc. @import foo.*
 @tag2() @// import path invocation
 @zee.tag3() @// import path invocation
 
+imports and relative path also apply to "action invocation":#invoke_action:
+
+bc. @import controllers.*
+@Application.index()
+
+p(note). To use import path you must explicitly import the packages, "implicit imports":#Implicitimportstatements has no effects.
+
 h3. <a name="pass_parameter_to_tag">Passing arguments to tag</a>
 
 Suppose you have defined a tag file hello.html:
@@ -347,6 +354,155 @@ p(note). Because controller action invocation are treated as tag invocation, the
 
 p(note). See "integration guide":integration#action for more detail about invoking controller action method
 
+h2. <a name="custom_tag">Create tags</a>
+
+You can easily create specific tags for your application. A tag is a simple template file, stored in the @app/views/tags/rythm@ directory. The template’s file name is used as the tag name.
+
+To create a @hello@ tag, just create the @app/views/tags/rythm/hello.html@ file.
+
+bc. Hello from tag!
+
+No need to configure anything. You can use the tag directly:
+
+bc. @hello() @// the brace () is a must to call a tag
+
+h3. Retrieve tag parameters
+
+Tag parameters are exposed as template variables which declared using <code>@args</code> tag.
+
+For example:
+
+bc. @args String name;
+Hello @name !
+
+And you can pass the name parameter to the tag:
+
+bc. @hello(name: "Bob")
+
+or to pass parameter by position:
+
+bc. @hello("Bob")
+
+h3. <a name="callback_tag_body">Callback tag body</a>
+
+If your tag supports a @body@, you can include it at any point in the tag code, using the <a href="reference#renderBody"><code>@renderBody()</code></a> keyword.
+
+For example:
+
+bc. Hello @renderBody()!
+
+And you can then pass the name as tag body:
+
+bc. @hello() {
+   Bob
+}
+
+h4. <a name="callback_tag_body_with_params">Callback tag body with parameters</a>
+
+Rythm v1.0 support a new feature to callback tag body with parameters:
+
+bc. @renderBody("superuser")
+
+See "Invoke tag with body":#invoke_tag_with_body to see how to invoke a tag which will callback body with parameters
+
+p(note). Invoking a tag is different from callback tag body. The former is used by app developer (tag consumer) and the latter is used by tag developer (tag producer)
+
+h3. <a name="content-negotiation">Pickup tag file based on content format</a>
+
+Like groovy template, you can have different versions of tag for different "content types":http://www.playframework.org/documentation/1.2.4/routes#content-types:
+
+bc. // javascript code to request a html page
+$.get("/ui/userManager", function(data) {
+   $('#manager-panel').html(data);
+})
+// javascript code to request a JSON data
+$.getJSON("/data/userList", function(data)) {
+   model.users = ko.mapping.fromJS(data);
+}
+
+Suppose both request will result in a tag invocation <code>@user.list()</code> in the template code as below:
+
+bc. //@ template code
+@args List<User> users
+...
+@user.list()
+...
+
+When you have normal html page request, Rythm will try to look for @app/rythm/user/list.html@ file when doing the tag invocation. If the request is for a json data, Rythm will pickup @app/rythm/user/list.json@ first. If the preferred tag file cannot be found, then Rythm look for tag file for other formats in the following sequence:
+
+# *.html
+# *.json
+# *.xml
+# *.csv
+# *.tag
+
+h2. <a name="inline_tag">Define inline tags</a>
+
+Rythm provides inline tag definition to achieve a lightweight and light speed reuse method in one template.
+
+bc. @tag sayHello(String who, String title) {
+  <p>Hello, @title @who</p>
+}
+
+And in the same template you can call the tag defined as usual:
+
+bc. @for (User user: users) {
+  @sayHello(user.name, user.title)
+}
+
+Inline tag definition is some how like "helper":http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx tool in Razor engine. With the <a href="#include"><code>@include</code></code></a> you can easily "reuse inline tag definition across multiple templates":#reuse_inline_tag
+
+p(note). Normal "tag invocation decoration":#tag_invoke_decoration functions cannot be used on inline tag directly. But there are corresponding workaround for each decoration function to use:
+
+bc. @myInlineTag().cache("3h") @// this is NOT okay
+@// the following is good
+@cache("3h") {
+    @myInlineTag()
+}
+
+bc. @myInlineTag().raw().assign("myResult") @// this is NOT okay
+@// the following is good
+@chain().raw().assign("myResult") {
+    @myInlineTag()
+}
+
+p(note). You cannot pass argument by name when invoking inline tag. Use pass by position instead:
+
+bc. @myInlineTag(varName: "value") @// this will cause compilation error
+@myInlineTag("value") @// this is okay
+
+h2. <a name="java_tags">Custom Java tags</a>
+
+Honestly creating Java tag is not so important in Rythm as it is in Groovy because Rythm template is running so fast that it is almost like a handwriting StringBuilder appended java code. However you might still want to do it because the logic in that tag is complicated and it is more easier to code in a Java source code than in a text template source.
+
+There are 2 ways to creating Custom Java tags.
+
+h3. <a name="fast_tags">The old Play FastTags approach</a>
+
+PlayRythm provides a bridge to intercept a rythm tag call to FastTags call. So you are free to continue define FastTags as you did for Groovy template. See http://www.playframework.org/documentation/1.2.4/templates#fasttags for more details on how to create FastTags.
+
+p(note). Developer cannot use all stuffs in FastTags. The constraints include @Closure@ parameter and @TagContext@ etc.
+
+h3. <a name="rythm_java_tag">Implement Java Tag using Rythm's new Java Tag interface</a>
+
+Another approach is to implement Java Tag using Rythm's new @com.greenlaw110.rythm.play.FastRythmTag@:
+
+bc. import com.greenlaw110.rythm.play.FastRythmTag;
+@play.templates.FastTags.Namespace("") // yes, you use the same Namespace annotation in Rythm Fast Tag definition
+public class authenticityToken extends FastRythmTag {
+    @Override public void call(ParameterList params, Body body) {
+        p("<input type=\"hidden\" name=\"authenticityToken\" value=\"" + Scope.Session.current().getAuthenticityToken() + "\">");
+    }
+}
+
+The above code shows how to implement Play's authenticityToken tag in Rythm.
+
+h4. Pros and Cons of the two approach
+
+The good side of FastTags approach is it's compatible to Groovy template, and thus should be welcome by module developers who don't need a PlayRythm copy to get their code compileds and distributed.
+
+The only tiny problem with FastTags is that it uses reflection to lookup the method to be called, which might be a little bit more time consuming than using Rythm's tag interface
+
 h2. <a name="include">Include other templates</a>
 
 Rythm support include other template inline:
@@ -496,155 +652,6 @@ bc. @extends(main)
 }
 
 <a name="default_section"></a>In the above example people with sharp eyes can notice that the @footer@ section render in the layout template is different from the @sidebar@ section in that we supplied a default content to the former. So if user did not define the @footer@ section in the sub template, the default content will be output instead. This is an new feature available in v1.0
-
-h2. <a name="custom_tag">Create tags</a>
-
-You can easily create specific tags for your application. A tag is a simple template file, stored in the @app/views/tags/rythm@ directory. The template’s file name is used as the tag name.
-
-To create a @hello@ tag, just create the @app/views/tags/rythm/hello.html@ file.
-
-bc. Hello from tag!
-
-No need to configure anything. You can use the tag directly:
-
-bc. @hello() @// the brace () is a must to call a tag
-
-h3. Retrieve tag parameters
-
-Tag parameters are exposed as template variables which declared using <code>@args</code> tag.
-
-For example:
-
-bc. @args String name;
-Hello @name !
-
-And you can pass the name parameter to the tag:
-
-bc. @hello(name: "Bob")
-
-or to pass parameter by position:
-
-bc. @hello("Bob")
-
-h3. <a name="callback_tag_body">Callback tag body</a>
-
-If your tag supports a @body@, you can include it at any point in the tag code, using the <a href="reference#renderBody"><code>@renderBody()</code></a> keyword.
-
-For example:
-
-bc. Hello @renderBody()!
-
-And you can then pass the name as tag body:
-
-bc. @hello() {
-   Bob
-}
-
-h4. <a name="callback_tag_body_with_params">Callback tag body with parameters</a>
-
-Rythm v1.0 support a new feature to callback tag body with parameters:
-
-bc. @renderBody("superuser")
-
-See "Invoke tag with body":#invoke_tag_with_body to see how to invoke a tag which will callback body with parameters
-
-p(note). Invoking a tag is different from callback tag body. The former is used by app developer (tag consumer) and the latter is used by tag developer (tag producer)
-
-h3. <a name="content-negotiation">Pickup tag file based on content format</a>
-
-Like groovy template, you can have different versions of tag for different "content types":http://www.playframework.org/documentation/1.2.4/routes#content-types:
-
-bc. // javascript code to request a html page
-$.get("/ui/userManager", function(data) {
-   $('#manager-panel').html(data);
-})
-// javascript code to request a JSON data
-$.getJSON("/data/userList", function(data)) {
-   model.users = ko.mapping.fromJS(data);
-}
-
-Suppose both request will result in a tag invocation <code>@user.list()</code> in the template code as below:
-
-bc. //@ template code
-@args List<User> users
-...
-@user.list()
-...
-
-When you have normal html page request, Rythm will try to look for @app/rythm/user/list.html@ file when doing the tag invocation. If the request is for a json data, Rythm will pickup @app/rythm/user/list.json@ first. If the preferred tag file cannot be found, then Rythm look for tag file for other formats in the following sequence:
-
-# *.html
-# *.json
-# *.xml
-# *.csv
-# *.tag
-
-h2. <a name="inline_tag">Define inline tags</a>
-
-Rythm provides inline tag definition to achieve a lightweight and light speed reuse method in one template.
-
-bc. @tag sayHello(String who, String title) {
-  <p>Hello, @title @who</p>
-}
-
-And in the same template you can call the tag defined as usual:
-
-bc. @for (User user: users) {
-  @sayHello(user.name, user.title)
-}
-
-Inline tag definition is some how like "helper":http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx tool in Razor engine. With the <a href="#include"><code>@include</code></code></a> you can easily "reuse inline tag definition across multiple templates":#reuse_inline_tag
-
-p(note). Normal "tag invocation decoration":#tag_invoke_decoration functions cannot be used on inline tag directly. But there are corresponding workaround for each decoration function to use:
-
-bc. @myInlineTag().cache("3h") @// this is NOT okay
-@// the following is good
-@cache("3h") {
-    @myInlineTag()
-}
-
-bc. @myInlineTag().raw().assign("myResult") @// this is NOT okay
-@// the following is good
-@chain().raw().assign("myResult") {
-    @myInlineTag()
-}
-
-p(note). You cannot pass argument by name when invoking inline tag. Use pass by position instead:
-
-bc. @myInlineTag(varName: "value") @// this will cause compilation error
-@myInlineTag("value") @// this is okay
-
-h2. <a name="java_tags">Custom Java tags</a>
-
-Honestly creating Java tag is not so important in Rythm as it is in Groovy because Rythm template is running so fast that it is almost like a handwriting StringBuilder appended java code. However you might still want to do it because the logic in that tag is complicated and it is more easier to code in a Java source code than in a text template source.
-
-There are 2 ways to creating Custom Java tags.
-
-h3. <a name="fast_tags">The old Play FastTags approach</a>
-
-PlayRythm provides a bridge to intercept a rythm tag call to FastTags call. So you are free to continue define FastTags as you did for Groovy template. See http://www.playframework.org/documentation/1.2.4/templates#fasttags for more details on how to create FastTags.
-
-p(note). Developer cannot use all stuffs in FastTags. The constraints include @Closure@ parameter and @TagContext@ etc.
-
-h3. <a name="rythm_java_tag">Implement Java Tag using Rythm's new Java Tag interface</a>
-
-Another approach is to implement Java Tag using Rythm's new @com.greenlaw110.rythm.play.FastRythmTag@:
-
-bc. import com.greenlaw110.rythm.play.FastRythmTag;
-@play.templates.FastTags.Namespace("") // yes, you use the same Namespace annotation in Rythm Fast Tag definition
-public class authenticityToken extends FastRythmTag {
-    @Override public void call(ParameterList params, Body body) {
-        p("<input type=\"hidden\" name=\"authenticityToken\" value=\"" + Scope.Session.current().getAuthenticityToken() + "\">");
-    }
-}
-
-The above code shows how to implement Play's authenticityToken tag in Rythm.
-
-h4. Pros and Cons of the two approach
-
-The good side of FastTags approach is it's compatible to Groovy template, and thus should be welcome by module developers who don't need a PlayRythm copy to get their code compileds and distributed.
-
-The only tiny problem with FastTags is that it uses reflection to lookup the method to be called, which might be a little bit more time consuming than using Rythm's tag interface
 
 h2. <a name="java_extension">Java object extensions in templates</a>
 

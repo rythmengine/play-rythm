@@ -211,6 +211,10 @@ p(note). An easier and clean way to <code>@doLayout()</code> is <code>@render()<
 
 See also "template inheritance":user_guide#inheritance
 
+h3. <a name="doBody">doBody</a>
+
+An alias of <a href="renderBody"><code>renderBody</code></a>
+
 h3. <a name="error">error</a>
 
 PlayRythm specific tag. Outputs the validation error message, if present, for the field specified by the tag parameter.
@@ -407,7 +411,35 @@ Enable dynamic tag invocation:
 
 bc. @invoke("designer." + platform).ignoreNonExistsTag()
 
-See "Dynamic tag invocation":user_guide#dynamic_tag_invocation section for details
+See "Dynamic tag invocation":user_guide#dynamic_tag_invocation section for details4
+
+h3. <a name="jsaction">jsAction</a>
+
+The <code>@jsAction()</code> tag returns a JavaScript function which constructs a URL based on a server action and free variables. It does not perform an AJAX request; these have to be done by hand using the returned URL.
+
+Let’s see an example:
+
+bc. GET     /users/{id}        Users.show
+
+Now you can import this route client side:
+
+bc. <script type="text/javascript">
+    @assign("showUserUrl"){@url(Users.show(":id"))}
+    var showUserAction = @jsAction(showUserUrl)
+
+    var displayUserDetail = function(userId) {
+        $('userDetail').load( showUserAction({id: userId}) )
+    }
+</script>
+
+Note at the moment <code>@jsAction()</code> tag in PlayRythm is no as convenient to use as the groovy <code>#{jsAction /} tag that you must use a special <code>@assign</code> statement to get the url reverse lookup result before passing it to the <code>@jsAction()</code> tag:
+
+bc. @assign("showUserUrl"){@url(Users.show(":id"))}
+var showUserAction = @jsAction(showUserUrl)
+
+It's desired the syntax could be simplified as:
+
+bc. var showUserAction = @jsAction(Users.show(":id")) @// note this has NOT been implemented yet!
 
 h3. <a name="renderBody">renderBody</a>
 

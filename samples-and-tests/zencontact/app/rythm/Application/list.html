@@ -1,5 +1,5 @@
 @args List<Contact> contacts
-@extends(/main.html)
+@extends(main)
 @set(title: "List")
 
 <table>
@@ -60,8 +60,9 @@
 
     // Drag & Drop
     var dragIcon = document.createElement('img');
-    dragIcon.src = '@_u(public/images/avatar.png)';
-    var action = @jsAction("form", ":id");
+    dragIcon.src = '@url(public/images/avatar.png)';
+    @assign("formUrl"){@url(Application.form(":id"))}
+    var action = @jsAction(formUrl);
     var cancel = function cancel(e) {e.preventDefault()};
 
     $('#new')

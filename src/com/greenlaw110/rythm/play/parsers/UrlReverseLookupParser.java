@@ -36,7 +36,7 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
 
     @Override
     protected String patternStr() {
-        return "^(%s%s[ \\t]*((?@()))\\s*)";
+        return "^(%s%s[ \\t]*((?@())))";
     }
 
     protected String innerPattern() {

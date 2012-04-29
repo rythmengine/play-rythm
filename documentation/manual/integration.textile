@@ -29,9 +29,9 @@ bc. @controllers.Applicaiton.index();
 
 Things you need to take care of:
 
-# -You must use full qualified method name (including package name, class name) when you invoke controller action method- No longer needed since v1.0.0
+# -You must use full qualified method name (including package name, class name) when you invoke controller action method- No longer required since v1.0.0
 # You must pass exactly the parameters that matches what is defined in the controller action method signature. The parameter must be passed in by position
-# The invocation is directly and will not go through the whole stack of Play's method action invocation. Meaning the <code>@Before</code>, <code>@After</code> and <code>@Final</code> logic will NOT be executed.
+# The invocation is directly and will not go through the whole stack of Play's action invocation process. Meaning the <code>@Before</code>, <code>@After</code> and <code>@Final</code> logic will NOT be executed, the same thing happens to all plugin's @beforeActionInvocation()@, @onActionInvocationResult()@ and @afterActionInvocation()@ hooks.
 # Start form v1.0 controller invocation is eligible to the following tag invocation extensions:
 ## "Cache":user_guide#tag_invocation_cache: <code>@controllers.Application.index().cache("1h")</code>
 ## "Invoke with relative path/import path":user_guide#call_tag_relative_path: <code>@import controllers.*; @Application.index()</code>
@@ -45,6 +45,9 @@ Though not so relevant to a template engine, Rythm still provides an new annotat
 * It will check <code>rythm.cache.prodOnly</code> configuration. If it's true, then cache not effect on dev mode
 * You can specify time using configuration name like <code>cron.xx.yy</code>, and Rythm will go @Play.configuration@ to find out the cache time duration. Meaning the cache duration is configurable now. Thus mechanism (by app developer) is well decoupled from policy (by app deployer). Note time duration configuration name must start with "cron"
 * You can specify or configure a special time "forever" and the cache will never expire
+* An additional @useSessionData@ attribute allow cache key generation check session data, which create a per user cache mechanism. This add an new granularity to the cache system
+* It does not cache a @Redirect@ that is not permanent, which basically enable to some modules like secure that might trigger a temporary redirect to pass through cache mechanism
+* It does not cache Error and NotFound which enable the system to recover from errors like database error or a network error.
 
 Sample:
 
@@ -58,9 +61,30 @@ In your @conf/application.conf@:
 bc. ...
 cron.top10.cache=5mn
 
-You can set @useSessionData@ attribute to @true@
+<a name="session_data"></a>You can set @useSessionData@ attribute to @true@ to create a per-user-cache mechanism:
 
-p(note). Unlike <code>@play.cache.CacheFor</code>, with the new <code>@Cache4</code>, if the action result get from cache, then the @Before and @After filters will not be executed. Also it might break the state of other plugins if they were using @beforeActionInvocation()@ and @onActionInvocationResult()@ pair. Rule of thumb: if you expect each request be handled through some filters, e.g. secure gate, DO NOT use <code>@Cache4</code>
+bc. @Cache4(useSessionData = true, value="1h")
+public static void showMyInterests() {
+...
+}
+
+h3. <a name="cache4_side_effect">Cache4 side effect</a>
+
+@Cache4@ logic is implemented in @RythmPlugin.beforeActionInvocation()@ and @RythmPlugin.onActionInvocationResult()@ hooks. This indicates the following side effect of @Cache4@:
+
+* if the @Result@ get from cache, the all the following logic will get bypassed:
+## The @beforeActionInvocation()@ hooks of other plugins (with plugin id > 55)
+## All application defined <code>@Before</code> and <code>@After</code> filters
+* if the @Result@ is missed in the cache, the all the following logic will get bypassed:
+## The @onActionInvocationResult()@ and @afterActionInvocation()@ hook of other plugins (with plugin id > 55)
+
+So you should not use @Cache4@ annotation in the following cases:
+
+* Your app or dependent modules have defined controller action filters which will change system state on each request (e.g. system access log)
+* Your dependent modules implemented @beforeActionInvocation()@, @afterActionInvocation()@ and @onActionInvocationResult()@ plugin hooks which might change system state on each request
+* If you don't know what I am talking about here
+
+p(note). For module or application defined filters that will throw out non-permanent Redirect result, for example, secure module will cause redirect if user has not logged in, in which case you are still safe to use @Cache4@ with @useSessionData@ enabled. See "above example":#session_data.
 
 p(note). <code>@Cache4</code> does not require you to use Rythm template, it works with any controller action methods
 

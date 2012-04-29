@@ -1,8 +1,8 @@
 @args Contact contact
-@extends(/main.html)
+@extends(main)
 @set(title: "Form")
 
-<form action="@_u(save)" method="post">
+<form action="@url(save)" method="post">
     @authenticityToken()
     @{
         boolean nullContact = null == contact;
@@ -37,7 +37,7 @@
     </p>
 
     <p class="buttons">
-     	<a href="@_u(list())">Cancel</a> or <input type="submit" value="Save this contact" id="saveContact">
+     	<a href="@url(list())">Cancel</a> or <input type="submit" value="Save this contact" id="saveContact">
     </p>
 
     <script type="text/javascript" charset="${_response_encoding}">

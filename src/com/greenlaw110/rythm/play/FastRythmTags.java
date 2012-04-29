@@ -95,14 +95,14 @@ public class FastRythmTags {
 //        }
 //    }
 //
-//    public static class jsAction extends FastRythmTag {
-//        @Override
-//        protected void call(ParameterList params, Body body) {
-//            String action = params.getDefault().toString();
-//            //String url = new ActionBridge(false).invokeMethod(action)
-//            p("function(options) {var pattern = '")
-//                .p(params.getDefault().toString().replace("&amp;", "&"))
-//                .p("'; for(key in options) { pattern = pattern.replace(':'+key, options[key]); } return pattern }");
-//        }
-//    }
+    public static class jsAction extends FastRythmTag {
+        @Override
+        protected void call(ParameterList params, Body body) {
+            String action = params.getDefault().toString();
+            //String url = new ActionBridge(false).invokeMethod(action)
+            p("function(options) {var pattern = '")
+                .p(params.getDefault().toString().replace("&amp;", "&"))
+                .p("'; for(key in options) { pattern = pattern.replace(':'+key, options[key]); } return pattern }");
+        }
+    }
 }
