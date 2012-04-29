@@ -30,7 +30,7 @@ h2. <a name="action">Invoking controller actions</a>
 
 PlayRythm 0.9.7 version released with this new feature which is first introduced in Japid template engine and people seems like it a lot. Basically you can invoke a controller action method directly from within the template and fill the place with the render result content. As with any function/tag/template invocation, action method invoke is very straghtforward. Excamples:
 
-bc. @controllers.Applicaiton.index();
+bc. @controllers.Applicaiton.index().cache("1h");
 @controllers.MyPortal.newsPanel(user);
 
 Things you need to take care of:

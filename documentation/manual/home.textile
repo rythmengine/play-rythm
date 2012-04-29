@@ -53,7 +53,7 @@ h4. 2. Create the template file in @app/rythm@ folder.
 
 The layout of the folder should be the same as your @app/views@ folder.
 
-Rythm can stay with your groovy templates. Suppose you have a controller action @Application.index()@, if you have @Application/index.html@ file put into @app/rythm@ folder, then Rythm template engine will execute it. If not then your @Application/index.html@ file in @app/views@ folder will be picked up and processed by Groovy template engine. Please refer to "Rythm Template User Guide":user_guide for more information
+Rythm can stay with your groovy templates. Suppose you have a controller action @Application.index()@, if you have @Application/index.html@ file put into @app/rythm@ folder, then Rythm template engine will execute it. If not then your @Application/index.html@ file in @app/views@ folder will be picked up and processed by Groovy template engine. Please refer to "Integration Guide":integration for more information
 
 h2. <a name="resource">See Also</a>
 

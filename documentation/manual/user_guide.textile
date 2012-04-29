@@ -146,9 +146,26 @@ Rythm 1.0 provides a useful feature to allow you to further process template con
 * "assign a block of template content into a variable":reference#assign
 * "cache a template block":reference#cache
 
+h2. <a name="tag_introduction">Tag in Rythm</a>
+
+Tag in Rythm is a powerful tool to reuse your template design. In Velocity and FreeMarker reusing is achieved via a tool named Macro. A Macro is roughly equals to "inline tag":#inline_tag provided in Rythm. Tag, however is much more powerful than it, and here enumerate some of the Tag advantages over Macro
+
+* Can be defined in a template or a "Java class":#java_tags
+* Like an ordinary java source code, the namespace is managed by the source path, thus no need to understand another namespace scheme.
+* Can "extends":#inheritance another template
+* The invocation can be "decorated":#tag_invoke_decoration and you do whatever you want with tag invocation result ("Cache":#tag_invocation_cache, "Escape":#tag_invocation_escape, "Assign":#tag_invocation_assign and "chain them together":#chain_tag_invocation_decoration)
+* Can "callback tag body":#callback_tag_body with "pre-defined parameters":#callback_tag_body_with_params, looks like a double dispatch, isn't?
+** In FreeMarker you get callback via nested content and limited callback params support via loop variables
+** Velocity users, we are sorry for you
+* Invoke controller action method as tag (Play specific)
+
+So check more on
+* "Tag invocation":#invoke_tag
+* "Tag creation":#custom_tag
+
 h2. <a name="invoke_tag">Tag invocation</a>
 
-**Tag** is a powerful tool to reuse your template definition in Rythm. To invoke a tag, use '@' plus tag name and brace pair
+**Tag** is a powerful tool to reuse your template definition in Rythm. To invoke a tag, use <code>@</code> plus tag name and brace
 
 bc. @// call greenscript.js tag using parameters to declare a list of javascript files and output them all
 @greenscript.js("app<jqueryui<jquery", all:true)
@@ -159,7 +176,7 @@ bc. @// call greenscript.js tag using parameters to declare a list of javascript
     @foo.bar()
 }
 
-p(note). You must append @()@ to tag name even it does not require any parameter. The only exception to this rule is <a href="reference#return"><code>@return</code></a>, <a href="reference#break"><code>@break</code></a> and <a href="reference#continue"><code>@continue</code></a>. Because all three are Java reserved words and one cannot use them for variable/method names.
+p(note). You must append @()@ to tag name even it does not require any parameter. The only exception to this rule is <a href="reference#return"><code>@return</code></a>, <a href="reference#break"><code>@break</code></a> and <a href="reference#continue"><code>@continue</code></a>. Because these three are Java reserved words and one cannot use them as variable/method names.
 
 h3. <a name="call_tag_relative_path">Call tag using relative and import path</a>
 
@@ -192,6 +209,7 @@ bc. @Application.tagA() @// full path invocation
 You can also save typing by using <code>@import</code> path:
 
 bc. @import foo.*
+　
 @foo.tag2() @// full path invocation
 @foo.zee.tag3() @// full path invocation
 @tag2() @// import path invocation
@@ -200,6 +218,7 @@ bc. @import foo.*
 imports and relative path also apply to "action invocation":#invoke_action:
 
 bc. @import controllers.*
+　
 @Application.index()
 
 p(note). To use import path you must explicitly import the packages, "implicit imports":#Implicitimportstatements has no effects.
@@ -208,7 +227,8 @@ h3. <a name="pass_parameter_to_tag">Passing arguments to tag</a>
 
 Suppose you have defined a tag file hello.html:
 
-bc. @args String title, String who;
+bc. @args String title, String who
+　
 Hello @title @who
 
 And in another template you want to invoke hello.html. Like groovy template, you can pass an argument to a tag by name:
@@ -254,6 +274,7 @@ bc. @lookupRole(permission: "superuser").callback(List<Role> roleList) {
 and in your @lookupRole@ tag:
 
 bc. @args String permission
+　
 @{
     List<Role> roles = Role.find("permission", permission).asList()
 }
@@ -360,15 +381,15 @@ p(note). See "integration guide":integration#action for more detail about invoki
 
 h2. <a name="custom_tag">Create tags</a>
 
-You can easily create specific tags for your application. A tag is a simple template file, stored in the @app/views/tags/rythm@ directory. The template’s file name is used as the tag name.
+You can easily create specific tags for your application. **Every template can be invoked as a tag**. The template’s file path start from template root (in Play context it's app/rythm) mapped into tag name by striping off the file extension and converting all path separator @/@ into the dot @.@.
 
-To create a @hello@ tag, just create the @app/views/tags/rythm/hello.html@ file.
+For example suppose you have a template with the following content located at @app/rythm/util/hello.html@:
 
 bc. Hello from tag!
 
-No need to configure anything. You can use the tag directly:
+From the any other template or even the template itself you can invoke the template as a tag:
 
-bc. @hello() @// the brace () is a must to call a tag
+bc. @util.hello() @// the brace () is a must to call a tag
 
 h3. Retrieve tag parameters
 
@@ -376,16 +397,16 @@ Tag parameters are exposed as template variables which declared using <code>@arg
 
 For example:
 
-bc. @args String name;
+bc. @args String name
 Hello @name !
 
 And you can pass the name parameter to the tag:
 
-bc. @hello(name: "Bob")
+bc. @util.hello(name: "Bob")
 
 or to pass parameter by position:
 
-bc. @hello("Bob")
+bc. @util.hello("Bob")
 
 h3. <a name="callback_tag_body">Callback tag body</a>
 
@@ -397,7 +418,7 @@ bc. Hello @doBody()! @// or Hello @renderBody()!
 
 And you can then pass the name as tag body:
 
-bc. @hello() {
+bc. @util.hello() {
    Bob
 }
 
