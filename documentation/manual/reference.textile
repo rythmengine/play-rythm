@@ -566,8 +566,8 @@ h3. <a name="__simple__">@__simple__@</a>
 
 Mark the current template as a **simple** template. A simple template is slightly faster than normal template and has the following constraint:
 
-* Don't have "implicit imports":user_guide#implicit_import
-* Don't have "implicit objects":user_guide#implicit_object
+* Doesn't have "implicit imports":user_guide#implicit_import
+* Doesn't have "implicit objects":user_guide#implicit_object
 * Cannot "extends":#extends other templates
 
 h2. PlayRythm Configuration
