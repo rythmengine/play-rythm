@@ -10,7 +10,7 @@ A template file is a text file, some parts of which have placeholders for dynami
 
 Dynamic elements are resolved during template execution. The rendered result is then sent as part of the HTTP response.
 
-p(note). All template elements are started with the '@' caret.
+p(note). All template elements are started with the <code>@</code> caret.
 
 If you want to output a literal "<code>@</code>" character, you need to double it. E.g.
 
