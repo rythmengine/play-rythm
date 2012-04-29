@@ -80,7 +80,7 @@ Corresponding JavaExtension methods to escape formats are:
 
 h3. <a name="call_build-in_function">Call built-in function</a>
 
-"@" is also used to invoke built-in functions. Built-in function could be treated as special type of tags. From the user's perspective there is no difference between calling a built-in function and calling a tag (either built-in or custom)
+<code>@</code> is also used to invoke built-in functions. Built-in function could be treated as special type of tags. From the user's perspective there is no difference between calling a built-in function and calling a tag (either built-in or custom)
 
 bc. @// indicate this template extends "/main.html" template
 @extends(main)
@@ -98,7 +98,7 @@ There are more than a dozen of built-in functions defined in Rythm, please go to
 
 h3. <a name="call_tag">Call user defined tag</a>
 
-Again "@" can be used to call a user defined tag:
+Again <code>@</code> can be used to call a user defined tag:
 
 bc. @greenscript("app<jqueryui<jquery", all:true)
 
