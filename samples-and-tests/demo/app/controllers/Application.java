@@ -142,9 +142,7 @@ public class Application extends Controller {
     }
 
     public static void testCache4(boolean enableCache) {
-        if (!Play.configuration.contains("cron.testCache4")) {
-            Play.configuration.setProperty("cron.testCache4", "3s");
-        }
+        Play.configuration.setProperty("cron.testCache4", "3s");
         if (enableCache) {
             Play.configuration.setProperty("rythm.cache.prodOnly", "false");
         } else {
@@ -155,10 +153,7 @@ public class Application extends Controller {
 
     public static void testCache4WithSessionData() {
         Properties c = Play.configuration;
-
-        if (!c.containsKey("cron.testCache4")) {
-            c.setProperty("cron.testCache4", "1mn");
-        }
+        c.setProperty("cron.testCache4", "1mn");
         c.setProperty("rythm.cache.prodOnly", "false");
         String cacheTime = c.getProperty("cron.testCache4");
         render(cacheTime);

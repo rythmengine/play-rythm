@@ -1,6 +1,20 @@
 @args String body
-@escape("raw") {
+@extends(main)
+
+@body
+
+@body.raw()
+
+@raw() {
+    @body
+}
+
+@raw() {
     @body.escape()
 }
 
-@body.raw()
+@escape() {
+    @body.raw()
+}
+
+@include("tmpl_src")

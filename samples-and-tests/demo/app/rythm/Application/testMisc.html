@@ -1,3 +1,4 @@
+@extends(main)
 <h1>Arbitrary Tests</h1>
 
 <table border="1">
@@ -9,7 +10,7 @@
     <tr>
         <td><pre>
 @verbatim() {
-    Now is @ts()
+Now is @ts()
 }
         </pre></td>
         <td>
@@ -19,8 +20,8 @@
     <tr>
         <td><pre>
 @verbatim() {
-        @{Object html = "<p>abcd</p>"}
-            @raw() {
+@{Object html = "<p>abcd</p>"}
+@raw() {
     @html
 }
 }
@@ -39,3 +40,4 @@
 @(getTemplateClass(true).javaSource.raw())
 </pre>
 
+@include(tmpl_src)

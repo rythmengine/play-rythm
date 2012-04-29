@@ -4,7 +4,7 @@ h2. <a name="tags">Built-in Tags</a>
 
 h3. <a name="msg">msg</a>
 
-PlayRythm specific tag. Lookup message string.
+Play specific tag. Lookup message string.
 
 bc. @msg("validation.required")
 
@@ -18,7 +18,7 @@ bc. @msg("some.message", "param1")
 
 h3. <a name="url">url</a>
 
-PlayRythm specific tag. Reverse lookup URL.
+Play specific tag. Reverse lookup URL.
 
 bc. @url(Application.index)
 
@@ -32,7 +32,7 @@ bc. @url(/public/javascripts/myscript.js)
 
 h3. <a name="fullUrl">fullUrl</a>
 
-PlayRythm specific tag. Absolute reverse lookup URL.
+Play specific tag. Absolute reverse lookup URL.
 
 bc. @fullUrl(Applicaiton.index)
 
@@ -120,38 +120,30 @@ Parameters:
 ** "1h": one hour
 ** "10s": ten seconds
 ** "360d": three hundred and sixty days
+** "forever": a fairly large time that could be considered forever in the current computing context
 ** 60 * 60: one hour
-* rest parameters: optional. specify the parameters impact the cache key. By default cache key is calculated literally using the enclosed content. However if rest parameters presented the cached key will be calculated using the parameters as well. For example
+* rest parameters: optional. specify the variables used in the cache key generation. By default cache key is calculated literally using the enclosed content. However if rest parameters presented the cached key will be calculated using the parameters as well. For example
 
 bc. @cache(null, new Random().nextInt()) {
-    <p>[@(new Date().getTime())]this content will literally looks like not cached at all because the cache argument changes every time</p>
+    <p>[@(new Date().getTime())]this content will literally looks like not cached at all because the cache key changes every time</p>
 }
 
-p(note). Be cautious when you use <code>@cache()</code> with template blocks contains <code>@include()</code>. Cache key is calculated at parsing time, while <code>@include()</code> content is appended to template at code generating time when cache key calculating already done. Thus Rythm cannot differentiate the differences among included content. The rule of thumb is: **if include content varies dynamically, do not cache it**
+p(note). Be cautious when you use <code>@cache()</code> with template blocks contains dynamic content or nested dynamic content via <code>@include()</code> or "tag invocation":user_guide#invoke_tag. Cache key is calculated literally based on the content at parsing time, while dynamic content might changes at runtime. The rule of thumb is: **if content or nested content via tag invocation or @include@ varies dynamically, do not cache it**, or you cache it and pass all variables used across the content and nested content via tag invocation and @include@ directive
+
+p(note). The "cache decoration":user_guide#tag_invocation_cache to "tag invocation":user_guide#invoke_tag is safer than the <code>@cache()</code> directive, because "cache decoration" will check parameter value at runtime when generating cache key:
+
+bc. @myTag(someVariable).cache("1h") // safer cache, cache key will vary if someVariable value changes
+@cache("1h"){ // even someVariable value changed, the cache key will be the same so the output will remain unchanged
+    @myTag(someVariable)
+}
 
 -h3. <a name="cacheOnProd">cacheOnProd<a>-
 
--Same as "cache":#cache, but cache happens only when @play.Play.mode@ is "@prod@".-
+-Same as "cache", but cache happens only when @play.Play.mode@ is "@prod@".-
 
 p(note). @cacheOnProd@ is no longer available in v1.0. Use @cache instead. However
-you can configure rythm not to cache on dev mode by using "rythm.cache.prodOnly" setting.
-By default "rythm.cache.prodOnly" is set to @true@
-
-h3. <a name="callback">callback</a>
-
-@callback@ is a unique tag in that it cannot used independently. It can only be attached to a tag invocation to mark the tag body argument list:
-
-bc. @tagX().callback(String name) {
-    hello @name
-}
-
-And inside @tagX@ you have
-
-bc. renderBody(name: "Motorola")
-
-or by position
-
-bc. renderBody("Motorola")
+you can configure rythm not to cache in dev mode by using @rythm.cache.prodOnly@ setting.
+By default @rythm.cache.prodOnly@ is set to @true@ so cache is not enabled at dev mode
 
 h3. <a name="chain">chain</a>
 
@@ -160,7 +152,6 @@ Chain the following decoration functions together:
 # "cache":#cache
 # "escape":#escape
 # "raw":#raw
-# "callback":#callback
 # "assign":#assign
 
 In the example of "assign":#assign, you found that it always needs to call <a href="#raw">@raw()@</a> when you want to use the variable get assigned, by using @chain@ you can do it at one time:
@@ -194,6 +185,22 @@ bc. @for (User user: users) {
     }
     ...
 }
+
+h3. <a name="def">def</a>
+
+AKA <a href="#tag"><code>@tag</code></a>, define an "inline tag":user_guide#inline_tag (helper in Razor, macro in velocity and freemarker) which can be invoked from within the same template, the parent template or children templates
+
+bc. @def sayHi(String who) {
+    Hi @who
+}
+
+To use the tag defined just follow the common way:
+
+bc. @sayHi("Play!framework")
+
+or pass argument by name:
+
+bc. @sayHi(who: "Play!framework")
 
 h3. <a name="doLayout">doLayout</a>
 
@@ -275,7 +282,7 @@ h3. <a name="escape">escape</a>
 Mark a block of template code default escape scheme:
 
 bc. @escape("JS"){
-alert("Hello Rythm");
+    alert("Hello Rythm");
 }
 
 The above code set the default escape to @JavaScript@. The parameter passed to @escape() could be one of the following:
@@ -309,7 +316,7 @@ Suppose you have a parent template defined as:
 
 bc. @args String style;
 <div class="panel @style">
-    @renderBody()
+    @doLayout()
 </div>
 
 And in your extending template, you pass the argument style as:
@@ -334,6 +341,7 @@ bc. <ul>
 @for (Product product: products) {
     <li>@product</li>
 }
+</ul>
 
 The tag defines implicit variables in it's body. The variable names are prefixed with loop variable name:
 
@@ -371,7 +379,7 @@ bc. <head>
     <title>@get("title": "Homepage")</title>
 </head>
 
-h3. <a name="if">if-elseif</a>
+h3. <a name="if">if-else-if</a>
 
 Evaluates a given test, and if true, evaluate the tag body. The syntax is the same as @if@ clause in Java language
 
@@ -415,7 +423,7 @@ See "Dynamic tag invocation":user_guide#dynamic_tag_invocation section for detai
 
 h3. <a name="jsaction">jsAction</a>
 
-The <code>@jsAction()</code> tag returns a JavaScript function which constructs a URL based on a server action and free variables. It does not perform an AJAX request; these have to be done by hand using the returned URL.
+<code>@jsAction()</code> is a play specific tag that returns a JavaScript function which constructs a URL based on a server action and free variables. It does not perform an AJAX request; these have to be done by hand using the returned URL.
 
 Let’s see an example:
 
@@ -426,13 +434,12 @@ Now you can import this route client side:
 bc. <script type="text/javascript">
     @assign("showUserUrl"){@url(Users.show(":id"))}
     var showUserAction = @jsAction(showUserUrl)
-
     var displayUserDetail = function(userId) {
         $('userDetail').load( showUserAction({id: userId}) )
     }
 </script>
 
-Note at the moment <code>@jsAction()</code> tag in PlayRythm is no as convenient to use as the groovy <code>#{jsAction /} tag that you must use a special <code>@assign</code> statement to get the url reverse lookup result before passing it to the <code>@jsAction()</code> tag:
+Note at the moment <code>@jsAction()</code> tag in PlayRythm is no as convenient to use as the groovy <code>#{jsAction /}</code> tag that you must use a special <code>@assign</code> statement to get the url reverse lookup result before passing it to the <code>@jsAction()</code> tag:
 
 bc. @assign("showUserUrl"){@url(Users.show(":id"))}
 var showUserAction = @jsAction(showUserUrl)
@@ -465,11 +472,11 @@ bc. <div id="sidebar">
 
 When no section name specified this tag output the layout content:
 
-bc. @render() @// same effect as groovy's #{doLayout/}
+bc. @render() @// also @doLayout(), same effect as groovy's #{doLayout/}
 
 <a name="default_section_content"></a>
 
-Start from v0.9.8 Rythm support define default content for section:
+Start from v1.0.0 Rythm support define default content for section:
 
 bc. <div id="footer">
     @renderSection("footer") {
@@ -511,23 +518,11 @@ You can use any expression in @set@ tag
 
 bc. @set(title:"Profile of " + user.login)
 
-Unlike "set"#http://www.playframework.org/documentation/1.2.4/tags#set tag in Groovy template engine, Rythm @set@ tag does not accept tag body. You can use "section":#section tag to achieve the same result.
+Unlike "set":http://www.playframework.org/documentation/1.2.4/tags#set tag in Groovy template engine, Rythm @set@ tag does not accept tag body. You can use "section":#section tag to achieve the same result.
 
 h3. <a name="tag">tag</a>
 
-Define an inline tag used in the same template, parent template or child template.
-
-bc. @tag sayHi(String who) {
-    Hi @who
-}
-
-To use the tag defined just follow the common way:
-
-bc. @sayHi("Play!framework")
-
-or pass argument by name:
-
-bc. @sayHi(who: "Play!framework")
+Alias of <a href="#def"><code>@def()</code></a>
 
 p(note). <code>@tag</code> is not used to invoke a tag. Check the "user guide":user_guide#invoke_tag to see how to invoke a tag.
 
@@ -536,24 +531,28 @@ h3. <a name="raw">raw</a>
 Mark a block of template code that by default output raw data for expression:
 
 bc. @{
-String body = "<p>some news</p";
+    String title = "<h1>title</h1>";
+    String body = "<p>some news</p";
 }
 @raw() {
-@body
+    @title
+    @body
 }
 
-The above code basically equals to
+The above code has the same effect as below
 
 bc. @{
-String body = "<p>some news</p>";
+    String title = "<h1>title</h1>";
+    String body = "<p>some news</p>";
 }
+@title.raw()
 @body.raw()
 
 h3. <a name="ts">ts</a>
 
 Output timestamp in place
 
-bc. now is @ts()
+bc. now is @ts() @// produce somethign like "now is 134325875435"
 
 h3. <a name="verbatim">verbatim</a>
 
@@ -563,9 +562,13 @@ bc. @verbatim() {
     OK, anything inside this block is not parsed: @someTag, @someExpression, etc
 }
 
-h3. <a name="__simple__">__simple__</a>
+h3. <a name="__simple__">@__simple__@</a>
 
-Mark the current template as a **simple** template. A simple template does not contain implicit arguments and is slightly faster than normal template
+Mark the current template as a **simple** template. A simple template is slightly faster than normal template and has the following constraint:
+
+* Don't have "implicit imports":user_guide#implicit_import
+* Don't have "implicit objects":user_guide#implicit_object
+* Cannot "extends":#extends other templates
 
 h2. PlayRythm Configuration
 
@@ -575,7 +578,6 @@ PlayRythm provides all default configuration settings that cater for most common
 |@rythm.mode@|set rythm template engine to run in dev or prod mode|the value of play.mode|
 |@rythm.compactOutput@|remove redundant space and line breaks|true in prod mode and false in dev mode|
 |@rythm.enableJavaExtensions@|enable "Java extension parsing":user_guide#java_extension|true|
-|@rythm.default.engine@|Indicate which template should be used as default|system (i.e. groovy)|
 
 h2. <a name="resource">See Also</a>
 

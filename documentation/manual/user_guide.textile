@@ -2,9 +2,7 @@ h1. PlayRythm User Guide
 
 PlayRythm provides an alternative template processing engine for Play!Framework. The template engine uses Java as an expression language. A powerful tag system allows you to create reusable functions.
 
-Templates are stored in @app/rythm@ directory.
-
-p(note). Unlike groovy engine, there is no special place for tag file storage. Basically every template can be "invoked as a tag":#invoke_tag.
+p(note). Unless marked explicitly, the content documented here also applies to using Rythm separately in a pure Java computing context (i.e. non-play environment).
 
 h2. <a name="syntax">Template Syntax</a>
 
@@ -302,7 +300,7 @@ In some cases where the tag invocation result is not merely a function of the ta
 bc. @{User user = User.current()}
 @myTag(1, 2, "3").cache("1h", user.isAdmin())
 
-The above statement shows how to pass additional parameter to cache extention.
+The above statement shows how to pass additional parameter to cache decoration.
 
 p(note). Also refer to <a href="reference#cache">@cache</a> keyword for more on cache parameters
 
@@ -340,7 +338,7 @@ p(note). <a href="call_tag_relative_path">Relative path/import path invocation</
 
 bc. @invoke("designer." + platform).ignoreNonExistsTag()
 
-h3. <a name="invoke_action">Invoke controller action method</a>
+h3. <a name="invoke_action">Invoke controller action method (Play specific)</a>
 
 It's possible to invoke controller action method directly from within the template and fill the render result content in place:
 
@@ -389,7 +387,7 @@ If your tag supports a @body@, you can include it at any point in the tag code, 
 
 For example:
 
-bc. Hello @renderBody()!
+bc. Hello @doBody()! @// or Hello @renderBody()!
 
 And you can then pass the name as tag body:
 
@@ -401,7 +399,7 @@ h4. <a name="callback_tag_body_with_params">Callback tag body with parameters</a
 
 Rythm v1.0 support a new feature to callback tag body with parameters:
 
-bc. @renderBody("superuser")
+bc. @doBody("superuser")
 
 See "Invoke tag with body":#invoke_tag_with_body to see how to invoke a tag which will callback body with parameters
 
@@ -477,13 +475,13 @@ Honestly creating Java tag is not so important in Rythm as it is in Groovy becau
 
 There are 2 ways to creating Custom Java tags.
 
-h3. <a name="fast_tags">The old Play FastTags approach</a>
+h3. <a name="fast_tags">The old Play FastTags approach (Play specific)</a>
 
 PlayRythm provides a bridge to intercept a rythm tag call to FastTags call. So you are free to continue define FastTags as you did for Groovy template. See http://www.playframework.org/documentation/1.2.4/templates#fasttags for more details on how to create FastTags.
 
 p(note). Developer cannot use all stuffs in FastTags. The constraints include @Closure@ parameter and @TagContext@ etc.
 
-h3. <a name="rythm_java_tag">Implement Java Tag using Rythm's new Java Tag interface</a>
+h3. <a name="rythm_java_tag">Implement Java Tag using Rythm's new Java Tag interface (Play specific)</a>
 
 Another approach is to implement Java Tag using Rythm's new @com.greenlaw110.rythm.play.FastRythmTag@:
 
@@ -502,6 +500,42 @@ h4. Pros and Cons of the two approach
 The good side of FastTags approach is it's compatible to Groovy template, and thus should be welcome by module developers who don't need a PlayRythm copy to get their code compileds and distributed.
 
 The only tiny problem with FastTags is that it uses reflection to lookup the method to be called, which might be a little bit more time consuming than using Rythm's tag interface
+
+h3. <a name="pure_rythm_java_tag">Create Java Tag in non-play environment
+
+Pure rythm user can also implement Java based Tag easily:
+
+# Create a Java class, say MyTag, extends @com.greenlaw110.rythm.template.JavaTagBase@
+# Call @RythmEngine.registerTag(JavaTagBase)@ interface to register your Java tag class
+
+bc. /**
+ * The Hello tag accept a name and output "hello @name"
+ */
+public class Hello extends com.greenlaw110.rythm.template.JavaTagBase {
+    public Hello() {
+    }
+    @Override
+    public String getName() {
+        return "hello";
+    }
+    @Override
+    public void call(ITag.ParameterList params, Body body) {
+        Object o = params.getDefault();
+        String name = null == o ? "who" : o.toString()
+        p("Hello ").p(name);
+    }
+}
+...
+// register your java tag somewhere in your bootstrap code
+Rythm.engine.registerTag(new Hello());
+
+To use the Hello tag in your template file:
+
+bc. @hello("Rythm")
+
+And it outputs:
+
+bc. Hello Rythm
 
 h2. <a name="include">Include other templates</a>
 
@@ -524,15 +558,21 @@ Things you can achieve with tag invocation but not <code>@include</code>
 
 p(note). If you switch tag invocation to <code>@include</code> and found something has changed even there is no parameter call it might because you have <code>@extended</code> layout template in the tag template. <code>include</code> will NOT be able to include the layout template parts
 
-p(note). Because <code>@include</code> are parsed at compile time therefore it's not possible to include template dynamically as shown below:
+Because <code>@include</code> are parsed at parsing time therefore it's not possible to include template dynamically as shown below:
 
 bc. @// spec could be one of facebook, google
 @args String spec
-@include("page." + spec) //@ THIS WON'T WORK
-@{
-    p(Rythm.render("path/to/page/" + spec + ".html") // THIS WORKS!
-}
+@include("page." + spec) @// THIS WON'T WORK
+@invoke("page." + spec) @// THIS WORKS!
 
+It is also not possible to apply "Java invocation decorations":#tag_invoke_decoration to <code>@include()</code> for the same reason.
+
+bc. @include("my.common.tag.lib").cache().assign("someVariable").raw() @// THIS WON'T WORK
+@my.common.tag.lib().cache().assign("someVariable").raw() @// this works
+@// the following also works
+@chain().cache().assign("someVariable").raw() {
+    @include("my.common.tag.lib")
+}
 
 h3. <a name="reuse_inline_tag">Reuse inline tag across multiple views</a>
 
@@ -576,7 +616,7 @@ You can even specify the default content if the sub template does not have any c
 
 bc. <h1>Main template</h1>
 <div id="content">
-    @render() {
+    @doLayout() {
         default content
     }
 </div>
@@ -621,7 +661,8 @@ bc. <!DOCTYPE html>
     @render("sidebar")
   </div>
   <div id="content">
-    @render() @// render body, could also use @doLayout()
+    @// render main content
+    @render() @// or doLayout()
   </div>
   <div id="footer">
     @render("footer") {
@@ -681,7 +722,7 @@ h3. Customized Java object extension
 
 This is not supported at the moment but is a "planned feature":https://github.com/greenlaw110/play-rythm/issues/2.
 
-h2. Implicit objects available in a template
+h2. <a name="implicit_object">Implicit objects available in a template</a>
 
 Unlike Play's Groovy template that all objects added to the renderArgs scope are directly injected as template variables, you must declare them (and might need to import their class packages) to use them freely in your template. PlayRythm plugin automatically declare and set the following implicit objects so that you don't need to do these job before using them:
 
@@ -704,7 +745,7 @@ p(note). If you have put something into your @RenderArgs@, and you didn't declar
 
 bc. @(((User)getRenderArg("user")).getName())
 
-h2. Implicit import statements
+h2. <a name="implicit_import">Implicit import statements</a>
 
 PlayRythm automatically insert the following import statements so that user can reference relevant classes without write manually <code>@import</code> statement:
 
@@ -716,5 +757,5 @@ PlayRythm automatically insert the following import statements so that user can 
 
 h2. <a name="resource">See also</a>
 
-# "References manual":reference
+# %(next)"References manual":reference%
 # "Integrate PlayRythm into your Play project":integration

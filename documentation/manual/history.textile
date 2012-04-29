@@ -8,8 +8,9 @@ h2. <a name="v1.0">v1.0.0-RC1</a>
 
 h3. break changes
 
-* <a href="reference#renderBody"><code>@renderBody()</code></a> does not do layout content now. It's specific to render tag body, instead, please use <a href="reference#render"><code>@render()</code></a> (render without section name) to render layout content
-* Automatic escape expression using escapeHtml if the template file name suffix is .html. If your code breaks, try to use <a href="reference#raw"><code>@raw()</code></a> tag to surround relevant template part or export your variable with <code>.raw()</code> extension.
+* <a href="reference#renderBody"><code>@renderBody()</code></a> does not render layout content now. It's used to "render tag body":user_guide#callback_tag_body. To render layout content, use <a href="reference#render"><code>@doLayout()</code></a> or <a href="reference#render"><code>@render()</code></a> (render without section name).
+* Automatic escape expression with html format if the template file name suffix is .html. If your code breaks, try to use <a href="reference#raw"><code>@raw()</code></a> tag to surround relevant template part or export your variable with <code>.raw()</code> extension.
+** Note **auto-escape can cause template execution performance up to 3 times slower** (still much faster than groovy) depending on how many expressions there are in your template, but we consider it a good trade-off to offer a secure default behavior. For those people who "need for speed", simply wrap your entire template content in @raw@ block: <code>@raw(){your content comes here}</code>.
 * @app/view@ as template root are no longer supported. All rythm template files must be put into @app/rythm@ folder
 * @app/view/tags/rythm@ as tag root are no longer supported. Just put tag files as normal template file into @app/rythm@ folder
 * <a href="reference#section"><code>@section</code></a> tag usage:
@@ -30,17 +31,18 @@ h3. New features
 ** "cache a template block":reference#cache
 * "Dynamic tag invocation with @invoke keyword":user_guide#dynamic_tag_invocation
 * "Call tag body with parameter":reference#renderBody_with_params
-* "Include other template inline":user_guide#include. This provides a way to "reuse inline tag definitions across multiple views":user_guide#reuse_inline_tag
+* "Include other template inline":user_guide#include. And now you can "reuse inline tag definitions across multiple views":user_guide#reuse_inline_tag
 * <a href="reference#return">Abort current template executing process and return to caller using <code>@return</code></a>
 * <a href="reference#break">Break the current loop using <code>@break</code></a>
 * <a href="reference#continue">Continue the current loop using <code>@continue</code></a>
 * New <a href="integration#cache4">@Cache4@</a> annotation to mark on controller action method
 * <code>@ts()</code> output timestamp in place
-* <code>@__simple__</code> mark the current template as simple template without implicit variables and does not extend other template
+* <code>@__simple__</code> mark the current template as simple template with no implicit variables/imports and does not extend other template
+* An new demo application with 25 sample cases, with each one has template source and generated java source presented for quick study the Rythm engine
 
 h3. Small enhancements
 
-* <code>@verbatim(){}</code> will escape html code
+* <code>@verbatim(){}</code> now escape html code
 * <code>@render[Section]()</code> now accept <a href="reference#default_section_content">default content/section block</a>
 * <a href="reference#for_second_form">Support <code>@for(int i = 0; i < 100; ++i)</code> loop style</a>
 * New alias for Play specific keywords:
@@ -67,7 +69,7 @@ h2. <a name="v0.9.7">v0.9.7</a>
 
 h2. <a name="v0.9.6c">v0.9.6c</a>
 
-* Fix bug: Fix bug: Secure layout not found when loading the module directly in project folder instead of installing to play/modules
+* Fix bug: Secure layout not found when loading the module directly in project folder instead of installing to play/modules
 
 h2. <a name="v0.9.6b">v0.9.6b</a>
 
@@ -79,7 +81,7 @@ h2. <a name="v0.9.6a">v0.9.6a</a>
 
 h2. <a name="v0.9.6">v0.9.6</a>
 
-* Error debug UI update to play-2.0 style
+* Error report update to play-2.0 style
 * Solve several issues in built-in tag/templates
 * Precompile now build all rythm templates (So move templates to app/rythm folder)
 * <code>@UseRythmTemplateEngine</code> and <code>@UseSystemTemplateEngine</code> annotation are deprecated now
@@ -88,7 +90,7 @@ h2. <a name="v0.9.6">v0.9.6</a>
 * print out java source if compilation error on prod mode
 * bug fix: NPE while scan tags in rare cases
 * simplified class reloading logic in <code>TemplateClassLoader.detectChange(...)</code>
-* improved template line number report in error screen
+* improved template line number report in error reporting
 * buf fix: "https://github.com/greenlaw110/Rythm/issues/1":https://github.com/greenlaw110/Rythm/issues/1
 * support <code>{}</code> to enclose tag body
 * support <code>@{}</code> to enclose script content.
