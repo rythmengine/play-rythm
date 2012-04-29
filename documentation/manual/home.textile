@@ -8,7 +8,7 @@ h2. PlayRythm features
 
 PlayRythm is yet another template engine plugin for Play!Framework 1.2x version:
 
-# Static and strong typed pure Java template. Yes it's like "Japid":http://www.playframework.org/modules/japid and "Jamon":www.jamon.org
+# Static and strong typed pure Java template. Yes it's like "Japid":http://www.playframework.org/modules/japid and "Jamon":http://www.jamon.org
 # "Razor":http://weblogs.asp.net/scottgu/archive/2010/07/02/introducing-razor.aspx like syntax
 # Easy to "integrate with Play":integration. There is no special controller needed at all
 # Automatic "escape":user_guide#escape expression output, like "Groovy":http://www.playframework.org/documentation/1.2.4/templates and unlike "Japid":http://www.playframework.org/modules/japid-0.9.3.4/home#JavaExpressionexpressionandexpression
