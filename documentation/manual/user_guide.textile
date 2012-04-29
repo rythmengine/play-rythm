@@ -84,10 +84,13 @@ h3. <a name="call_build-in_function">Call built-in function</a>
 
 bc. @// indicate this template extends "/main.html" template
 @extends(main)
+　
 @// declare the java package/classes needed in this template
 @import play.util.*, play.templates.*
+　
 @// declare arguments used in this template
 @args String name, int score
+　
 @// output some information for debugging purpose
 @debug("the variable is %s", someVariable)
 
@@ -147,7 +150,10 @@ h2. <a name="invoke_tag">Tag invocation</a>
 
 **Tag** is a powerful tool to reuse your template definition in Rythm. To invoke a tag, use '@' plus tag name and brace pair
 
-bc. @greenscript.js("app<jqueryui<jquery", all:true)
+bc. @// call greenscript.js tag using parameters to declare a list of javascript files and output them all
+@greenscript.js("app<jqueryui<jquery", all:true)
+　
+@// call verbatim tag with a tag body instead of parameters
 @verbatim() {
     the content within verbatim body will not get parsed by Rythm
     @foo.bar()
@@ -413,6 +419,7 @@ bc. // javascript code to request a html page
 $.get("/ui/userManager", function(data) {
    $('#manager-panel').html(data);
 })
+　
 // javascript code to request a JSON data
 $.getJSON("/data/userList", function(data)) {
    model.users = ko.mapping.fromJS(data);
@@ -486,6 +493,7 @@ h3. <a name="rythm_java_tag">Implement Java Tag using Rythm's new Java Tag inter
 Another approach is to implement Java Tag using Rythm's new @com.greenlaw110.rythm.play.FastRythmTag@:
 
 bc. import com.greenlaw110.rythm.play.FastRythmTag;
+　
 @play.templates.FastTags.Namespace("") // yes, you use the same Namespace annotation in Rythm Fast Tag definition
 public class authenticityToken extends FastRythmTag {
     @Override public void call(ParameterList params, Body body) {
@@ -512,12 +520,15 @@ bc. /**
  * The Hello tag accept a name and output "hello @name"
  */
 public class Hello extends com.greenlaw110.rythm.template.JavaTagBase {
+　　
     public Hello() {
     }
+　　
     @Override
     public String getName() {
         return "hello";
     }
+　　
     @Override
     public void call(ITag.ParameterList params, Body body) {
         Object o = params.getDefault();
@@ -562,6 +573,7 @@ Because <code>@include</code> are parsed at parsing time therefore it's not poss
 
 bc. @// spec could be one of facebook, google
 @args String spec
+　
 @include("page." + spec) @// THIS WON'T WORK
 @invoke("page." + spec) @// THIS WORKS!
 
@@ -583,6 +595,7 @@ Suppose you have created a template named @app/rythm/util.html@ with a set of in
 bc. @tag hi (String who) {
     Hi @who
 }
+　
 @tag bye (String who) {
     Bye @who
 }
@@ -654,14 +667,17 @@ bc. <!DOCTYPE html>
   <div id="header">
     <h1>@get("title')</h1>
   </div>
+　
   <div id="sidebar">
     @// render "sidebar" section
     @render("sidebar")
   </div>
+　
   <div id="content">
     @// render main content
     @render() @// or doLayout()
   </div>
+　
   <div id="footer">
     @render("footer") {
         @// here we define default content for footer section
@@ -677,10 +693,12 @@ And in your working template, say 'index.html':
 
 bc. @extends(main)
 @set(title="Home page")
+　
 <h2>Welcome to my site</h2>
 <p>This is our home page</p>
 <p>Not super exciting is it?</p>
 <p>Yada, Yada, Yada</p>
+　
 @section("sidebar") { @// define "sidebar" section
   <p>This sidebar has "Home Page" specific content</p>
   <ul>
