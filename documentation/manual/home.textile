@@ -14,12 +14,12 @@ PlayRythm is yet another template engine plugin for Play!Framework 1.2x version:
 # Automatic "escape":user_guide#escape expression output, like "Groovy":http://www.playframework.org/documentation/1.2.4/templates and unlike "Japid":http://www.playframework.org/modules/japid-0.9.3.4/home#JavaExpressionexpressionandexpression
 # High performance at "Japid level":http://www.playframework.org/modules/japid
 # Support "layout":user_guide#inheritance and "tag":user_guide#custom_tag, you get all you have in Groovy template, actually even "more":user_guide#inline_tag
-# Support "FastTags":user_guide#fast_tags and "JavaExtensions":user_guide#java_extension with constraints
+# (Play specific) Support "FastTags":user_guide#fast_tags and "JavaExtensions":user_guide#java_extension with constraints
 # "Tag invocation decorations":user_guide#tag_invoke_decoration and "chain":user_guide#chain_tag_invocation_decoration them together
 # "Template content decorations":user_guide#template_content_decoration and "chain":reference#chain them together
-# (Play specific)"Invoke controller action method":user_guide#invoke_action directly from within your template
+# (Play specific) "Invoke controller action method":user_guide#invoke_action directly from within your template
 # "Include other template inline":user_guide#include (not the same as tag invocation)
-# New <a href="integration#cache4">@Cache4@</a> annotation to mark on controller action method
+# (Play specific) New <a href="integration#cache4">@Cache4@</a> annotation to mark on controller action method
 
 h2. Template Syntax at a glance
 

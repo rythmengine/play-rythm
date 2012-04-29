@@ -638,8 +638,6 @@ p(note). Because extends are parsed statically you can omit the quotation mark w
 
 bc. @extends(main)
 @extends(layout.foo.bar)
-@extends(main.html)
-...
 
 h3. <a name="define_section">Define section and output section</a>
 

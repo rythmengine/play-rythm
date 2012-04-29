@@ -8,7 +8,7 @@ h2. <a name="v1.0">v1.0.0-RC1</a>
 
 h3. break changes
 
-* <a href="reference#renderBody"><code>@renderBody()</code></a> does not render layout content now. It's used to "render tag body":user_guide#callback_tag_body. To render layout content, use <a href="reference#render"><code>@doLayout()</code></a> or <a href="reference#render"><code>@render()</code></a> (render without section name).
+* <a href="reference#renderBody"><code>@renderBody()</code></a> does not render layout content now. It's used to "render tag body":user_guide#callback_tag_body specifically. To render the layout content, use <a href="reference#render"><code>@doLayout()</code></a> or <a href="reference#render"><code>@render()</code></a> without section name parameter
 * Automatic escape expression with html format if the template file name suffix is .html. If your code breaks, try to use <a href="reference#raw"><code>@raw()</code></a> tag to surround relevant template part or export your variable with <code>.raw()</code> extension.
 ** Note **auto-escape can cause template execution performance up to 3 times slower** (still much faster than groovy) depending on how many expressions there are in your template, but we consider it a good trade-off to offer a secure default behavior. For those people who "need for speed", simply wrap your entire template content in @raw@ block: <code>@raw(){your content comes here}</code>.
 * @app/view@ as template root are no longer supported. All rythm template files must be put into @app/rythm@ folder
@@ -32,6 +32,7 @@ h3. New features
 * "Dynamic tag invocation with @invoke keyword":user_guide#dynamic_tag_invocation
 * "Call tag body with parameter":reference#renderBody_with_params
 * "Include other template inline":user_guide#include. And now you can "reuse inline tag definitions across multiple views":user_guide#reuse_inline_tag
+* <a href="reference#extends"><code>@extends()</code></a> directive now has "new syntax":user_guide#extended_template_path to specify layout(parent) template
 * <a href="reference#return">Abort current template executing process and return to caller using <code>@return</code></a>
 * <a href="reference#break">Break the current loop using <code>@break</code></a>
 * <a href="reference#continue">Continue the current loop using <code>@continue</code></a>
