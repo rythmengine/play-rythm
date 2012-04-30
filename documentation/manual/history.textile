@@ -58,6 +58,7 @@ h3. Issues closed
 * "https://github.com/greenlaw110/Rythm/issues/14":https://github.com/greenlaw110/Rythm/issues/14
 * "https://github.com/greenlaw110/play-rythm/issues/5":https://github.com/greenlaw110/play-rythm/issues/5
 * "https://github.com/greenlaw110/play-rythm/issues/1":https://github.com/greenlaw110/play-rythm/issues/1
+* "https://github.com/greenlaw110/play-rythm/pull/11":https://github.com/greenlaw110/play-rythm/pull/11
 
 h2. <a name="v0.9.7a">v0.9.7a</a>
 
