@@ -54,10 +54,16 @@ public class ActionBridge {
         try {
 
             String action = actionString;
-            if (actionString.indexOf(".") <= 0) {
-                action = Http.Request.current().controller + "." + actionString;
+            if (actionString.indexOf(".") < 0) {
+                // is it comes from a controller or mailer?
+                Http.Request request = Http.Request.current();
+                if (null != request) {
+                    action = request.controller + "." + actionString;
+                } else {
+                    throw new IllegalArgumentException("Must attach mailer class name to action string in reverse url lookup");
+                }
             }
-            
+
             Map<String, Object> r = new HashMap<String, Object>();
             Method actionMethod = (Method) ActionInvoker.getActionMethod(action)[1];
             String[] names = (String[]) actionMethod
