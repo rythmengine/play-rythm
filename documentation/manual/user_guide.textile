@@ -178,6 +178,8 @@ bc. @// call greenscript.js tag using parameters to declare a list of javascript
 
 p(note). You must append @()@ to tag name even it does not require any parameter. The only exception to this rule is <a href="reference#return"><code>@return</code></a>, <a href="reference#break"><code>@break</code></a> and <a href="reference#continue"><code>@continue</code></a>. Because these three are Java reserved words and one cannot use them as variable/method names.
 
+p(note). [Tip] You can recursively call the current tag with <a href="reference#this"><code>@this</code></a> directive.
+
 h3. <a name="call_tag_relative_path">Call tag using relative and import path</a>
 
 Start from v1.0 you were able to invoke tag use relative path and import path. So suppose you have the following file system structure:

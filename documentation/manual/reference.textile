@@ -526,6 +526,32 @@ Alias of <a href="#def"><code>@def()</code></a>
 
 p(note). <code>@tag</code> is not used to invoke a tag. Check the "user guide":user_guide#invoke_tag to see how to invoke a tag.
 
+h3. <a name="this">this</a>
+
+Call the current template itself as a tag
+
+bc. @args int max, int i, int j
+@i @if (j < max) {
+    @{
+        int t = i;
+        i = j;
+        j = i + t;
+    }
+    , @this(max, i, j)　@// recursively call to this template
+} else {
+    <hr/>
+　
+    <h3>Fibonacci tag template source</h3>
+    <pre>
+        @(getTemplateClass(false).getTemplateSource())
+    </pre>
+　
+    <h3>Fibonacci tag java source</h3>
+    <pre>
+        @(getTemplateClass(false).javaSource)
+    </pre>
+}
+
 h3. <a name="raw">raw</a>
 
 Mark a block of template code that by default output raw data for expression:

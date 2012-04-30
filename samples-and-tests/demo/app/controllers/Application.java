@@ -4,6 +4,7 @@ import com.greenlaw110.rythm.logger.Logger;
 import com.greenlaw110.rythm.play.Cache4;
 import com.greenlaw110.rythm.play.RythmPlugin;
 import com.greenlaw110.rythm.play.UseRythmTemplateEngine;
+import com.greenlaw110.rythm.template.JavaTagBase;
 import org.apache.commons.lang3.StringUtils;
 import play.Play;
 import play.cache.Cache;
@@ -175,4 +176,10 @@ public class Application extends Controller {
         ok();
     }
 
+    public static void fibonacci() {
+        int max = 1000000;
+        int i = 0;
+        int j = 1;
+        render(max, i, j);
+    }
 }

@@ -32,6 +32,7 @@ h3. New features
 * "Dynamic tag invocation with @invoke keyword":user_guide#dynamic_tag_invocation
 * "Call tag body with parameter":reference#renderBody_with_params
 * "Include other template inline":user_guide#include. And now you can "reuse inline tag definitions across multiple views":user_guide#reuse_inline_tag
+* Call the current template (self) as a tag using <a href="reference#this"><code>@this</code></a> directive
 * <a href="reference#extends"><code>@extends()</code></a> directive now has "new syntax":user_guide#extended_template_path to specify layout(parent) template
 * <a href="reference#return">Abort current template executing process and return to caller using <code>@return</code></a>
 * <a href="reference#break">Break the current loop using <code>@break</code></a>

@@ -1,0 +1,19 @@
+@args int max, int i, int j
+@i @if (j < max) {
+@{
+    int t = i;
+    i = j;
+    j = i + t;
+}
+, @this(max, i, j)
+} else {
+<hr/>
+<h3>Fibonacci tag template source</h3>
+<pre>
+@(getTemplateClass(false).getTemplateSource())
+</pre>
+<h3>Fibonacci tag java source</h3>
+<pre>
+@(getTemplateClass(false).javaSource)
+</pre>
+}

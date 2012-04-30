@@ -216,6 +216,9 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
                     TemplateClass tc = engine.classes.getByTemplate(tr.getKey());
                     if (null == tc) {
                         tc = new TemplateClass(tr, engine);
+                    } else if (tc.equals(templateClass)) {
+                        // call self
+                        return templateClass;
                     }
                     ITag tag = (ITag) tc.asTemplate();
                     if (null != tag) {
