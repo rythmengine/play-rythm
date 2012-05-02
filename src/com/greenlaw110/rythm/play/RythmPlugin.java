@@ -53,7 +53,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-RC1";
+    public static final String VERSION = "1.0.0-RC2";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -298,10 +298,16 @@ public class RythmPlugin extends PlayPlugin {
 //        if (Logger.isDebugEnabled()) debug("rythm tag root set to %s", p.get("rythm.tag.root"));
 
         // set tmp dir
-        File tmpDir = new File(Play.tmpDir, "rythm");
-        tmpDir.mkdirs();
-        p.put("rythm.tmpDir", tmpDir);
-        if (Logger.isDebugEnabled()) debug("rythm tmp dir set to %s", p.get("rythm.tmpDir"));
+        boolean gae = Boolean.valueOf(Play.configuration.getProperty("rythm.gae", "false"));
+        if (!gae) {
+            File tmpDir = new File(Play.tmpDir, "rythm");
+            tmpDir.mkdirs();
+            p.put("rythm.tmpDir", tmpDir);
+            if (Logger.isDebugEnabled()) debug("rythm tmp dir set to %s", p.get("rythm.tmpDir"));
+        } else {
+            warn("GAE enabled");
+            p.put("rythm.noFileWrite", true);
+        }
 
         // always get "java.lang.UnsupportedOperationException: class redefinition failed: attempted to change the schema" exception
         // from the hotswapAgent

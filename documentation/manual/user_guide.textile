@@ -156,7 +156,7 @@ Tag in Rythm is a powerful tool to reuse your template design. In Velocity and F
 * The invocation can be "decorated":#tag_invoke_decoration and you do whatever you want with tag invocation result ("Cache":#tag_invocation_cache, "Escape":#tag_invocation_escape, "Assign":#tag_invocation_assign and "chain them together":#chain_tag_invocation_decoration)
 * Can "callback tag body":#callback_tag_body with "pre-defined parameters":#callback_tag_body_with_params, looks like a double dispatch, isn't?
 ** In FreeMarker you get callback via nested content and limited callback params support via loop variables
-** Velocity users, we are sorry for you
+** Velocity users, we are sorry to you
 * Invoke controller action method as tag (Play specific)
 
 So check more on

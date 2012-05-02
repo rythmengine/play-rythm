@@ -10,6 +10,16 @@ PlayRythm hijack the template rendering process if it found the corresponding te
 
 p(note). -Tip: enclose all your rythm template with @#{verbatim}@ and @#{/verbatim}@ can help you avoid groovy compile exception and does not impact your rythm template-. This is not true. The groovy template engine will still parse the expressions. See "Resolve groovy compilation error":#conflict for workarounds.
 
+h2. <a name="configuration">Configuration</a>
+
+PlayMorphia provides default value for all configuration items, thus enable it to be used with zero configuration.
+
+|*name*|*description*|*default value*|
+|@rythm.cache.prodOnly@|Set if cache service enabled only on prod mode. If true then cache service is disabled on dev mode|true|
+|@rythm.cache.defaultTTL@|Set default timeout duration in seconds|3600 seconds|
+|@rythm.gae@|Set this to true if running in GAE. This will disable bytecode cache in Rythm|false|
+|@rythm.noFileWrite@|Same effect as @rythm.gae@|false|
+
 h2. <a name="conflict">Resolve groovy compilation error</a>
 
 -Because groovy template engine does not provide a way to skip parsing any part of the template file, the rythm template file might cause compilation error during precompile process, where rythm has no way to identify some files been a rythm template or groovy template, e.g. some json generation template.-

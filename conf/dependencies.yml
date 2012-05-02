@@ -1,4 +1,7 @@
 # History
+# 1.0.0-RC2
+#        - Support GAE mode (no disk write)
+#        - Bug fix
 # 1.0.0-RC1
 #        - A lot of changes and enhancements including auto-escape, native cache support, call tag body with parameter, relative/import path to call tag, assign part to variable etc.
 # 0.9.7a - Add @_rythmPlugin and @_rythm@ implicit variable

@@ -4,7 +4,7 @@ h2. <a name="roadmap">TODO list</a>
 
 * "Support custom Java extensions":https://github.com/greenlaw110/play-rythm/issues/2
 
-h2. <a name="v1.0">v1.0.0-RC1</a>
+h2. <a name="v1.0">v1.0.0-RC2</a>
 
 h3. break changes
 
@@ -19,6 +19,7 @@ h3. break changes
 
 h3. New features
 
+* Support "GAE mode":integration#configuration
 * "Tag invocation decorations":user_guide#tag_invoke_decoration and "chain":user_guide#chain_tag_invocation_decoration them together
 ** "Cache tag invocation result":user_guide#tag_invocation_cache
 ** "Cache controller action invocation result":user_guide#invoke_action_cache
