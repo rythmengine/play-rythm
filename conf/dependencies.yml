@@ -70,7 +70,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-RC1
+self: play -> rythm 1.0.0-RC2
 
 require:
     - play 1.2
