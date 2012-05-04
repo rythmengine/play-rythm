@@ -1,8 +1,8 @@
 # Application dependencies
-
 require:
-    - com.gelinsoft -> betterlogs 1.2h
-    - play-rythm -> play-rythm
+    - play
+    - play -> gae 1.6.0
+    - com.gelinsoft -> rythm 1.0.0-RC2-20120505
 
 repositories:
     - gelinsoft:
@@ -10,9 +10,3 @@ repositories:
         artifact: "http://gelinsoft.com/play/repo/[module]-[revision].zip"
         contains:
             - com.gelinsoft -> *
-    - local:
-        type: local
-        artifact: ${application.path}/../../../[module]
-        contains:
-            - play-rythm
-            

@@ -14,7 +14,13 @@
 <div>
 list the <code>tmp</code> dir:
 @{
-	String[] sa = _play.tmpDir.list();
+    String[] sa;
+    if (null == _play.tmpDir) {
+        // run in real GAE, thus no tmpDir created
+        sa = new String[]{};
+    } else {
+        sa = _play.tmpDir.list();
+    }
 }
 <ul id="tmpDirList">
 @for (String s: sa) {
