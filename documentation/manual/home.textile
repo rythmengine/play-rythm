@@ -24,6 +24,9 @@ PlayRythm is yet another template engine plugin for Play!Framework 1.2x version:
 # (Play specific) "Invoke controller action method":user_guide#invoke_action directly from within your template
 # "Include other template inline":user_guide#include (not the same as tag invocation)
 # (Play specific) New <a href="integration#cache4">@Cache4@</a> annotation to mark on controller action method
+# (Play specific) "Support GAE":integration#configuration
+
+p(note). There is "a live demo app":http://play-rythm-demo.appspot.com running on GAE for your reference
 
 h2. Template Syntax at a glance
 
