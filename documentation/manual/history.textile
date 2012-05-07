@@ -8,6 +8,9 @@ h2. <a name="v1.0-RC2">v1.0.0-RC2</a>
 
 * Support "GAE mode":integration#configuration
 * A live "demo application":http://play-rythm-demo.appspot.com/ running on GAE for study
+* Issues resolved:
+** "Support TagContext in FastTags":https://github.com/greenlaw110/play-rythm/issues/13
+** "Support FastTags default arg":https://github.com/greenlaw110/play-rythm/issues/14
 
 h2. <a name="v1.0-RC1">v1.0.0-RC1</a>
 
