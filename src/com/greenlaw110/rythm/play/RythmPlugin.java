@@ -425,6 +425,11 @@ public class RythmPlugin extends PlayPlugin {
     }
 
     public static boolean isActionCall() {
+        Scope.RenderArgs renderArgs = Scope.RenderArgs.current();
+        if (null == renderArgs) {
+            // calling from Mails?
+            return false;
+        }
         Stack<Boolean> actionCalls = Scope.RenderArgs.current().get(ACTION_CALL_FLAG_KEY, Stack.class);
         if (null == actionCalls || actionCalls.empty()) return false;
         return true;
