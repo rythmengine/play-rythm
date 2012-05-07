@@ -1,5 +1,5 @@
 # History
-# 1.0.0-20120505
+# 1.0.0-RC2
 #        - Support GAE mode (no disk write)
 # 1.0.0-RC1
 #        - A lot of changes and enhancements including auto-escape, native cache support, call tag body with parameter, relative/import path to call tag, assign part to variable etc.
@@ -69,7 +69,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-20120505
+self: play -> rythm 1.0.0-RC2
 
 require:
     - play 1.2

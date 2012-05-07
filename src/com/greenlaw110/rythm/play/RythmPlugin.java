@@ -1,9 +1,6 @@
 package com.greenlaw110.rythm.play;
 
-import com.greenlaw110.rythm.IByteCodeHelper;
-import com.greenlaw110.rythm.IHotswapAgent;
-import com.greenlaw110.rythm.Rythm;
-import com.greenlaw110.rythm.RythmEngine;
+import com.greenlaw110.rythm.*;
 import com.greenlaw110.rythm.cache.ICacheService;
 import com.greenlaw110.rythm.logger.ILogger;
 import com.greenlaw110.rythm.logger.ILoggerFactory;
@@ -13,6 +10,7 @@ import com.greenlaw110.rythm.play.parsers.MessageLookupParser;
 import com.greenlaw110.rythm.play.parsers.UrlReverseLookupParser;
 import com.greenlaw110.rythm.play.utils.ActionInvokeProcessor;
 import com.greenlaw110.rythm.resource.ITemplateResource;
+import com.greenlaw110.rythm.runtime.ITag;
 import com.greenlaw110.rythm.spi.*;
 import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.template.TemplateBase;
@@ -38,6 +36,7 @@ import play.mvc.results.NotFound;
 import play.mvc.results.Redirect;
 import play.mvc.results.RenderTemplate;
 import play.mvc.results.Result;
+import play.templates.TagContext;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 
@@ -376,7 +375,16 @@ public class RythmPlugin extends PlayPlugin {
                     }
                     return false;
                 }
-            }).registerExpressionProcessor(new ActionInvokeProcessor());
+            }).registerExpressionProcessor(new ActionInvokeProcessor()).registerTagInvoeListener(new ITagInvokeListener() {
+                @Override
+                public void onInvoke(ITag tag) {
+                    TagContext.enterTag(tag.getName());
+                }
+                @Override
+                public void tagInvoked(ITag tag) {
+                    TagContext.exitTag();
+                }
+            });
             debug("Play specific parser registered");
         } else {
             engine.init(p);

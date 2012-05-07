@@ -13,6 +13,7 @@ import play.classloading.enhancers.ControllersEnhancer;
 import play.exceptions.TemplateCompilationException;
 import play.exceptions.TemplateExecutionException;
 import play.exceptions.UnexpectedException;
+import play.templates.TagContext;
 import play.templates.Template;
 
 import java.util.Map;
@@ -103,6 +104,9 @@ public class RythmTemplate extends Template {
             t.setRenderArgs(args);
             // allow invoke controller method without redirect
             ControllersEnhancer.ControllerInstrumentation.initActionCall();
+            if (!RythmPlugin.isActionCall()) {
+                TagContext.init();
+            }
             String s = t.render();
             if (!RythmPlugin.engine.isProdMode()) {
                 refreshCounter.set(0);

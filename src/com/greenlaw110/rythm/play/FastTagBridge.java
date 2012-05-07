@@ -10,6 +10,7 @@ import play.classloading.ApplicationClasses;
 import play.exceptions.UnexpectedException;
 import play.templates.FastTags;
 import play.templates.GroovyTemplate;
+import play.templates.TagContext;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -127,8 +128,15 @@ public class FastTagBridge extends JavaTagBase {
             public void close() throws IOException {
             }
         });
+        Map<String, Object> paramMap = null == params ? new HashMap() : params.asMap();
+        if (null != params) {
+            Object defVal = params.getDefault();
+            if (null != defVal && !paramMap.containsKey("arg")) {
+                paramMap.put("arg", defVal);
+            }
+        }
         try {
-            method.invoke(null, null == params ? new HashMap() : params.asMap(), new TagBodyClosure(body, w), w, new RythmExecutableTemplate((TemplateBase)_caller), 0);
+            method.invoke(null, paramMap, new TagBodyClosure(body, w), w, new RythmExecutableTemplate(caller()), 0);
         } catch (InvocationTargetException e) {
             throw new UnexpectedException("cannot invoke fast tag method: " + tagName, e);
         } catch (IllegalAccessException e) {
