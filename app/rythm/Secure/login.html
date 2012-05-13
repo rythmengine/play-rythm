@@ -2,7 +2,7 @@
 @extends("_layout")
 <div id="login">
     <h1>@msg("secure.title")</h1>
-    <form action="@url(authenticate())">
+    <form action="@url(authenticate())" method="post">
     @authenticityToken()
 
     @if (flash.contains("error")) {
