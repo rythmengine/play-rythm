@@ -417,9 +417,11 @@ public class RythmPlugin extends PlayPlugin {
     }
 
     public static void setActionCallFlag() {
-        Stack<Boolean> actionCalls = Scope.RenderArgs.current().get(ACTION_CALL_FLAG_KEY, Stack.class);
+        Scope.RenderArgs renderAargs = Scope.RenderArgs.current();
+        Stack<Boolean> actionCalls = renderAargs.get(ACTION_CALL_FLAG_KEY, Stack.class);
         if (null == actionCalls) {
             actionCalls = new Stack<Boolean>();
+            renderAargs.put(ACTION_CALL_FLAG_KEY, actionCalls);
         }
         actionCalls.push(true);
     }
