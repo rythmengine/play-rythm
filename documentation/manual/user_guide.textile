@@ -39,6 +39,16 @@ The bracket "( )" can be used to compose complicated expressions or to separate 
 bc. @(1 + 5) @// print out the result of 1 + 5
 @(user.name)_and_some_other_string @// use ( ) to separate expression from other part of the template
 
+h4. <a name="nullable_expression">Null safe expression</a>
+
+You can use @?@ to create null safe expression:
+
+bc. @foo?.bar?.bee()
+
+The above expression will not throw out @NullPointerException@ if @foo@ or @foo.bar@ is null.
+
+p(note). You cannot embed null safe expression into parameters like <code>@foo?.bar(@x?.y)</code>
+
 h4. <a name="escape">Escape an expression</a>
 
 -Unlike Groovy template which all expressions are escaped by default, Rythm template won't do that due to performance concern. You must explicitly call @escape@ java object extension to escape the variable:-

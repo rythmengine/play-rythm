@@ -1,8 +1,25 @@
 h1. PlayRythm version history
 
-h2. <a name="roadmap">TODO list</a>
+h2. <a name="roadmap">What's left for R1.0</a>
 
 * "Support custom Java extensions":https://github.com/greenlaw110/play-rythm/issues/2
+* "Support precompile":https://github.com/greenlaw110/Rythm/issues/31
+
+h2. <a name="v1.0>v1.0.0</a>
+
+* "Support groovy style null safe expression":nullable_expression
+
+h2. <a name="v1.0-RC3">v1.0.0-RC3</a>
+
+* Bug fixes:
+** "cannot do type cast in @for loop":https://github.com/greenlaw110/Rythm/issues/29
+** "escape with JSON format cause syntax error in javascript":https://github.com/greenlaw110/Rythm/issues/27
+** "@__simple__ template java source does not have setRenderArgs(Object...) method":https://github.com/greenlaw110/Rythm/issues/24
+** "Cannot use primitive type in @for loop":https://github.com/greenlaw110/Rythm/issues/30
+** "@args: Cannot declare array type":https://github.com/greenlaw110/Rythm/issues/33
+** "Logic error is RythmPlugin.isActionCall":https://github.com/greenlaw110/play-rythm/issues/19
+** "Fix login form for Secure":https://github.com/greenlaw110/play-rythm/pull/18 - thanks to "Roman Dolgushin":https://github.com/rdolgushin for the contribution
+** "NPE when doing reverse url lookup in mail template":https://github.com/greenlaw110/play-rythm/pull/11 - thanks to "Sojin":https://github.com/sojin for the contribution
 
 h2. <a name="v1.0-RC2">v1.0.0-RC2</a>
 
