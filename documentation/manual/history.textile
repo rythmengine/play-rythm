@@ -10,6 +10,7 @@ h2. <a name="v1.0>v1.0.0</a>
 * "Support groovy style null safe expression":nullable_expression
 * Bug fixes:
 ** "Template cache cannot handle nested class with levels 2 or more":https://github.com/greenlaw110/Rythm/issues/34
+** "@invoke tag parse issue":https://github.com/greenlaw110/Rythm/issues/32
 
 h2. <a name="v1.0-RC3">v1.0.0-RC3</a>
 

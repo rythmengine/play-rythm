@@ -35,6 +35,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
 
         VirtualFileTemplateResource(VirtualFile file) {
             this.file = file;
+            this.tagName = getFullTagName(getKey());
 //            String tagRoot = RythmPlugin.tagRoot;
 //            if (!tagRoot.startsWith("/")) tagRoot = '/' + tagRoot;
 //            String filePath = file.relativePath();
@@ -150,6 +151,10 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
     @Override
     public String getFullTagName(TemplateClass tc) {
         String key = tc.getKey();
+        return getFullTagName(key);
+    }
+
+    private static String getFullTagName(String key) {
         if (key.startsWith("/")) key = key.substring(1);
         if (key.startsWith(RythmPlugin.templateRoot)) {
             key = key.replace(RythmPlugin.templateRoot, "");
