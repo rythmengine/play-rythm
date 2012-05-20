@@ -49,6 +49,13 @@ The above expression will not throw out @NullPointerException@ if @foo@ or @foo.
 
 p(note). You cannot embed null safe expression into parameters like <code>@foo?.bar(@x?.y)</code>
 
+h4. <a name="properties_enhancement">Properties enhancement</a>
+
+This is Play-Rythm specific feature. To make it consistent with Play convention, calling to an application class instance public property will automatically get translated to the corresponding get/set method:
+
+bc. @myModel.name //@ equals to @myModel.getName()
+@{myModel.name = "foo"} //@ equals to @{myModel.setName("foo")}
+
 h4. <a name="escape">Escape an expression</a>
 
 -Unlike Groovy template which all expressions are escaped by default, Rythm template won't do that due to performance concern. You must explicitly call @escape@ java object extension to escape the variable:-

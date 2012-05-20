@@ -5,10 +5,11 @@ h2. <a name="roadmap">What's left for R1.0</a>
 * "Support custom Java extensions":https://github.com/greenlaw110/play-rythm/issues/2
 *
 
-h2. <a name="v1.0>v1.0.0</a>
+h2. <a name="v1.0.0-RC4">v1.0.0-RC4</a>
 
-* "Support groovy style null safe expression":nullable_expression
-* "Support precompile - fast load on GAE":https://github.com/greenlaw110/Rythm/issues/31
+* "Support groovy style null safe expression":user_guide#nullable_expression
+* Support pre-compile - fast load on GAE or other cloud stack
+* "Support template source properties enhancement":user_guide#properties_enhancement
 * Bug fixes:
 ** "Template cache cannot handle nested class with levels 2 or more":https://github.com/greenlaw110/Rythm/issues/34
 ** "@invoke tag parse issue":https://github.com/greenlaw110/Rythm/issues/32
