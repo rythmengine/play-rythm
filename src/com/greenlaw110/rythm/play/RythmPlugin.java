@@ -340,19 +340,24 @@ public class RythmPlugin extends PlayPlugin {
                     template.setRenderArgs(m);
                 }
             });
-//            engine.registerTemplateClassEnhancer(new ITemplateClassEnhancer() {
-//                @Override
-//                public byte[] enhance(String className, byte[] classBytes) throws  Exception {
-//                    ApplicationClasses.ApplicationClass applicationClass = new ApplicationClasses.ApplicationClass();
-//                    applicationClass.javaByteCode = classBytes;
-//                    applicationClass.enhancedByteCode = classBytes;
-//                    File f = File.createTempFile("rythm_", className.contains("$") ? "$1" : "" + ".java", Play.tmpDir);
-//                    applicationClass.javaFile = VirtualFile.open(f);
-//                    new TemplatePropertiesEnhancer().enhanceThisClass(applicationClass);
-//                    return applicationClass.enhancedByteCode;
-//                }
-//            });
-//            debug("Template class enhancer registered");
+            engine.registerTemplateClassEnhancer(new ITemplateClassEnhancer() {
+                @Override
+                public byte[] enhance(String className, byte[] classBytes) throws  Exception {
+                    ApplicationClasses.ApplicationClass applicationClass = new ApplicationClasses.ApplicationClass();
+                    applicationClass.javaByteCode = classBytes;
+                    applicationClass.enhancedByteCode = classBytes;
+                    File f = File.createTempFile("rythm_", className.contains("$") ? "$1" : "" + ".java", Play.tmpDir);
+                    applicationClass.javaFile = VirtualFile.open(f);
+                    try {
+                        new TemplatePropertiesEnhancer().enhanceThisClass(applicationClass);
+                    } catch (Exception e) {
+                        error(e, "Error enhancing class: %s", className);
+                    }
+                    if (!f.delete()) f.deleteOnExit();
+                    return applicationClass.enhancedByteCode;
+                }
+            });
+            debug("Template class enhancer registered");
             //Rythm.engine.cacheService.shutdown();
             Rythm.engine = engine;
             engine.preCompiling = true;

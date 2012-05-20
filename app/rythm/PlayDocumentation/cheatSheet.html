@@ -38,10 +38,12 @@
         </div>
     </div>
     <div id="content" class="wikistyle">
+        @raw() {
         @for(String sheet: sheets) {
         <div class="cs @sheet_parity">
             @sheet
         </div>
+        }
         }
     </div>
 </div>
