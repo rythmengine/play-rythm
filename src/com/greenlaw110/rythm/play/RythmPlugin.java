@@ -162,6 +162,12 @@ public class RythmPlugin extends PlayPlugin {
         p.put("rythm.tag.autoscan", false); // we want to scan tag folder coz we have Virtual Filesystem
         p.put("rythm.classLoader.parent", Play.classloader);
         p.put("rythm.resource.refreshOnRender", "true");
+        p.put("rythm.loadPreCompiled", Play.usePrecompiled);
+        if (Play.usePrecompiled || Play.getFile("precompiled").exists()) {
+            File preCompiledRoot = new File(Play.getFile("precompiled"), "rythm");
+            if (!preCompiledRoot.exists()) preCompiledRoot.mkdirs();
+            p.put("rythm.preCompiled.root", preCompiledRoot);
+        }
         p.put("rythm.resource.loader", new VirtualFileTemplateResourceLoader());
         p.put("rythm.classLoader.byteCodeHelper", new IByteCodeHelper() {
             @Override
@@ -349,6 +355,7 @@ public class RythmPlugin extends PlayPlugin {
 //            debug("Template class enhancer registered");
             //Rythm.engine.cacheService.shutdown();
             Rythm.engine = engine;
+            engine.preCompiling = true;
 
             IParserFactory[] factories = {new AbsoluteUrlReverseLookupParser(), new UrlReverseLookupParser(),
                     new MessageLookupParser(), new GroovyVerbatimTagParser()};
@@ -441,6 +448,7 @@ public class RythmPlugin extends PlayPlugin {
     public void onApplicationStart() {
         long l = System.currentTimeMillis();
         RythmTemplateLoader.scanTagFolder();
+        engine.preCompiling = false;
         debug("%sms to load Rythm tags", System.currentTimeMillis() - l);
     }
 
