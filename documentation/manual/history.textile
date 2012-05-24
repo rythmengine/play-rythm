@@ -2,8 +2,19 @@ h1. PlayRythm version history
 
 h2. <a name="roadmap">What's left for R1.0</a>
 
-* "Support custom Java extensions":https://github.com/greenlaw110/play-rythm/issues/2
-*
+* There is no feature left for R1.0. RC5 will be the last RC version and if no show stopper found R1.0 will be released soon
+
+h2. <a name="v1.0.0-RC5">v1.0.0-RC5</a>
+
+* New built-in keywords:
+** <code>@compact</code>: mark a block of template to be output in compact mode without regarding to global engine setting
+** <code>@nocompact</code>: mark a block of template to be output in NON-compact mode without regarding to global engine setting
+** <code>@macro</code>: define an macro
+** <code>@exec</code>: execute an macro
+* Support "custom defined Java Extensions":user_guide#custom-java-extension
+* Bug fixes:
+** "enhance embedded template class fail":https://github.com/greenlaw110/play-rythm/issues/21
+** "The content inside @for loop doesn't update on dev mode":https://github.com/greenlaw110/rythm/issues/35
 
 h2. <a name="v1.0.0-RC4">v1.0.0-RC4</a>
 

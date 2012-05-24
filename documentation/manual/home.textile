@@ -1,6 +1,6 @@
 h1. PlayRythm module documentation
 
-Welcome to PlayRythm module documentation. This documentation is intended for the *1.0.0-RC4 release* and is significantly differ from previous module version's documentation.
+Welcome to PlayRythm module documentation. This documentation is intended for the *1.0.0-RC5 release* and is significantly differ from previous module version's documentation.
 
 Check the "version history":history.
 
@@ -18,7 +18,7 @@ PlayRythm is yet another template engine plugin for Play!Framework 1.2x version:
 # Automatic "escape":user_guide#escape expression output, like "Groovy":http://www.playframework.org/documentation/1.2.4/templates and unlike "Japid":http://www.playframework.org/modules/japid-0.9.3.4/home#JavaExpressionexpressionandexpression
 # High performance at "Japid level":http://www.playframework.org/modules/japid
 # Support "layout":user_guide#inheritance and "tag":user_guide#custom_tag, you get all you have in Groovy template, actually even "more":user_guide#inline_tag
-# (Play specific) Support "FastTags":user_guide#fast_tags and "JavaExtensions":user_guide#java_extension with constraints
+# (Play specific) Support "FastTags":user_guide#fast_tags and "JavaExtensions":user_guide#java_extension with "constraints":https://github.com/greenlaw110/Rythm/issues/37
 # (Play specific) Support "properties enhancement":user_guide#properties_enhancement to template class
 # "Tag invocation decorations":user_guide#tag_invoke_decoration and "chain":user_guide#chain_tag_invocation_decoration them together
 # "Template content decorations":user_guide#template_content_decoration and "chain":reference#chain them together

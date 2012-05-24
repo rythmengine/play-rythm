@@ -56,6 +56,8 @@ This is Play-Rythm specific feature. To make it consistent with Play convention,
 bc. @myModel.name //@ equals to @myModel.getName()
 @{myModel.name = "foo"} //@ equals to @{myModel.setName("foo")}
 
+p(note). *Properties enhancement* is NOT like JavaBean invokation as documented in "Velocity Case Subsitituion":http://velocity.apache.org/engine/releases/velocity-1.7/user-guide.html#Case_Substitution. It only happen when your model has a public field called "name", otherwise the above statement will fail.
+
 h4. <a name="escape">Escape an expression</a>
 
 -Unlike Groovy template which all expressions are escaped by default, Rythm template won't do that due to performance concern. You must explicitly call @escape@ java object extension to escape the variable:-
@@ -119,7 +121,7 @@ Again <code>@</code> can be used to call a user defined tag:
 
 bc. @greenscript("app<jqueryui<jquery", all:true)
 
-p(note). The "tag" in Rythm is called "macro" in Velocity and WebMacro, however Rythm tag facility are more powerful than macro in Velocity and FreeMarker. See "Tag invocation":#invoke_tag for more information.
+p(note). The "tag" in Rythm is kind like "macro" in Velocity and WebMacro, which provides a way to enable template content reuse at runtime. However Rythm tag facility are more powerful than macro in Velocity and FreeMarker. See "Tag invocation":#invoke_tag for more information. In addition, Rythm (start from 1.0 RC5) provides <a href="reference#macro"><code>@macro</code></a> and <a href="reference#exec"><code>@exec</code></a> for parsing time content reuse.
 
 h3. <a name="nameconflict">Tag or expression?</a>
 
@@ -596,7 +598,7 @@ bc. @include("foo.bar")
 
 The above statement will put the content of template @foo.bar@ in place. "foo.bar" is translate into file name following "tag invocation":#call_tag_relative_path convention.
 
-The difference between <code>@include("foo.bar")</code> a tag and call the tag via <code>@foo.bar()</code> is the former put the content of the template into the current template inline, while the latter invoke the template specified. It is some how like @#include@ vs. function call in c language. <code>@include</code> is super fast to reuse part of template because it suppress the function invocation at runtime. It's a **inline** function call if you speak c++.
+The difference between <code>@include("foo.bar")</code> a tag and call the tag via <code>@foo.bar()</code> is the former put the content of the template into the current template inline, while the latter invoke the template specified. It is some how like @#include@ vs. function call in c language. <code>@include</code> is super fast to reuse part of template because it suppress the function invocation at runtime. It's a **inline** function call if you speak c++. In other words, <code>@include</code> process happen at template parsing time, while tag invocation happen at template executing time.
 
 Things you can achieve with <code>@include</code> but not tag invocation:
 
@@ -647,6 +649,54 @@ bc. @include("util")
 @bye("rythm")
 
 p(note). While <code>@tag</code> provides an alternative to "Helper":http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx in Razor, the <code>@include</code> provides an alternative to _*Reusing @helpers across multiple views*_. See Scott's "blog":http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx and search for "reusing @helpers across multiple views"
+
+h2. <a name="macro">Define and execute Macro</a>
+
+Like <code>@include</code>, macro provides a way to reuse template content at parsing time, but inside a template file. Suppose you defined a macro called "macro-1":
+
+bc. @macro("macro-1") {
+content inside macro-1
+}
+
+Later on in the same template file you can invoke "macro-1" using the following code:
+
+bc. @exec("macro-1")
+
+which produce the following output:
+
+bc. content inside macro-1
+
+At first glance this effect could be achieved using "inline tag":##inline_tag or even <a href="reference#assign">assignment</a>. However they are fundamentally different in that macro executing happen at parsing time while tag invocation and assignment are happened at runtime, which could result in subtle differences of content been rendered. Let's take a look at the following code:
+
+bc. @macro("foo") {
+    <foo>
+        <bar>abc</bar>
+    </foo>
+}
+@compact() {@exec("foo")}
+@nocompact() {@exec("foo")}
+
+So the above code will display "foo" content in "compact":reference#compact and "nocompact":reference#nocompact mode. If we change the implementation to:
+
+bc. @assign("foo") {
+    <foo>
+        <bar>abc</bar>
+    </foo>
+}
+@compact() {@foo}
+@nocompact() {@foo}
+
+The result will not be expected. The reason is assignment will evaluate the content at runtime, and when "foo" content is assigned, the content is already produced and later on calling it in <code>@compact</code> and <code>@nocompact</code> block will not make any change. For the same reason the following code works neither:
+
+bc. @def foo() {
+    <foo>
+        <bar>abc</bar>
+    </foo>
+}
+@compact() {@foo()}
+@nocompact() {@foo()}
+
+p(note). Macro will be expanded at parsing time, therefore it is very fast at runtime but will generate larger class byte codes, furthermore macro will guaranteed to be executed when invoked with <code>@exec</code>, this is unlike <code>@assign</code>, which is executed for only once when assignment happen.
 
 h2. <a name="inheritance">Template inheritance</a>
 
@@ -774,9 +824,9 @@ bc. @myVal.escape().capAll()
 
 In the above expression, java object extension @capAll@ and @escape@ is chained together and both of they will be processed.
 
-h3. Customized Java object extension
+h3. <a name="custom-java-extension>Customized Java object extension</a>
 
-This is not supported at the moment but is a "planned feature":https://github.com/greenlaw110/play-rythm/issues/2.
+Start from Rythm 1.0.0-RC5, you can use application defined Java extensions. Refer to the "play documentation":http://www.playframework.org/documentation/1.2.4/templates#extensions to understand how to define application java extensions.
 
 h2. <a name="implicit_object">Implicit objects available in a template</a>
 

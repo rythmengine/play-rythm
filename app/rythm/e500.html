@@ -119,7 +119,7 @@
         final int from = lineNumber - 5 >= 0 && lineNumber < source.size() ? lineNumber - 5 : 0;
         final int to = lineNumber + 5  < source.size() ? lineNumber + 5 : source.size()-1;
         final List<String> lines = new ArrayList();
-        for (int i = from; i < to; ++i) {
+        for (int i = from; i <= to; ++i) {
             lines.add(source.get(i));
         }
     }

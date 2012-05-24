@@ -402,19 +402,13 @@ public class RythmPlugin extends PlayPlugin {
             engine.init(p);
         }
 
-        long l = System.currentTimeMillis();
-        if (engine.enableJavaExtensions()) {
-            l = System.currentTimeMillis();
-            JavaExtensionBridge.registerPlayBuiltInJavaExtensions(engine);
-            debug("%sms to register java extension", System.currentTimeMillis() - l);
-        }
-        l = System.currentTimeMillis();
         FastTagBridge.registerFastTags(engine);
-        debug("%sms to register play fast tags", System.currentTimeMillis() - l);
-        l = System.currentTimeMillis();
         registerJavaTags(engine);
-        debug("%sms to register rythm java tags", System.currentTimeMillis() - l);
         ActionTagBridge.registerActionTags(engine);
+        if (engine.enableJavaExtensions()) {
+            JavaExtensionBridge.registerPlayBuiltInJavaExtensions(engine);
+            JavaExtensionBridge.registerAppJavaExtensions(engine);
+        }
 
         RythmTemplateLoader.clear();
     }
@@ -458,6 +452,7 @@ public class RythmPlugin extends PlayPlugin {
     }
 
     private void registerJavaTags(RythmEngine engine) {
+        long l = System.currentTimeMillis();
         // -- register application java tags
         List<ApplicationClasses.ApplicationClass> classes = Play.classes.getAssignableClasses(FastRythmTag.class);
         for (ApplicationClasses.ApplicationClass ac: classes) {
@@ -469,6 +464,7 @@ public class RythmPlugin extends PlayPlugin {
         for (Class<?> c: ca) {
             registerJavaTag(c, engine);
         }
+        debug("%sms to register rythm java tags", System.currentTimeMillis() - l);
     }
 
     private void registerJavaTag(Class<?> jc, RythmEngine engine) {

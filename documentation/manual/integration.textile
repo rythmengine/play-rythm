@@ -8,7 +8,7 @@ PlayRythm is designed to support smooth migrating from Groovy template engine.
 
 PlayRythm hijack the template rendering process if it found the corresponding template exists in the @app/rythm@ folder. Otherwise it quit silently and leave groovy engine to handle it. So what you need to do is just create an new template file using Rythm syntax and put it into the @app/rythm@ folder. Before your new rythm template available your existing groovy template works like a charm, and after the rythm template created, Rythm will take over
 
-p(note). -Tip: enclose all your rythm template with @#{verbatim}@ and @#{/verbatim}@ can help you avoid groovy compile exception and does not impact your rythm template-. This is not true. The groovy template engine will still parse the expressions. See "Resolve groovy compilation error":#conflict for workarounds.
+p(note). See "Step by step migrate groovy template to rythm":http://software-lgl.blogspot.com.au/2012/05/step-by-step-migrate-your-groovy.html.
 
 h2. <a name="configuration">Configuration</a>
 
@@ -19,6 +19,7 @@ PlayMorphia provides default value for all configuration items, thus enable it t
 |@rythm.cache.defaultTTL@|Set default timeout duration in seconds|3600 seconds|
 |@rythm.gae@|Set this to true if running in GAE. This will disable bytecode cache in Rythm|false|
 |@rythm.noFileWrite@|Same effect as @rythm.gae@|false|
+|@rythm.compactOutput@|If true then output content in compact mode, i.e. additonal white space and line breaks will be removed|true in prod mode|
 
 h2. <a name="conflict">Resolve groovy compilation error</a>
 

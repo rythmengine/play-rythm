@@ -175,6 +175,21 @@ bc. @chain.raw().assign("roleSelector").cache() {
 
 The order of the chained function doesn't matter as they are orthogonal concerns.
 
+h3. <a name="compact">compact</a>
+
+Mark a block of template to be output in compact mode without regarding to the "global compact setting":integration#configuration.
+
+bc. @compact() {
+   All content here will be output
+   in compact mode.
+}
+
+The above code will output the following content:
+
+bc. All content here will be output in compact mode
+
+See also "nocompact":#nocompact.
+
 h3. <a name="continue">continue</a>
 
 Continue current loop:
@@ -299,6 +314,14 @@ Note
 * the parameter is case insensitive.
 * if no parameter is passed, then it default to HTML
 * you pass the parameter within quotation mark or not
+
+h3. <a name="exec">exec</a>
+
+Execute an "macro":#macro.
+
+bc. @exec("macro1")
+
+See also "Define and execute Macro":user_guide#macro
 
 h3. <a name="extends">extends</a>
 
@@ -447,6 +470,32 @@ var showUserAction = @jsAction(showUserUrl)
 It's desired the syntax could be simplified as:
 
 bc. var showUserAction = @jsAction(Users.show(":id")) @// note this has NOT been implemented yet!
+
+h3. <a name="macro">macro</a>
+
+Define a template macro.
+
+bc. @macro() {
+    macro content
+}
+
+See also <a href="#exec"><code>@exec</code></a> and "Define and execute Macro":user_guide#macro
+
+h3. <a name="nocompact">nocompact</a>
+
+Mark a block of template to be output NOT in compact mode without regarding to the "global compact setting":integration#configuration.
+
+bc. @nocompact() {
+All content here will be output
+in nocompact mode.
+}
+
+The above code will output the following content:
+
+bc. All content here will be output
+in compact mode
+
+See also "compact":#compact.
 
 h3. <a name="renderBody">renderBody</a>
 
