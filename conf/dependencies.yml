@@ -1,4 +1,11 @@
 # History
+# 1.0.0-20120604:
+#        - https://github.com/greenlaw110/Rythm/issues/42
+#        - https://github.com/greenlaw110/Rythm/issues/41
+#        - https://github.com/greenlaw110/Rythm/issues/40
+#        - https://github.com/greenlaw110/Rythm/issues/38
+# 1.0.0-20120527
+#        - Fix bug: bad render result of loop inside callback body
 # 1.0.0-RC5
 #        - Add @compact, @nocompact, @macro, @exec
 #        - Support customized java extensions
@@ -85,7 +92,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-RC5
+self: play -> rythm 1.0.0-20120604
 
 require:
     - play 1.2

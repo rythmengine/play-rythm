@@ -57,6 +57,20 @@ bc. @assign("roleSelector") {
 
 p(note). The variable name specified in <code>@assign</code> must be unique across the context where <code>@assign</code> is put in. Otherwise you will expect a compilation exception
 
+h4. assign to a final variable
+
+To assign to a final variable pass the second parameter @true@:
+
+bc. @assign("roleSelector", true) {
+<select>
+@for(Role role: Role.findAll()){
+<option value="@role.getId()">role.toString()</option>
+}
+</select>
+}
+
+The benefit of final variable is that you can use it directly inside <a href="#for"><code>@for</code></a> loop.
+
 h3. <a name="args">args</a>
 
 The @args@ tag declare variables used in the template.
@@ -317,9 +331,17 @@ Note
 
 h3. <a name="exec">exec</a>
 
-Execute an "macro":#macro.
+Execute an "macro":#macro. AKA <a href="#expand">exec</a>.
 
 bc. @exec("macro1")
+
+See also "Define and execute Macro":user_guide#macro
+
+h3. <a name="expand">expand</a>
+
+Expand an "macro":#macro. AKA <a href="#exec">exec</a>.
+
+bc. @expand("macro1")
 
 See also "Define and execute Macro":user_guide#macro
 
@@ -381,6 +403,18 @@ bc. <ul>
     @(product_isLast ? "" : "-")
 }
 </ul>
+
+p(note). If you refer to a local variable inside the loop, you need to make sure they are declared as @final@:
+
+bc. @{
+ String foo = "foo";
+ final String bar = foo;
+}
+@for(MyModel model: myModels) {
+    <p>@bar</p> @// this is okay
+    <p>@foo</p> @// this line will cause compilation error
+    ...
+}
 
 <a name="for_second_form">You can also use the second form of <code>@for</code> tag:</a>
 

@@ -362,6 +362,12 @@ Now you have a template variable @xResult@ contains the content of @tagX@ tag. Y
 
 bc. @xResult.toLowerCase().raw()
 
+You can assign tag execution result to a final variable by passing additional parameter to assign extension:
+
+bc. @tagX().assign("xResult", true)
+
+The benefit of final variable is that you can use it directly inside <a href="reference#for"><code>@for</code></a> loop.
+
 h3. <a name="chain_tag_invocation_decoration">Chain tag invocation decoration functions</a>
 
 It is possible to chain tag invocation extension functions in one statement:
