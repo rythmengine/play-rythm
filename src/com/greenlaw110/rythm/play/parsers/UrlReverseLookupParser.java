@@ -51,24 +51,24 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
             public TextBuilder go() {
                 Regex r = reg(dialect());
                 if (!r.search(remain())) {
-                    if (isAbsolute) {
-                        throw new ParseException(ctx().getTemplateClass(), ctx().currentLine(), "Error parsing @fullUrl statement, correct usage: @fullUrl(Controller.action), or @fullUrl(/public/<your public assets>)");
-                    } else {
-                        throw new ParseException(ctx().getTemplateClass(), ctx().currentLine(), "Error parsing @url statement, correct usage: @url(Controller.action), or @url(/public/<your public assets>)");
-                    }
+//                    if (isAbsolute) {
+//                        throw new ParseException(ctx().getTemplateClass(), ctx().currentLine(), "Error parsing @fullUrl statement, correct usage: @fullUrl(Controller.action), or @fullUrl(/public/<your public assets>)");
+//                    } else {
+//                        throw new ParseException(ctx().getTemplateClass(), ctx().currentLine(), "Error parsing @url statement, correct usage: @url(Controller.action), or @url(/public/<your public assets>)");
+//                    }
+                    // allow @url expression
+                    return null;
                 }
                 String s = r.stringMatched();
                 step(s.length());
                 s = r.stringMatched(3);
-                //strip off ( and )
-                s = s.substring(1);
-                s = s.substring(0, s.length() - 1);
-                // strip off quotation mark if there is
-                if (s.startsWith("\"") || s.startsWith("'")) {
-                    s = s.substring(1);
-                }
-                if (s.endsWith("\"") || s.endsWith("'")) {
-                    s = s.substring(0, s.length() - 1);
+                s = S.stripBraceAndQuotation(s);
+                if (S.isEmpty(s)) {
+                    if (isAbsolute) {
+                        raiseParseException("Error parsing @fullUrl() tag, controller action or static assets expected");
+                    } else {
+                        raiseParseException("Error parsing @url() tag, controller action or static assets expected");
+                    }
                 }
                 // try to see if it is a static url
                 String staticUrl = staticRouteMap.get(s);
@@ -76,12 +76,16 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
                     try {
                         staticUrl = Router.reverseWithCheck(s, Play.getVirtualFile(s), isAbsolute);
                     } catch (play.exceptions.NoRouteFoundException e) {
-                        // ignore it and try controller action
                     }
                 }
                 if (null != staticUrl) {
                     staticRouteMap.put(s, staticUrl);
                     return new Token(staticUrl, ctx());
+                } else {
+                    if (s.startsWith("/") || s.startsWith("\\")) {
+                        raiseParseException("Static URL lookup failed: %s", s);
+                    }
+                    // otherwise ignore it and try controller action
                 }
 
                 // now try parse action name and params
@@ -109,7 +113,7 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
     public static void main(String[] args) {
         UrlReverseLookupParser p = new UrlReverseLookupParser();
         Regex r = p.reg(new Rythm());
-        String s = "@url(\"Application.index()\") abc";
+        String s = "@url() abc";
         if (r.search(s)) {
             System.out.println(r.stringMatched());
             s = (r.stringMatched(3));

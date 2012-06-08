@@ -11,6 +11,12 @@ h2. <a name="v1.0.0-RC6">v1.0.0-RC6</a>
 ** "Cannot pass expression in parameters to @extends":https://github.com/greenlaw110/Rythm/issues/38
 ** "Cannot use complex expression in @set":https://github.com/greenlaw110/Rythm/issues/40
 ** "Need refresh twice when layout template changed":https://github.com/greenlaw110/Rythm/issues/42
+** "expression with the same name as a keyword will not be evaluated":https://github.com/greenlaw110/Rythm/issues/43
+** "In prod mode, javascript in templates can get corrupt over dropped newlines":https://github.com/greenlaw110/Rythm/issues/44
+** "@url expression cause trouble":https://github.com/greenlaw110/play-rythm/issues/24
+** "String index out of range: -1":https://github.com/greenlaw110/play-rythm/issues/25
+** ""Action Application.public not found" error when deploying to Heroku":https://github.com/greenlaw110/play-rythm/issues/28
+** "In prod mode, javascript in templates can get corrupt over dropped newlines":https://github.com/greenlaw110/play-rythm/issues/29
 
 h2. <a name="v1.0.0-RC5">v1.0.0-RC5</a>
 

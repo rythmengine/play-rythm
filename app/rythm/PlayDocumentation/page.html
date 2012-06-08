@@ -1,3 +1,4 @@
+@__exitIfNoPlayModule__(_docviewer)
 @args String id, String html, String title, List<String> modules, List<String> apis, String module;
 <html>
     <head>
@@ -14,7 +15,7 @@
 
                 <div id="logo">
                     <img src="@url(/public/playmanual/logo.png)">
-                    <h2 id="version">Play ${play.version}</h2>
+                    <h2 id="version">Play @play.version</h2>
                 </div>
 
                 @{

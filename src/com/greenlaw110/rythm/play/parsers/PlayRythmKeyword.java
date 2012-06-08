@@ -21,7 +21,11 @@ public enum PlayRythmKeyword implements IKeyword {
     /**
      * used for url reverse lookup
      */
-    _U("(_u|url)");
+    _U("(_u|url)"),
+    /**
+     * used to check if a certain module loaded
+     */
+    EXIT_IF_NO_MODULE("__exitIfNoPlayModule__");
 
     private final String s;
     private PlayRythmKeyword() {

@@ -4,10 +4,7 @@ import com.greenlaw110.rythm.*;
 import com.greenlaw110.rythm.cache.ICacheService;
 import com.greenlaw110.rythm.logger.ILogger;
 import com.greenlaw110.rythm.logger.ILoggerFactory;
-import com.greenlaw110.rythm.play.parsers.AbsoluteUrlReverseLookupParser;
-import com.greenlaw110.rythm.play.parsers.GroovyVerbatimTagParser;
-import com.greenlaw110.rythm.play.parsers.MessageLookupParser;
-import com.greenlaw110.rythm.play.parsers.UrlReverseLookupParser;
+import com.greenlaw110.rythm.play.parsers.*;
 import com.greenlaw110.rythm.play.utils.ActionInvokeProcessor;
 import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.runtime.ITag;
@@ -31,6 +28,7 @@ import play.exceptions.ConfigurationException;
 import play.exceptions.UnexpectedException;
 import play.libs.IO;
 import play.mvc.Http;
+import play.mvc.Router;
 import play.mvc.Scope;
 import play.mvc.results.NotFound;
 import play.mvc.results.Redirect;
@@ -52,7 +50,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-RC5";
+    public static final String VERSION = "1.0.0-RC6";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -143,6 +141,11 @@ public class RythmPlugin extends PlayPlugin {
     @Override
     public void onLoad() {
         loadTemplatePaths();
+
+        // try to workaround play issue https://play.lighthouseapp.com/projects/57987-play-framework/tickets/1545-play-precompile-does-not-load-routes
+        if (Router.routes.isEmpty()) {
+            Router.load(Play.ctxPath);
+        }
     }
 
     @Override
@@ -363,7 +366,7 @@ public class RythmPlugin extends PlayPlugin {
             engine.preCompiling = true;
 
             IParserFactory[] factories = {new AbsoluteUrlReverseLookupParser(), new UrlReverseLookupParser(),
-                    new MessageLookupParser(), new GroovyVerbatimTagParser()};
+                    new MessageLookupParser(), new GroovyVerbatimTagParser(), new ExitIfNoModuleParser()};
             engine.getExtensionManager().registerUserDefinedParsers(factories).registerTemplateExecutionExceptionHandler(new ITemplateExecutionExceptionHandler() {
                 @Override
                 public boolean handleTemplateExecutionException(Exception e, TemplateBase template) {

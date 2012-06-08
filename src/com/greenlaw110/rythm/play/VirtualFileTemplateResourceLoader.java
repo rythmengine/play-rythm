@@ -128,8 +128,10 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
             path = path.replace(".", "/");
             // but not for suffix
             int pos = path.lastIndexOf("/");
-            String path0 = path;
-            path = path0.substring(0, pos) + "." + path0.substring(pos + 1);
+            if (-1 != pos) {
+                String path0 = path;
+                path = path0.substring(0, pos) + "." + path0.substring(pos + 1);
+            }
             vf = loadFromPath_(path);
         }
         if (!isValid(vf)) return null;
