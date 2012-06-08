@@ -2,11 +2,14 @@ h1. PlayRythm version history
 
 h2. <a name="roadmap">What's left for R1.0</a>
 
-* There is no feature left for R1.0. RC5 will be the last RC version and if no show stopper found R1.0 will be released soon
+* There is no feature left for R1.0. RC6 will be the last RC version and if no show stopper found R1.0 will be released soon
 
 h2. <a name="v1.0.0-RC6">v1.0.0-RC6</a>
 
-* Support assign to final variable: <code>@assign("foo", true) {...}</code> and <code>@myTag(...).assign("myTagResult", true)</code>
+* New built-in keywords:
+** <a href="reference#expand"><code>@expand</code></a>: alias of <a href="reference#exec"><code>@exec</code></a>, used to expand a predefined <a href="reference#macro"><code>@macro</code></a>
+* Enhancements:
+** Support assign to final variable: <code>@assign("foo", true) {...}</code> and <code>@myTag(...).assign("myTagResult", true)</code>
 * Bug fixes:
 ** "Cannot pass expression in parameters to @extends":https://github.com/greenlaw110/Rythm/issues/38
 ** "Cannot use complex expression in @set":https://github.com/greenlaw110/Rythm/issues/40
@@ -16,17 +19,17 @@ h2. <a name="v1.0.0-RC6">v1.0.0-RC6</a>
 ** "Support java syntax in tag parameters":https://github.com/greenlaw110/play-rythm/issues/16
 ** "@url expression cause trouble":https://github.com/greenlaw110/play-rythm/issues/24
 ** "String index out of range: -1":https://github.com/greenlaw110/play-rythm/issues/25
-** ""Action Application.public not found" error when deploying to Heroku":https://github.com/greenlaw110/play-rythm/issues/28
+** "'Action Application.public not found' error when deploying to Heroku":https://github.com/greenlaw110/play-rythm/issues/28
 ** "In prod mode, javascript in templates can get corrupt over dropped newlines":https://github.com/greenlaw110/play-rythm/issues/29
 ** "i18n is always escaped":https://github.com/greenlaw110/play-rythm/issues/30
 
 h2. <a name="v1.0.0-RC5">v1.0.0-RC5</a>
 
 * New built-in keywords:
-** <code>@compact</code>: mark a block of template to be output in compact mode without regarding to global engine setting
-** <code>@nocompact</code>: mark a block of template to be output in NON-compact mode without regarding to global engine setting
-** <code>@macro</code>: define an macro
-** <code>@exec</code>: execute an macro
+** <a href="reference#compact"><code>@compact</code></a>: mark a block of template to be output in compact mode without regarding to global engine setting
+** <a href="reference#nocompact"><code>@nocompact</code></a>: mark a block of template to be output in NON-compact mode without regarding to global engine setting
+** <a href="reference#macro"><code>@macro</code></a>: define an macro
+** <a href="reference#exec"><code>@exec</code></a>: execute an macro
 * Support "custom defined Java Extensions":user_guide#custom-java-extension
 * Bug fixes:
 ** "enhance embedded template class fail":https://github.com/greenlaw110/play-rythm/issues/21

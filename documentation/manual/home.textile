@@ -1,6 +1,6 @@
 h1. PlayRythm module documentation
 
-Welcome to PlayRythm module documentation. This documentation is intended for the *1.0.0-RC5 release* and is significantly differ from previous module version's documentation.
+Welcome to *PlayRythm module* documentation. This documentation is intended for the *1.0.0-RC6 release* and is significantly differ from previous module version's documentation.
 
 Check the "version history":history.
 
@@ -25,7 +25,7 @@ PlayRythm is yet another template engine plugin for Play!Framework 1.2x version:
 # (Play specific) "Invoke controller action method":user_guide#invoke_action directly from within your template
 # "Include other template inline":user_guide#include (not the same as tag invocation)
 # (Play specific) New <a href="integration#cache4">@Cache4@</a> annotation to mark on controller action method
-# (Play specific) "Support GAE":integration#configuration
+# (Play specific) "Support GAE":integration#configuration and other PaaS like Heroku
 
 p(note). There is "a live demo app":http://play-rythm-demo.appspot.com running on GAE for your reference
 
