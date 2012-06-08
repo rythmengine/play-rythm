@@ -33,7 +33,7 @@ public class MessageLookupParser extends KeywordParserFactory {
     }
 
     protected String innerPattern() {
-        return "(((?@\"\")|(?@'')|[a-zA-Z_][\\w$_\\.]*)(?@())?)((,\\s*([0-9\\.]+|[a-zA-Z_][\\w$_\\.]*(?@())?))*)";
+        return "(((?@\"\")|(?@())|(?@'')|[a-zA-Z_][\\w$_\\.]*)(?@())?)((,\\s*([0-9\\.]+|[a-zA-Z_][\\w$_\\.]*(?@())?))*)";
     }
 
     @Override
