@@ -1,5 +1,8 @@
 @import java.util.*, play.i18n.Messages, play.i18n.Lang;
-@args String keys; // specifify a list of keys separated by ','
+@args String keys @// specifify a list of keys separated by ','
+
+
+
 
 @* groovy implementation
 %{
@@ -14,6 +17,7 @@ js_messages=new com.google.gson.Gson().toJson(ymessages);
 
 @{
     Properties ymessages = null;
+
     if (null != keys) {
         Set s = new HashSet();
         s.addAll(Arrays.asList(keys.split("[,;:\\s]")));
@@ -22,12 +26,11 @@ js_messages=new com.google.gson.Gson().toJson(ymessages);
         ymessages = Messages.all(Lang.get());
     }
     String js_messages = new com.google.gson.Gson().toJson(ymessages);
-}@
+}
 
 <script type="text/javascript">
 
-var i18nMessages = @js_messages;
-@verbatim {
+var i18nMessages = @js_messages.raw();
 /**
  * Fixme : only parse single char formatters eg. %s
  */
@@ -60,4 +63,3 @@ var i18n = function(code) {
 };
 
 </script>
-}

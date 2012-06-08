@@ -114,17 +114,17 @@ public class RythmTemplate extends Template {
             return s;
         } catch (RythmException e) {
             Throwable cause = e.getCause();
-            if (null != cause && cause instanceof ClassCastException) {
-                return handleClassCastException((ClassCastException)cause, args);
-            }
+//            if (null != cause && cause instanceof ClassCastException) {
+//                return handleClassCastException((ClassCastException)cause, args);
+//            }
             TemplateInfo t = handleRythmException(e);
             if (e instanceof CompileException) {
                 throw new TemplateCompilationException(t, t.lineNo, e.getMessage());
             } else {
                 throw new TemplateExecutionException(t, t.lineNo, e.errorMessage, e);
             }
-        } catch (ClassCastException e) {
-            return handleClassCastException(e, args);
+//        } catch (ClassCastException e) {
+//            return handleClassCastException(e, args);
         } catch (Exception e) {
             throw new TemplateExecutionException(this, -1, e.getMessage(), e);
         }

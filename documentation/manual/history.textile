@@ -18,6 +18,7 @@ h2. <a name="v1.0.0-RC6">v1.0.0-RC6</a>
 ** "String index out of range: -1":https://github.com/greenlaw110/play-rythm/issues/25
 ** ""Action Application.public not found" error when deploying to Heroku":https://github.com/greenlaw110/play-rythm/issues/28
 ** "In prod mode, javascript in templates can get corrupt over dropped newlines":https://github.com/greenlaw110/play-rythm/issues/29
+** "i18n is always escaped":https://github.com/greenlaw110/play-rythm/issues/30
 
 h2. <a name="v1.0.0-RC5">v1.0.0-RC5</a>
 
