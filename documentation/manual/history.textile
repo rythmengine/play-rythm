@@ -4,6 +4,14 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * There is no feature left for R1.0. RC6 will be the last RC version and if no show stopper found R1.0 will be released soon
 
+h2. <a name="v1.0.0">v1.0.0</a>
+
+* New built-in tags:
+** "errors":reference#errors
+* Bug Fixes:
+** "NPE when call Java based tag with empty parameter":https://github.com/greenlaw110/Rythm/issues/46
+** "NPE when calling @errorList()":https://github.com/greenlaw110/play-rythm/issues/31
+
 h2. <a name="v1.0.0-RC6">v1.0.0-RC6</a>
 
 * New built-in keywords:

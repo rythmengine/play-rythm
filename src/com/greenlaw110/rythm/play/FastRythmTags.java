@@ -75,6 +75,13 @@ public class FastRythmTags {
     public static class errorList extends FastRythmTag {
         @Override
         protected void call(ParameterList params, Body body) {
+            new errors().call(params, body);
+        }
+    }
+
+    public static class errors extends FastRythmTag {
+        @Override
+        protected void call(ParameterList params, Body body) {
             String field = params.size() > 0 ? params.getDefault().toString() : null;
             List<play.data.validation.Error> errors = null == field ? play.data.validation.Validation.errors() : play.data.validation.Validation.errors(field);
             int count = errors.size();

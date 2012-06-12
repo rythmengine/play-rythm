@@ -275,6 +275,10 @@ bc. <input name="name" class="@(play.data.validation.Validation.hasError("name")
 
 h3. <a name="errorList">errorList</a>
 
+Alias of @errors@. See below.
+
+h3. <a name="errors">errors</a>
+
 Corresponding to Groovy template's "errors":http://www.playframework.org/documentation/1.2.4/tags#errors. Iterates over the current validation errors.
 
 bc. <ul>
@@ -292,7 +296,7 @@ The tag defines implicit variables in its body.
 
 bc. <table>
 <tr><th>#</th><th>Error</th></tr>
-@errorList() {
+@errors() {
     <tr class="@error_parity"><td>@error_index</td><td>@error</td></tr>
 }
 </table>
@@ -300,7 +304,7 @@ bc. <table>
 You can also use the optional field parameter, or just the default parameter, to filter only the errors belonging to a certain field.
 
 bc. <ul>
-@errorList("myField") {
+@errors("myField") {
     There where errors with the field myField<br />
     <li>@error</li>
 }
