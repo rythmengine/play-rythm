@@ -138,13 +138,20 @@ public class RythmPlugin extends PlayPlugin {
         }
     }
 
+    private boolean loadingRoute = false;
     @Override
     public void onLoad() {
         loadTemplatePaths();
 
         // try to workaround play issue https://play.lighthouseapp.com/projects/57987-play-framework/tickets/1545-play-precompile-does-not-load-routes
         if (Router.routes.isEmpty()) {
-            Router.load(Play.ctxPath);
+            loadingRoute = true;
+            try {
+                Router.load(Play.ctxPath);
+            } catch (Exception e) {
+                warn("cannot load routes on rythm load: you have compilation error: %s", e.getMessage());
+            }
+            loadingRoute = false;
         }
     }
 
@@ -496,6 +503,7 @@ public class RythmPlugin extends PlayPlugin {
 
     @Override
     public Template loadTemplate(VirtualFile file) {
+        if (loadingRoute) return null;
         if (null == engine) {
             // in prod mode this method is called in preCompile() when onConfigurationRead() has not been called yet
             onConfigurationRead();

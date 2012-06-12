@@ -32,7 +32,11 @@ class ImplicitVariables {
     }
 
     static Var[] vars = {
-            new Var("error", "java.util.Map<String, java.util.List<play.data.validation.Error>>"),
+            new Var("error", "play.data.validation.Error"),
+            new Var("error_index", "int"),
+            new Var("error_isLast", "boolean"),
+            new Var("error_isFirst", "boolean"),
+            new Var("error_parity", "java.lang.String"),
             new Var("flash", "play.mvc.Scope.Flash"),
             new Var("params", "play.mvc.Scope.Params"),
             new Var("request", "play.mvc.Http.Request"),
