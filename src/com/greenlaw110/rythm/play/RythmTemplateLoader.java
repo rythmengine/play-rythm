@@ -125,6 +125,7 @@ public class RythmTemplateLoader {
     private static Object lock_ = new Object();
 
     public static Template loadTemplate(VirtualFile file) {
+        if (Logger.isTraceEnabled()) RythmPlugin.trace("about to load template: %s", file);
         String path = file.relativePath();
 //RythmPlugin.info("loading template from virtual file: %s", file.relativePath());
         if (!path.contains(RythmPlugin.R_VIEW_ROOT)) return null;
@@ -133,11 +134,13 @@ public class RythmTemplateLoader {
 
         RythmTemplate rt = cache.get(path);
         if (null != rt) {
-            rt.refresh(); // check if the resource is still valid
+            if (Logger.isTraceEnabled()) RythmPlugin.trace("template[%s] loaded from cache. About to refresh it", file);
+            if (RythmPlugin.engine.mode.isDev()) rt.refresh(); // check if the resource is still valid
+            if (Logger.isTraceEnabled()) RythmPlugin.trace("template[%s] refreshed", file);
             return rt.isValid() ? rt : null;
         }
 
-        synchronized (lock_) {
+        //synchronized (lock_) {
             rt = cache.get(path);
             if (null != rt) {
                 rt.refresh();
@@ -159,15 +162,17 @@ public class RythmTemplateLoader {
 //RythmPlugin.info("Play started, template returned");
 
             RythmTemplate tc = new RythmTemplate(resource);
-            tc.refresh(true);
+            if (Logger.isTraceEnabled()) RythmPlugin.trace("about to refresh template: %s", file);
+            tc.refresh();
             if (tc.isValid()) {
                 cache.put(file.relativePath(), tc);
             } else {
                 tc = null;
             }
 
+            if (Logger.isTraceEnabled()) RythmPlugin.trace("template[%s] refreshed", file);
             return tc;
-        }
+        //}
     }
 
     static void clear() {

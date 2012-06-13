@@ -9,6 +9,7 @@ import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.template.ITemplate;
 import play.Logger;
+import play.Play;
 import play.classloading.enhancers.ControllersEnhancer;
 import play.exceptions.TemplateCompilationException;
 import play.exceptions.TemplateExecutionException;
@@ -93,6 +94,7 @@ public class RythmTemplate extends Template {
     @Override
     public void compile() {
         refresh();
+        tc.asTemplate();
         //if (tc.isValid) tc.compile();
     }
 
@@ -100,17 +102,21 @@ public class RythmTemplate extends Template {
     @Override
     protected String internalRender(Map<String, Object> args) {
         try {
+            if (Logger.isTraceEnabled()) RythmPlugin.trace("prepare template to render");
             ITemplate t = tc.asTemplate();
+            if (Logger.isTraceEnabled()) RythmPlugin.trace("about to set render args");
             t.setRenderArgs(args);
             // allow invoke controller method without redirect
             ControllersEnhancer.ControllerInstrumentation.initActionCall();
             if (!RythmPlugin.isActionCall()) {
                 TagContext.init();
             }
+            if (Logger.isTraceEnabled()) RythmPlugin.trace("about to execute template");
             String s = t.render();
             if (!RythmPlugin.engine.isProdMode()) {
                 refreshCounter.set(0);
             }
+            if (Logger.isTraceEnabled()) RythmPlugin.trace("render completed");
             return s;
         } catch (RythmException e) {
             Throwable cause = e.getCause();

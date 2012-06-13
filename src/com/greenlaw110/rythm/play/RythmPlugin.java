@@ -157,6 +157,8 @@ public class RythmPlugin extends PlayPlugin {
 
     @Override
     public void onConfigurationRead() {
+        if (null != engine) return; // already configured
+
         Properties playConf = Play.configuration;
 
         // special configurations

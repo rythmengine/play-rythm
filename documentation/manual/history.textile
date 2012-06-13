@@ -8,9 +8,12 @@ h2. <a name="v1.0.0">v1.0.0</a>
 
 * New built-in tags:
 ** "errors":reference#errors
+* Enhancements:
+** Improved boot up performance when running in product mode
 * Bug Fixes:
 ** "NPE when call Java based tag with empty parameter":https://github.com/greenlaw110/Rythm/issues/46
 ** "NPE when calling @errorList()":https://github.com/greenlaw110/play-rythm/issues/31
+** "update layout templates only effects on one content template":https://github.com/greenlaw110/Rythm/issues/47
 
 h2. <a name="v1.0.0-RC6">v1.0.0-RC6</a>
 
