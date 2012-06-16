@@ -163,7 +163,8 @@ public class RythmTemplateLoader {
 
             RythmTemplate tc = new RythmTemplate(resource);
             if (Logger.isTraceEnabled()) RythmPlugin.trace("about to refresh template: %s", file);
-            tc.refresh();
+            if (Play.mode.isDev()) tc.refresh(true);
+            else tc.refresh();
             if (tc.isValid()) {
                 cache.put(file.relativePath(), tc);
             } else {
