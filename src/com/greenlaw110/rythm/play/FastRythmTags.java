@@ -32,47 +32,6 @@ public class FastRythmTags {
         }
     }
 
-    public static class cache extends FastRythmTag {
-        @Override
-        protected void call(ParameterList params, Body body) {
-            String key = params.getDefault().toString();
-            String duration = params.size() > 1 ? params.getByPosition(1).toString() : "1h";
-            Object cached = Cache.get(key);
-            if (cached != null) {
-                p(cached);
-                return;
-            }
-            String result = body.toString();
-            Cache.set(key, result, duration);
-            p(result);
-        }
-    }
-    
-    public static class cacheOnProd extends FastRythmTag {
-        @Override
-        protected void call(ParameterList params, Body body) {
-            if (Play.mode == Play.Mode.DEV) {
-                p(body);
-            } else {
-                Object o = params.getDefault();
-                String key = null == o ? null : o.toString().trim();
-                if (S.isEmpty(key)) {
-                    p(body);
-                    return;
-                }
-                String duration = params.size() > 1 ? params.getByPosition(1).toString() : "1h";
-                Object cached = Cache.get(key);
-                if (cached != null) {
-                    p(cached);
-                    return;
-                }
-                String result = body.toString();
-                Cache.set(key, result, duration);
-                p(result);
-            }
-        }
-    }
-
     public static class authenticityTokenValue extends FastRythmTag {
         @Override
         protected void call(ParameterList params, Body body) {
@@ -116,6 +75,13 @@ public class FastRythmTags {
     public static class errorList extends FastRythmTag {
         @Override
         protected void call(ParameterList params, Body body) {
+            new errors().call(params, body);
+        }
+    }
+
+    public static class errors extends FastRythmTag {
+        @Override
+        protected void call(ParameterList params, Body body) {
             String field = params.size() > 0 ? params.getDefault().toString() : null;
             List<play.data.validation.Error> errors = null == field ? play.data.validation.Validation.errors() : play.data.validation.Validation.errors(field);
             int count = errors.size();
@@ -125,7 +91,7 @@ public class FastRythmTags {
                 body.setProperty("error_isLast", (i+1) == count);
                 body.setProperty("error_isFirst", i == 0);
                 body.setProperty("error_parity", (i+1)%2==0?"even":"odd");
-                body.call();
+                body.render(getOut());
             }
         }
     }
@@ -136,14 +102,14 @@ public class FastRythmTags {
 //        }
 //    }
 //
-//    public static class jsAction extends FastRythmTag {
-//        @Override
-//        protected void call(ParameterList params, Body body) {
-//            String action = params.getDefault().toString();
-//            //String url = new ActionBridge(false).invokeMethod(action)
-//            p("function(options) {var pattern = '")
-//                .p(params.getDefault().toString().replace("&amp;", "&"))
-//                .p("'; for(key in options) { pattern = pattern.replace(':'+key, options[key]); } return pattern }");
-//        }
-//    }
+    public static class jsAction extends FastRythmTag {
+        @Override
+        protected void call(ParameterList params, Body body) {
+            String action = params.getDefault().toString();
+            //String url = new ActionBridge(false).invokeMethod(action)
+            p("function(options) {var pattern = '")
+                .p(params.getDefault().toString().replace("&amp;", "&"))
+                .p("'; for(key in options) { pattern = pattern.replace(':'+key, options[key]); } return pattern }");
+        }
+    }
 }

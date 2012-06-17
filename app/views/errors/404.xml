@@ -1,2 +1,0 @@
-@args Exception result;
-<notfound>@result.getMessage()</notfound>

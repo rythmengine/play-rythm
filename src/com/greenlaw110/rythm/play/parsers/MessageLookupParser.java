@@ -21,7 +21,7 @@ import com.stevesoft.pat.Regex;
  * To change this template use File | Settings | File Templates.
  */
 public class MessageLookupParser extends KeywordParserFactory {
-    
+
     @Override
     public IKeyword keyword() {
         return PlayRythmKeyword._M;
@@ -29,11 +29,11 @@ public class MessageLookupParser extends KeywordParserFactory {
 
     @Override
     protected String patternStr() {
-        return "%s%s\\s*((?@()))";
+        return "^(%s%s[\\t ]*((?@()))\\s*)";
     }
-    
+
     protected String innerPattern() {
-        return "(((?@\"\")|(?@'')|[a-zA-Z_][\\w$_\\.]*)(?@())?)(,\\s*([a-zA-Z_][\\w$_\\.]*(?@())?))?";
+        return "(((?@\"\")|(?@())|(?@'')|[a-zA-Z_][\\w$_\\.]*)(?@())?)((,\\s*([0-9\\.]+|[a-zA-Z_][\\w$_\\.]*(?@())?))*)";
     }
 
     @Override
@@ -44,7 +44,7 @@ public class MessageLookupParser extends KeywordParserFactory {
                 if (!r.search(remain())) return null;
                 String s = r.stringMatched();
                 step(s.length());
-                s = r.stringMatched(1);
+                s = r.stringMatched(3);
                 //strip off ( and )
                 s = s.substring(1);
                 s = s.substring(0, s.length() - 1);
@@ -52,11 +52,11 @@ public class MessageLookupParser extends KeywordParserFactory {
                 r = new Regex(innerPattern());
                 if (r.search(s)) {
                     final String msgStr = r.stringMatched(1);
-                    final String param = r.stringMatched(4);
+                    final String param = r.stringMatched(3);
                     if (S.isEmpty(param)) {
                         s = String.format("Messages.get(%s)", msgStr);
                     } else {
-                        s = String.format("Messages.get(%s, %s)", msgStr, param);
+                        s = String.format("Messages.get(%s %s)", msgStr, param);
                     }
                     ctx().getCodeBuilder().addImport("play.i18n.Messages");
                     return new CodeToken(s, ctx()){
@@ -75,11 +75,10 @@ public class MessageLookupParser extends KeywordParserFactory {
     public static void main(String[] args) {
         MessageLookupParser p = new MessageLookupParser();
         Regex r = p.reg(new Rythm());
-        System.out.println(S.escapeJavaScript(S.escapeJavaScript("\"abc\"")));
-        String s = "@_m(\"abc\")";
+        String s = "@msg(\"abc%s, %s\", ab, true) \n";
         if (r.search(s)) {
             System.out.println(r.stringMatched());
-            s = (r.stringMatched(1));
+            s = (r.stringMatched(3));
             System.out.println(">>" + s);
             s = s.substring(1).substring(0, s.length() - 2);
             System.out.println("<<" + s);
@@ -94,7 +93,7 @@ public class MessageLookupParser extends KeywordParserFactory {
                 System.out.println("4>>" + r.stringMatched(4));
             }
         }
-        
+
 //        s = "RythmTester.test(a.boc(), 14, '3', \"aa\")";
 //        //s = "getId()";
 //        r = new Regex("([a-zA-Z_][\\w$_\\.]*)((?@())?)");

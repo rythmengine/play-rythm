@@ -13,15 +13,19 @@ public enum PlayRythmKeyword implements IKeyword {
     /**
      * Absolute reverse url lookup
      */
-    _AU,
+    _AU("(_au|fullUrl)"),
     /**
      * Message lookup
      */
-    _M,
+    _M("(_m|msg)"),
     /**
      * used for url reverse lookup
      */
-    _U;
+    _U("(_u|url)"),
+    /**
+     * used to check if a certain module loaded
+     */
+    EXIT_IF_NO_MODULE("__exitIfNoPlayModule__");
 
     private final String s;
     private PlayRythmKeyword() {

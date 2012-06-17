@@ -29,8 +29,6 @@ import java.util.Map;
  * since the class is not public.
  * <p/>
  * Please check this with the original source code to find any updates to bring over.
- *
- * @author Bing Ran<bing_ran@hotmail.com>
  */
 public class ActionBridge {
 
@@ -55,17 +53,15 @@ public class ActionBridge {
     public Router.ActionDefinition invokeMethod(String actionString, Object param) {
         try {
 
-            String controllerName = Http.Request.current().controller;
-            // forms: Controller.action, action, package.Controller.action
             String action = actionString;
-//			String methodName = actionString;
-            if (actionString.indexOf(".") > 0) {
-                int lastIndexOf = actionString.lastIndexOf('.');
-//				methodName = actionString.substring(lastIndexOf + 1);
-                controllerName = actionString.substring(0, lastIndexOf);
-                // fell spec with controller name
-            } else {
-                action = controllerName + "." + actionString;
+            if (actionString.indexOf(".") < 0) {
+                // is it comes from a controller or mailer?
+                Http.Request request = Http.Request.current();
+                if (null != request) {
+                    action = request.controller + "." + actionString;
+                } else {
+                    throw new IllegalArgumentException("Must attach mailer class name to action string in reverse url lookup");
+                }
             }
 
             Map<String, Object> r = new HashMap<String, Object>();

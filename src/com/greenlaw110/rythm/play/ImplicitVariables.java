@@ -30,9 +30,13 @@ class ImplicitVariables {
             return Scope.RenderArgs.current().get(name());
         }
     }
-    
+
     static Var[] vars = {
-            new Var("error", "java.util.Map<String, java.util.List<play.data.validation.Error>>"),
+            new Var("error", "play.data.validation.Error"),
+            new Var("error_index", "int"),
+            new Var("error_isLast", "boolean"),
+            new Var("error_isFirst", "boolean"),
+            new Var("error_parity", "java.lang.String"),
             new Var("flash", "play.mvc.Scope.Flash"),
             new Var("params", "play.mvc.Scope.Params"),
             new Var("request", "play.mvc.Http.Request"),
@@ -52,8 +56,7 @@ class ImplicitVariables {
                     return new Messages();
                 }
             },
-            // use _play instead of play to avoid name conflicting why reference class in play.** package with full
-            // qualified name
+            // use _play instead of play to avoid name conflicting why reference class in play.** package with full qualified name
             new Var("_play", "play.Play") {
                 @Override
                 protected Object evaluate() {
@@ -63,9 +66,22 @@ class ImplicitVariables {
             new Var("_response_encoding", "java.lang.String") {
                 @Override
                 protected Object evaluate() {
-                    return Http.Response.current().encoding;
+                    Http.Response resp = Http.Response.current();
+                    return null == resp ? "utf-8" : resp.encoding;
+                }
+            },
+            new Var("_rythmPlugin", "com.greenlaw110.rythm.play.RythmPlugin") {
+                @Override
+                protected Object evaluate() {
+                    return Play.plugin(RythmPlugin.class);
+                }
+            },
+            new Var("_rythm", "com.greenlaw110.rythm.RythmEngine") {
+                @Override
+                protected Object evaluate() {
+                    return RythmPlugin.engine;
                 }
             }
     };
-    
+
 }
