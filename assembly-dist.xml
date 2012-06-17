@@ -39,7 +39,9 @@ under the License.
                 <include>documentation/**</include>
                 <include>src/**</include>
                 <include>assembly-dist.xml</include>
+                <include>LICENSE.txt</include>
                 <include>pom.xml</include>
+                <include>README.txt</include>
             </includes>
             <excludes>
                 <exclude>documentation/api/**</exclude>
@@ -49,11 +51,13 @@ under the License.
             <directory>${basedir}/samples-and-tests</directory>
             <outputDirectory>samples-and-tests</outputDirectory>
             <includes>
+                <include>*/README</include>
                 <include>*/README.txt</include>
                 <include>*/app/**</include>
                 <include>*/conf/**</include>
                 <include>*/public/**</include>
                 <include>*/test/**</include>
+                <include>*/war/**</include>
             </includes>
         </fileSet>
         <fileSet>
