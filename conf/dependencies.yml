@@ -1,6 +1,8 @@
 # History
-# 1.0.0-20120615
-#        - add renderArgs to default render args list
+# 1.0.0-20120620
+#        - https://github.com/greenlaw110/Rythm/issues/50
+#        - https://github.com/greenlaw110/Rythm/issues/48
+#        - https://github.com/greenlaw110/Rythm/issues/49
 # 1.0.0-20120613
 #        - https://github.com/greenlaw110/Rythm/issues/47
 # 1.0.0-20120612
@@ -104,7 +106,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-20120615
+self: play -> rythm 1.0.0-20120620
 
 require:
     - play 1.2

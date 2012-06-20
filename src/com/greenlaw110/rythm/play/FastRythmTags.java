@@ -71,11 +71,17 @@ public class FastRythmTags {
         }
     }
 
-    // rename errors to errorList to avoid name conflict with errors renderArg
+    /**
+     * @Deprecated use errors instead
+     */
+    @Deprecated
     public static class errorList extends FastRythmTag {
         @Override
         protected void call(ParameterList params, Body body) {
-            new errors().call(params, body);
+            RythmPlugin.warn("@errorList() is deprecated, use @errors() instead");
+            errors e = new errors();
+            e.setOut(getOut());
+            e.call(params, body);
         }
     }
 
