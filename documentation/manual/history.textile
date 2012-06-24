@@ -2,18 +2,27 @@ h1. PlayRythm version history
 
 h2. <a name="roadmap">What's left for R1.0</a>
 
-* There is no feature left for R1.0. RC6 will be the last RC version and if no show stopper found R1.0 will be released soon
+* "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
 
-h2. <a name="v1.0.0">v1.0.0</a>
+h2. <a name="v1.0.0-RC7">v1.0.0-RC7</a>
 
 * New built-in tags:
 ** "errors":reference#errors
 * Enhancements:
 ** Improved boot up performance when running in product mode
+** "Support multi lines import declaration":https://github.com/greenlaw110/Rythm/issues/56
+** "Support multi line render args declaration":https://github.com/greenlaw110/Rythm/issues/55
 * Bug Fixes:
-** "NPE when call Java based tag with empty parameter":https://github.com/greenlaw110/Rythm/issues/46
-** "NPE when calling @errorList()":https://github.com/greenlaw110/play-rythm/issues/31
+** "unexpected line breaks":https://github.com/greenlaw110/Rythm/issues/54
+** "line separator not kept for certain case":https://github.com/greenlaw110/Rythm/issues/53
+** "embedded tag call with @doBody() output not synchronized":https://github.com/greenlaw110/Rythm/issues/52
+** "Empty lines in template are removed":https://github.com/greenlaw110/Rythm/issues/50
+** "getRenderArg can't get anything in layout template":https://github.com/greenlaw110/Rythm/issues/49
+** "Make getRenderArg method generic?":https://github.com/greenlaw110/Rythm/issues/48
 ** "update layout templates only effects on one content template":https://github.com/greenlaw110/Rythm/issues/47
+** "NPE when call Java based tag with empty parameter":https://github.com/greenlaw110/Rythm/issues/46
+** "@errorList() does not output content":https://github.com/greenlaw110/play-rythm/issues/32
+** "NPE when calling @errorList()":https://github.com/greenlaw110/play-rythm/issues/31
 
 h2. <a name="v1.0.0-RC6">v1.0.0-RC6</a>
 

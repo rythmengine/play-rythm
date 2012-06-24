@@ -1,15 +1,17 @@
 # History
-# 1.0.0-20120620a 
-#        - https://github.com/greenlaw110/play-rythm/issues/32
-# 1.0.0-20120620
+# 1.0.0-RC7
+#        - https://github.com/greenlaw110/Rythm/issues/56
+#        - https://github.com/greenlaw110/Rythm/issues/55
+#        - https://github.com/greenlaw110/Rythm/issues/54
+#        - https://github.com/greenlaw110/Rythm/issues/53
+#        - https://github.com/greenlaw110/Rythm/issues/52
 #        - https://github.com/greenlaw110/Rythm/issues/50
-#        - https://github.com/greenlaw110/Rythm/issues/48
 #        - https://github.com/greenlaw110/Rythm/issues/49
-# 1.0.0-20120613
+#        - https://github.com/greenlaw110/Rythm/issues/48
 #        - https://github.com/greenlaw110/Rythm/issues/47
-# 1.0.0-20120612
-#        - https://github.com/greenlaw110/play-rythm/issues/31
 #        - https://github.com/greenlaw110/Rythm/issues/46
+#        - https://github.com/greenlaw110/play-rythm/issues/32
+#        - https://github.com/greenlaw110/play-rythm/issues/31
 # 1.0.0-RC6:
 #        - https://github.com/greenlaw110/play-rythm/issues/30
 #        - https://github.com/greenlaw110/play-rythm/issues/29
@@ -108,7 +110,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-20120620a
+self: play -> rythm 1.0.0-RC7
 
 require:
     - play 1.2

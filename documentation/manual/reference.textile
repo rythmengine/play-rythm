@@ -75,7 +75,15 @@ h3. <a name="args">args</a>
 
 The @args@ tag declare variables used in the template.
 
-bc. @args String var1, int var2, ...;
+bc. @args String var1, int var2, ...
+
+or declare render arguments in multiple lines (start from 1.0.0-RC7):
+
+bc. @args {
+    String var1, int var2
+    boolean var3
+    ...
+}
 
 p(note). @args@ is one of few tags that are not invoked in @tag(...) style. At the moment please use ";" to terminate @args@ statement. This limitation will be removed in the future, and line-break could be an natural way to terminate the statement
 
@@ -464,6 +472,20 @@ bc. @if (tasks.size() > 1) {
     One task in the list
 } else {
     Nothing to do
+}
+
+h3. <a name="import">import</a>
+
+Import package or class.
+
+bc. @import java.awt.*, java.io.*,...
+
+or declare import statements in multiple lines (start from 1.0.0-RC7):
+
+bc. @import {
+    java.awt.*, java.io.*
+    static java.lang.Math.*
+    ...
 }
 
 h3. <a name="include">include</a>
