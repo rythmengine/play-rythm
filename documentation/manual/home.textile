@@ -1,6 +1,8 @@
 h1. PlayRythm module documentation
 
-Welcome to *PlayRythm module* documentation. This documentation is intended for the *1.0.0-RC7 release* and is significantly differ from previous module version's documentation.
+p(note). 1.0-RC8 is an emergent release to fix issue "#58":https://github.com/greenlaw110/Rythm/issues/58 introduced in RC7
+
+Welcome to *PlayRythm module* documentation. This documentation is intended for the *1.0.0-RC8 release* and is significantly differ from previous module version's documentation.
 
 Check the "version history":history.
 

@@ -4,6 +4,12 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
 
+h2. <a name="v1.0.0-RC8">v1.0.0-RC8</a>
+
+* Bug fixes:
+** "Space get removed when run in compact output mode":https://github.com/greenlaw110/Rythm/issues/58
+** "StringIndexOutOfBoundsException occured on reloading":https://github.com/greenlaw110/Rythm/issues/57
+
 h2. <a name="v1.0.0-RC7">v1.0.0-RC7</a>
 
 * New built-in tags:
