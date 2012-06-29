@@ -239,6 +239,27 @@ or pass argument by name:
 
 bc. @sayHi(who: "Play!framework")
 
+p(note). Inline tag must be defined before the invocation code. Otherwise you might get compilation error.
+
+Define return type of inline tag:
+
+bc. @def boolean isMobile() {
+    @{
+        UserAgent ua = getRenderArg("userAgent");
+        return ua.isMobile();
+    }
+}
+
+And later on it can be used as:
+
+bc. @if (isMobile()) {
+   @mobileTag()
+} else {
+   @pcTag()
+}
+
+p(note). See "defining inline tag" in the "user guide":user_guide#inline_tag
+
 h3. <a name="doLayout">doLayout</a>
 
 Used with template inheritance, this tag inserts the evaluated sub-template’s contents.

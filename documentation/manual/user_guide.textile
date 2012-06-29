@@ -493,7 +493,7 @@ h2. <a name="inline_tag">Define inline tags</a>
 
 Rythm provides inline tag definition to achieve a lightweight and light speed reuse method in one template.
 
-bc. @tag sayHello(String who, String title) {
+bc. @def sayHello(String who, String title) {
   <p>Hello, @title @who</p>
 }
 
@@ -519,10 +519,33 @@ bc. @myInlineTag().raw().assign("myResult") @// this is NOT okay
     @myInlineTag()
 }
 
-p(note). You cannot pass argument by name when invoking inline tag. Use pass by position instead:
+p(note). You cannot pass argument by name when invoking inline tag. *ALWAYS pass parameter to inline tag by position*:
 
 bc. @myInlineTag(varName: "value") @// this will cause compilation error
 @myInlineTag("value") @// this is okay
+
+h3. <a name="inline_tag_return_type">Define return type of inline tag</a>
+
+Starting from v1.0.0-RC9 it can define return type of the inline tag:
+
+bc. @def boolean isMobile() {
+    @{
+        UserAgent ua = getRenderArg("userAgent");
+        return ua.isMobile();
+    }
+}
+
+And later on it can be used as:
+
+bc. @if (isMobile()) {
+   @mobileTag()
+} else {
+   @pcTag()
+}
+
+So this actually the scope from defining an inline tag to defining a reusable method. This feature allows developer to actually extends a template class and greatly improve the reusability.
+
+The cool part of this feature is it allows developer to define inline tag in the parent (layout) template and used in the descendant templates. Furthermore, the inline tag method is also available to templates which "included":reference#include the template defined it.
 
 h2. <a name="java_tags">Custom Java tags</a>
 

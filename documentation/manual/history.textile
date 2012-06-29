@@ -4,6 +4,11 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
 
+h2. <a name="v1.0.0-RC9">v1.0.0-RC9</a>
+
+* Enhancement
+** "support defining return type of the inline tag":user_guide#inline_tag_return_type
+
 h2. <a name="v1.0.0-RC8">v1.0.0-RC8</a>
 
 * Bug fixes:
