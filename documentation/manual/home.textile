@@ -1,8 +1,6 @@
 h1. PlayRythm module documentation
 
-p(note). 1.0-RC8 is an emergent release to fix issue "#58":https://github.com/greenlaw110/Rythm/issues/58 introduced in RC7
-
-Welcome to *PlayRythm module* documentation. This documentation is intended for the *1.0.0-RC9 release* and might be significantly differ from previous module version's documentation.
+Welcome to *PlayRythm module* documentation. This documentation is intended for the *1.0.0-20120703 release* and might be significantly differ from previous module version's documentation.
 
 Check the "version history":history.
 
@@ -28,6 +26,7 @@ PlayRythm is yet another template engine plugin for Play!Framework 1.2x version:
 # "Include other template inline":user_guide#include (not the same as tag invocation)
 # (Play specific) New <a href="integration#cache4">@Cache4@</a> annotation to mark on controller action method
 # (Play specific) "Support GAE":integration#configuration and other PaaS like Heroku
+# <img src="http://www.naccas.org/_layouts/1033/images/new.gif" style="border: none !important"><a href="string_interpolation">String Interpolation Mode</a>
 
 p(note). There is "a live demo app":http://play-rythm-demo.appspot.com running on GAE for your reference
 
@@ -70,3 +69,4 @@ h2. <a name="resource">See Also</a>
 # %(next)"Integrate PlayRythm into your Play project":integration%
 # "User's guide":user_guide
 # "Reference manual":reference
+# "String interpolation mode":string_interpolation

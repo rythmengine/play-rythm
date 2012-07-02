@@ -4,8 +4,19 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
 
-h2. <a name="v1.0.0-RC9">v1.0.0-RC9</a>
+h2. <a name="v1.0.0-20120703">v1.0.0-20120703</a>
 
+* Feature
+** "Support array in String interpolation mode":string_interpolation#array
+** "Add @nosim() keyword":string_interpolation#nosim
+* Bug fix
+** "SIM not work with @(foo) style expression":https://github.com/greenlaw110/Rythm/issues/61
+** "@url, @fullUrl and @msg not work in SIM":https://github.com/greenlaw110/play-rythm/issues/34
+
+h2. <a name="v1.0.0-20120630">v1.0.0-20120630</a>
+
+* Feature
+** "String interpolation mode":string_interpolation
 * Enhancement
 ** "support defining return type of the inline tag":user_guide#inline_tag_return_type
 

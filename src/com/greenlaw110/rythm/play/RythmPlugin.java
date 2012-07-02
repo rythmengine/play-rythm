@@ -50,7 +50,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-20120629";
+    public static final String VERSION = "1.0.0-20120703";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -376,7 +376,7 @@ public class RythmPlugin extends PlayPlugin {
 
             IParserFactory[] factories = {new AbsoluteUrlReverseLookupParser(), new UrlReverseLookupParser(),
                     new MessageLookupParser(), new GroovyVerbatimTagParser(), new ExitIfNoModuleParser()};
-            engine.getExtensionManager().registerUserDefinedParsers(factories).registerTemplateExecutionExceptionHandler(new ITemplateExecutionExceptionHandler() {
+            engine.getExtensionManager().registerUserDefinedParsers(factories).registerUserDefinedParsers("simple_rythm", factories).registerTemplateExecutionExceptionHandler(new ITemplateExecutionExceptionHandler() {
                 @Override
                 public boolean handleTemplateExecutionException(Exception e, TemplateBase template) {
                     if (e instanceof Result) {

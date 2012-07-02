@@ -524,7 +524,7 @@ p(note). You cannot pass argument by name when invoking inline tag. *ALWAYS pass
 bc. @myInlineTag(varName: "value") @// this will cause compilation error
 @myInlineTag("value") @// this is okay
 
-h3. <a name="inline_tag_return_type">Define return type of inline tag</a>
+h3. <img src="http://www.naccas.org/_layouts/1033/images/new.gif" style="border: none !important"><a name="inline_tag_return_type">Define return type of inline tag</a>
 
 Starting from v1.0.0-RC9 it can define return type of the inline tag:
 
