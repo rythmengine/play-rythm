@@ -1,10 +1,13 @@
 # History
+# 1.0.0-20120704
+#        - Support TSM (toString mode)
+#        - https://github.com/greenlaw110/Rythm/issues/62
 # 1.0.0-20120703
 #        - https://github.com/greenlaw110/Rythm/issues/61
 #        - add @nosim() keyword
 #        - support array in SIM
 # 1.0.0-20120630
-#        - Support string interpolation mode
+#        - Support (SIM) string interpolation mode
 #        - https://github.com/greenlaw110/Rythm/issues/59
 # 1.0.0-RC8
 #        - https://github.com/greenlaw110/Rythm/issues/58
@@ -120,7 +123,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-20120703
+self: play -> rythm 1.0.0-20120704
 
 require:
     - play 1.2

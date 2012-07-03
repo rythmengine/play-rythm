@@ -1,0 +1,24 @@
+h1. ToString Mode
+
+p(note). This is *NOT* a Play specific feature.
+
+Rythm (starts from v1.0.0-20120704) provides an new feature called TSM, the "To String Mode".
+
+bc. public class Address {
+    public String unitNo;
+    public String streetNo;
+    public String street;
+    public String suburb;
+    public String state;
+    public String postCode;
+
+    @Override public String toString() {
+        return Rythm.toString("@_.unitNo @_.streetNo @_.street, @_.suburb, @_.state, @_.postCode", this);
+    }
+}
+
+Without TSM you will need to declare the type in the template:
+
+bc. return Rythm.render("@args Address _;@_.unitNo @_.streetNo @_.street, @_.suburb, @_.state, @_.postCode", this);
+
+p(note). To specify Rythm to render with TSM, use @Rythm.toString(...)@ API instead of @Rythm.render(...)@ API.
