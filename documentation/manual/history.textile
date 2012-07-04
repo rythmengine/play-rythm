@@ -4,15 +4,15 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
 
+h2. <a name="v1.0.0-20120704a">v1.0.0-20120704a</a>
+
+* Bug fix
+** "external parser like @url() not recognized once NotSIMTemplate captured":https://github.com/greenlaw110/Rythm/issues/63
+
 h2. <a name="v1.0.0-20120704">v1.0.0-20120704</a>
 
 * Feature
-** Support toString mode
-
-h2. <a name="v1.0.0-20120704">v1.0.0-20120704</a>
-
-* Feature
-** "Support **TSM (toString mode)**":to_string
+** <a href="to_string">Support <b>TSM (toString mode)</b></a>
 * Enhancement
 ** "ClasspathResource should check resource change on dev mode":https://github.com/greenlaw110/Rythm/issues/62
 
