@@ -4,6 +4,11 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
 
+h2. <a name="v1.0.0-20120704a">v1.0.0-20120711</a>
+
+* Bug fix
+** "FastTag body parameter should be null when no body is supported":https://github.com/greenlaw110/play-rythm/issues/37
+
 h2. <a name="v1.0.0-20120704a">v1.0.0-20120704a</a>
 
 * Bug fix

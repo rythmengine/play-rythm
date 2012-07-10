@@ -1,6 +1,6 @@
 h1. PlayRythm module documentation
 
-Welcome to *PlayRythm module* documentation. This documentation is intended for the *1.0.0-20120704a release* and might be significantly differ from previous module version's documentation.
+Welcome to *PlayRythm module* documentation. This documentation is intended for the *1.0.0-20120711 release* and might be significantly differ from previous module version's documentation.
 
 Check the "version history":history.
 
@@ -71,3 +71,4 @@ h2. <a name="resource">See Also</a>
 # "User's guide":user_guide
 # "Reference manual":reference
 # "String interpolation mode":string_interpolation
+# "To string mode":to_string

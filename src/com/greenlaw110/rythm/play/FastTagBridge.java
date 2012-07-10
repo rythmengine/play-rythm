@@ -136,7 +136,7 @@ public class FastTagBridge extends JavaTagBase {
             }
         }
         try {
-            method.invoke(null, paramMap, new TagBodyClosure(body, w), w, new RythmExecutableTemplate(caller()), 0);
+            method.invoke(null, paramMap, null == body ? null : new TagBodyClosure(body, w), w, new RythmExecutableTemplate(caller()), 0);
         } catch (InvocationTargetException e) {
             throw new UnexpectedException("cannot invoke fast tag method: " + tagName, e);
         } catch (IllegalAccessException e) {
