@@ -1,6 +1,7 @@
 # History
-# 1.0.0-20120711
+# 1.0.0-20120716
 #        - https://github.com/greenlaw110/play-rythm/issues/37
+#        - https://github.com/greenlaw110/rythm/issues/66
 # 1.0.0-20120704a
 #        - https://github.com/greenlaw110/Rythm/issues/63
 # 1.0.0-20120704
@@ -127,7 +128,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-20120711
+self: play -> rythm 1.0.0-20120716
 
 require:
     - play 1.2

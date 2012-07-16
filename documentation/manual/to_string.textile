@@ -31,3 +31,8 @@ h2. @Rythm.toString()@ API
 # an object, usually it's specified by @this@ keyword
 
 All expressions used inside TSM template starts with @_.@ where "_" means this object.
+
+h2. <a name="resource">See also</a>
+
+# %(next)"Auto to string mode":auto_to_string%
+# "Rythm Manual Home Page":home

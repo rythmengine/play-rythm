@@ -152,7 +152,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
 
     @Override
     public String getFullTagName(TemplateClass tc) {
-        String key = tc.getKey();
+        String key = tc.getKey().toString();
         return getFullTagName(key);
     }
 
@@ -205,7 +205,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
 
         String tagName0 = tagName;
         // call tag using relative path
-        String currentPath = templateClass.getKey();
+        String currentPath = templateClass.getKey().toString();
         int pos = currentPath.lastIndexOf("/");
         currentPath = currentPath.substring(0, pos);
         if (currentPath.startsWith("/")) currentPath = currentPath.substring(1);

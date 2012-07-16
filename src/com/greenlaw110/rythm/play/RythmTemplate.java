@@ -33,7 +33,7 @@ public class RythmTemplate extends Template {
     RythmTemplate(ITemplateResource resource) {
         if (null == resource) throw new NullPointerException();
         tc = new TemplateClass(resource, RythmPlugin.engine, true);
-        name = resource.getKey();
+        name = resource.getKey().toString();
         source = tc.templateResource.asTemplateContent();
     }
 
@@ -164,6 +164,6 @@ public class RythmTemplate extends Template {
 
     @Override
     public String getName() {
-        return tc.getKey();
+        return tc.getKey().toString();
     }
 }

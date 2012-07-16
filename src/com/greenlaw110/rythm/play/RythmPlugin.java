@@ -50,7 +50,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-20120711";
+    public static final String VERSION = "1.0.0-20120716";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -339,6 +339,7 @@ public class RythmPlugin extends PlayPlugin {
         }
 
         p.put("rythm.mode", Play.mode.isDev() ? Rythm.Mode.dev : Rythm.Mode.prod);
+        p.put("rythm.playHost", true);
 
         if (null == engine) {
             engine = new RythmEngine(p);

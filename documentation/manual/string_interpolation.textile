@@ -74,3 +74,8 @@ You don't specify Rythm to enter SIM, Rythm is intelligent enough to enter SIM a
 h2. How to specify Rythm **NOT** to enter SIM?
 
 As states above whenever you used any of the keywords listed above, Rythm will use normal mode to render the template. However in certain case you might want to explicitly ask Rythm not to use SIM by adding a <code>@nosim()</code> into the template at anywhere.
+
+h2. <a name="resource">See also</a>
+
+# %(next)"To string mode":to_string%
+# "Rythm Manual Home Page":home
