@@ -4,6 +4,14 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
 
+h2. <a name="v1.0.0-20120717">v1.0.0-20120717</a>
+
+This version is released because fix to issue #42 is fairly important
+
+* Bug fix
+** "Pre load routes cause class not found error in some cases":https://github.com/greenlaw110/play-rythm/issues/42
+** "Wrong Template Compilation Error Position with @msg() tag":https://github.com/greenlaw110/play-rythm/issues/41
+
 h2. <a name="v1.0.0-20120716">v1.0.0-20120716</a>
 
 * Feature
