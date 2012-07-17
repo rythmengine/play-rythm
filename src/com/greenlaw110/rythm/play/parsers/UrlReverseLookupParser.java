@@ -5,6 +5,7 @@ import com.greenlaw110.rythm.internal.dialect.Rythm;
 import com.greenlaw110.rythm.internal.parser.CodeToken;
 import com.greenlaw110.rythm.internal.parser.ParserBase;
 import com.greenlaw110.rythm.internal.parser.build_in.KeywordParserFactory;
+import com.greenlaw110.rythm.play.utils.StaticRouteResolver;
 import com.greenlaw110.rythm.spi.IContext;
 import com.greenlaw110.rythm.spi.IKeyword;
 import com.greenlaw110.rythm.spi.IParser;
@@ -15,6 +16,7 @@ import com.stevesoft.pat.Regex;
 import play.Play;
 import play.mvc.Router;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -44,6 +46,7 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
     }
 
     private static final ConcurrentMap<String, String> staticRouteMap = new ConcurrentHashMap<String, String>();
+    private static final ConcurrentMap<String, String> staticAbsoluteRouteMap = new ConcurrentHashMap<String, String>();
 
     @Override
     public IParser create(IContext ctx) {
@@ -71,15 +74,16 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
                     }
                 }
                 // try to see if it is a static url
-                String staticUrl = staticRouteMap.get(s);
+                Map<String, String> routeMap = isAbsolute ? staticAbsoluteRouteMap : staticRouteMap;
+                String staticUrl = routeMap.get(s);
                 if (null == staticUrl) {
                     try {
-                        staticUrl = Router.reverseWithCheck(s, Play.getVirtualFile(s), isAbsolute);
+                        staticUrl = StaticRouteResolver.reverseWithCheck(s, isAbsolute);
                     } catch (play.exceptions.NoRouteFoundException e) {
                     }
                 }
                 if (null != staticUrl) {
-                    staticRouteMap.put(s, staticUrl);
+                    routeMap.put(s, staticUrl);
                     return new Token(staticUrl, ctx());
                 } else {
                     if (s.startsWith("/") || s.startsWith("\\")) {

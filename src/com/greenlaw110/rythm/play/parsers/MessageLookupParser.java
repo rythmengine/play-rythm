@@ -29,7 +29,7 @@ public class MessageLookupParser extends KeywordParserFactory {
 
     @Override
     protected String patternStr() {
-        return "^(%s%s[\\t ]*((?@()))\\s*)";
+        return "^(%s%s[\\t ]*((?@())))";
     }
 
     protected String innerPattern() {
@@ -40,29 +40,30 @@ public class MessageLookupParser extends KeywordParserFactory {
     public IParser create(IContext ctx) {
         return new ParserBase(ctx) {
             public TextBuilder go() {
-                Regex r = new Regex(String.format(patternStr(), dialect().a(), keyword()));
+                Regex r = reg(dialect());
                 if (!r.search(remain())) return null;
                 String s = r.stringMatched();
                 step(s.length());
                 s = r.stringMatched(3);
                 //strip off ( and )
-                s = s.substring(1);
-                s = s.substring(0, s.length() - 1);
+                s = S.stripBrace(s);
                 // now parse message string and parameters
                 r = new Regex(innerPattern());
                 if (r.search(s)) {
-                    final String msgStr = r.stringMatched(1);
-                    final String param = r.stringMatched(3);
+                    String msgStr = r.stringMatched(1);
+                    msgStr = S.stripQuotation(msgStr);
+                    String param = r.stringMatched(3);
                     if (S.isEmpty(param)) {
-                        s = String.format("Messages.get(%s)", msgStr);
+                        s = String.format("Messages.get(\"%s\")", msgStr);
                     } else {
-                        s = String.format("Messages.get(%s %s)", msgStr, param);
+                        s = String.format("Messages.get(\"%s\" %s)", msgStr, param);
                     }
                     ctx().getCodeBuilder().addImport("play.i18n.Messages");
                     return new CodeToken(s, ctx()){
                         @Override
                         public void output() {
                             p("p(").p(s).p(");");
+                            pline();
                         }
                     };
                 } else {

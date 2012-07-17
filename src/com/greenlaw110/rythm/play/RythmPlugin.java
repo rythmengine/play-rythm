@@ -6,6 +6,7 @@ import com.greenlaw110.rythm.logger.ILogger;
 import com.greenlaw110.rythm.logger.ILoggerFactory;
 import com.greenlaw110.rythm.play.parsers.*;
 import com.greenlaw110.rythm.play.utils.ActionInvokeProcessor;
+import com.greenlaw110.rythm.play.utils.StaticRouteResolver;
 import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.runtime.ITag;
 import com.greenlaw110.rythm.spi.*;
@@ -50,7 +51,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-20120716";
+    public static final String VERSION = "1.0.0-20120717";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -142,17 +143,18 @@ public class RythmPlugin extends PlayPlugin {
     @Override
     public void onLoad() {
         loadTemplatePaths();
-
-        // try to workaround play issue https://play.lighthouseapp.com/projects/57987-play-framework/tickets/1545-play-precompile-does-not-load-routes
-        if (Router.routes.isEmpty()) {
-            loadingRoute = true;
-            try {
-                Router.load(Play.ctxPath);
-            } catch (Exception e) {
-                warn("cannot load routes on rythm load: you have compilation error: %s", e.getMessage());
-            }
-            loadingRoute = false;
-        }
+        StaticRouteResolver.loadStaticRoutes();
+/* disable preload routes as it cause class load troubles */
+//        // try to workaround play issue https://play.lighthouseapp.com/projects/57987-play-framework/tickets/1545-play-precompile-does-not-load-routes
+//        if (Router.routes.isEmpty()) {
+//            loadingRoute = true;
+//            try {
+//                Router.load(Play.ctxPath);
+//            } catch (Exception e) {
+//                warn("cannot load routes on rythm load: you have compilation error: %s", e.getMessage());
+//            }
+//            loadingRoute = false;
+//        }
     }
 
     @Override
