@@ -51,12 +51,15 @@ public class MessageLookupParser extends KeywordParserFactory {
                 r = new Regex(innerPattern());
                 if (r.search(s)) {
                     String msgStr = r.stringMatched(1);
+                    boolean hasQuotation = msgStr.startsWith("'") || msgStr.startsWith("\"");
                     msgStr = S.stripQuotation(msgStr);
                     String param = r.stringMatched(3);
                     if (S.isEmpty(param)) {
-                        s = String.format("Messages.get(\"%s\")", msgStr);
+                        String fmt = hasQuotation ? "Messages.get(\"%s\")" : "Messages.get(%s)";
+                        s = String.format(fmt, msgStr);
                     } else {
-                        s = String.format("Messages.get(\"%s\" %s)", msgStr, param);
+                        String fmt = hasQuotation ? "Messages.get(\"%s\" %s)" : "Messages.get(%s %s)";
+                        s = String.format(fmt, msgStr, param);
                     }
                     ctx().getCodeBuilder().addImport("play.i18n.Messages");
                     return new CodeToken(s, ctx()){
