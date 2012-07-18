@@ -16,6 +16,11 @@ You can also pass parameters:
 
 bc. @msg("some.message", "param1")
 
+You can pass variable as message (Start from v1.0.0-20120718):
+
+bc. @{String message = "validation.required"}
+@msg(message)
+
 h3. <a name="url">url</a>
 
 Play specific tag. Reverse lookup URL.

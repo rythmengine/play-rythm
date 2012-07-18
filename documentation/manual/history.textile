@@ -4,9 +4,13 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
 
-h2. <a name="v1.0.0-20120717">v1.0.0-20120717</a>
+h2. <a name="v1.0.0-20120718">v1.0.0-20120718</a>
 
-This version is released because fix to issue #42 is fairly important
+* Bug fix
+** "@msg() tag does not recognize parameter if there is quotation mark on it":https://github.com/greenlaw110/play-rythm/issues/44
+** "@msg() tag does not recognize variable as message":https://github.com/greenlaw110/play-rythm/issues/43
+
+h2. <a name="v1.0.0-20120717">v1.0.0-20120717</a>
 
 * Bug fix
 ** "Pre load routes cause class not found error in some cases":https://github.com/greenlaw110/play-rythm/issues/42
