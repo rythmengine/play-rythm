@@ -33,7 +33,7 @@ public class MessageLookupParser extends KeywordParserFactory {
     }
 
     protected String innerPattern() {
-        return "(((?@\"\")|(?@())|(?@'')|[a-zA-Z_][\\w$_\\.]*)(?@())?)((,\\s*([0-9\\.]+|[a-zA-Z_][\\w$_\\.]*(?@())?))*)";
+        return "(((?@\"\")|(?@())|(?@'')|[a-zA-Z_][\\w$_\\.]*)(?@())?)(.*)";
     }
 
     @Override
@@ -79,7 +79,7 @@ public class MessageLookupParser extends KeywordParserFactory {
     public static void main(String[] args) {
         MessageLookupParser p = new MessageLookupParser();
         Regex r = p.reg(new Rythm());
-        String s = "@msg(\"abc%s, %s\", ab, true) \n";
+        String s = "@msg(x, \"rythm\")";
         if (r.search(s)) {
             System.out.println(r.stringMatched());
             s = (r.stringMatched(3));
