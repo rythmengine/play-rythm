@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.greenlaw110.rythm.play.RythmPlugin.error;
 import static com.greenlaw110.rythm.play.RythmPlugin.warn;
 
 /**
@@ -145,7 +146,7 @@ public class StaticRouteResolver {
             if (s.contains("module:")) {
                 importModule(s, prefix);
             }
-            if (s.contains("staticDir:") || s.contains("staticFile:")) parseLine(s, prefix);
+            if (s.contains("staticDir:") || s.contains("staticFile:")) parseLine(s, prefix, vf);
         }
     }
 
@@ -170,7 +171,7 @@ public class StaticRouteResolver {
         }
     }
 
-    private static void parseLine(String line, String prefix) {
+    private static void parseLine(String line, String prefix, VirtualFile routesConf) {
         String[] sa = line.split("\\s+");
         if (!(sa.length == 3)) {
             warn("invalid route line: %s", line);
@@ -185,7 +186,10 @@ public class StaticRouteResolver {
         else if (path.contains("staticFile:")) path = path.substring("staticFile:".length());
         if (path.endsWith("/")) path = path.substring(0, path.length() - 1);
         VirtualFile vf = Play.getVirtualFile(path);
-        if (vf == null || !vf.exists()) throw new ConfigurationException("staticDir not found: " + path);
+        if (vf == null || !vf.exists()) {
+            error("Bad routes file [%s]: staticDir[%s] not found", routesConf.relativePath(), path);
+            return;
+        }
         routes.put(url, vf.relativePath());
         if (!urlList.contains(url)) urlList.add(url);
     }
