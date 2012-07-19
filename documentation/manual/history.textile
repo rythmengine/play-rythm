@@ -8,7 +8,7 @@ h2. <a name="v1.0.0-20120719b">v1.0.0-20120719b</a>
 
 * Enhancement
 ** "Executing macro like invoking a tag":user_guide#other-methods-execute-macro
-** "New loop variables (separator and utils) inside @for loop":reference:loop_variables
+** "New loop variables (separator and utils) inside @for loop":reference#loop_variables
 * Bug fix
 ** "Unclear error report when routes file configured bad static URL mapping":https://github.com/greenlaw110/play-rythm/issues/45
 ** "StringIndexOutOfBoundsException when calling Rythm.toString() in PlayRythm":https://github.com/greenlaw110/play-rythm/issues/46
