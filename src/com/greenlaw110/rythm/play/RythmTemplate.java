@@ -108,9 +108,10 @@ public class RythmTemplate extends Template {
             t.setRenderArgs(args);
             // allow invoke controller method without redirect
             ControllersEnhancer.ControllerInstrumentation.initActionCall();
-            if (!RythmPlugin.isActionCall()) {
-                TagContext.init();
-            }
+            // moved to RythmPlugin.beforeActionInvocation()
+//            if (!RythmPlugin.isActionCall()) {
+//                TagContext.init();
+//            }
             if (Logger.isTraceEnabled()) RythmPlugin.trace("about to execute template");
             String s = t.render();
             if (!RythmPlugin.engine.isProdMode()) {

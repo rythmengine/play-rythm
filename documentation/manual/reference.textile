@@ -426,6 +426,8 @@ bc. <ul>
 }
 </ul>
 
+<a name="loop_variables"></a>
+
 The tag defines implicit variables in it's body. The variable names are prefixed with loop variable name:
 
 * @name_index@, the item's index, start with 1
@@ -434,13 +436,27 @@ The tag defines implicit variables in it's body. The variable names are prefixed
 * @name_parity@, alternates between @odd@ and @even@
 * @name__isOdd@, true if the current element is odd in sequence
 * @name_size@, the size of the collection
+* <img src="http://www.naccas.org/_layouts/1033/images/new.gif" style="border: none !important"> @name_sep@, "," if the current loop is not at the last item
+* <img src="http://www.naccas.org/_layouts/1033/images/new.gif" style="border: none !important"> @name_utils@, the loop utils object
 
 bc. <ul>
 @for (Product product: products) {
     <li class="@product_parity">@product_index. @product</li>
-    @(product_isLast ? "" : "-")
+    @product_sep
 }
 </ul>
+
+h4. <a name="loop_utils">Loop Utils object</a>
+
+If you need a special item separator other than the default @xx_sep@, you can use @xx_utils@ object:
+
+bc. @for(String s: strList) {
+    @s_utils.sep(",")
+    @s_utils.preSep(",")
+    @s_utils.postSep(",")
+}
+
+in the above example, <code>@s_utils.sep(",")</code> is the same as <code>@s_sep</code> and <code>@s_utils.postSep(",")</code>, which output a comma if the current loop is *NOT* at the last item. <code>@s_utils.preSep(",")</code> output a comma if the current loop is not at the first item. This feature is very helpful when you want to print a list of items separated by a certain separator.
 
 p(note). If you refer to a local variable inside the loop, you need to make sure they are declared as @final@:
 
@@ -459,6 +475,8 @@ bc. @{
 bc. @for(int i = 0; i < 6; ++i) {
     <li>the current index is @i</li>
 }
+
+p(note). You don't have access to loop variables if you use the second <code>@for</code> loop form.
 
 h3. <a name="get">get</a>
 

@@ -1,4 +1,10 @@
 # History
+# 1.0.0-20120719b
+#        new loop variables: separator and utils
+#        Better way to invoke an macro
+#        Bug fixes
+#        - https://github.com/greenlaw110/play-rythm/issues/45
+#        - https://github.com/greenlaw110/play-rythm/issues/46
 # 1.0.0-20120718
 #        - https://github.com/greenlaw110/play-rythm/issues/44
 #        - https://github.com/greenlaw110/play-rythm/issues/43
@@ -134,7 +140,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-20120718
+self: play -> rythm 1.0.0-20120719b
 
 require:
     - play 1.2

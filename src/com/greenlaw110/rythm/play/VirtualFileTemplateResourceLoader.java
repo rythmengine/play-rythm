@@ -2,6 +2,7 @@ package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.RythmEngine;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
+import com.greenlaw110.rythm.internal.dialect.DialectManager;
 import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.resource.ITemplateResourceLoader;
 import com.greenlaw110.rythm.resource.TemplateResourceBase;
@@ -207,10 +208,12 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
         // call tag using relative path
         String currentPath = templateClass.getKey().toString();
         int pos = currentPath.lastIndexOf("/");
-        currentPath = currentPath.substring(0, pos);
-        if (currentPath.startsWith("/")) currentPath = currentPath.substring(1);
-        if (!currentPath.startsWith(RythmPlugin.templateRoot)) currentPath = RythmPlugin.templateRoot + "/" + currentPath;
-        roots.add(currentPath);
+        if (-1 != pos) {
+            currentPath = currentPath.substring(0, pos);
+            if (currentPath.startsWith("/")) currentPath = currentPath.substring(1);
+            if (!currentPath.startsWith(RythmPlugin.templateRoot)) currentPath = RythmPlugin.templateRoot + "/" + currentPath;
+            roots.add(currentPath);
+        }
 
         for (String root : roots) {
             tagName = root + "/" + tagName0;
