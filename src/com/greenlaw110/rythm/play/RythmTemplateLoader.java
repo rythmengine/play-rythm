@@ -68,7 +68,7 @@ public class RythmTemplateLoader {
         return null;
     }
 
-    private static void scanTagFolder(VirtualFile root) {
+    private static void scanRythmFolder(VirtualFile root) {
         class FileTraversal {
             public final void traverse( final VirtualFile f )  {
                 if (f.isDirectory()) {
@@ -101,7 +101,7 @@ public class RythmTemplateLoader {
                         throw new UnexpectedException("Don't know why I am here");
                     }
                 } catch (Exception e) {
-                    Logger.warn(e, "error loading tag: %s", f.relativePath());
+                    Logger.warn(e, "error pre-loading template: %s", f.relativePath());
                     // might be groovy template, let's ignore it
                 }
             }
@@ -109,17 +109,17 @@ public class RythmTemplateLoader {
         new FileTraversal().traverse(root);
     }
 
-    static void scanTagFolder() {
-//        RythmPlugin.trace("start to scan tags");
-//        long ts = System.currentTimeMillis();
-//        String s = RythmPlugin.tagRoot;
-//        for (VirtualFile root: Play.roots) {
-//            VirtualFile tagRoot = root.child(s);
-//            if (!tagRoot.isDirectory()) continue;
-//            scanTagFolder(tagRoot);
-//        }
-//        ts = System.currentTimeMillis() - ts;
-//        RythmPlugin.trace("%sms to scan tags", ts);
+    static void scanRythmFolder() {
+        RythmPlugin.trace("start to preload templates");
+        long ts = System.currentTimeMillis();
+        String s = RythmPlugin.templateRoot;
+        for (VirtualFile root: Play.roots) {
+            VirtualFile templateRoot = root.child(s);
+            if (!templateRoot.isDirectory()) continue;
+            scanRythmFolder(templateRoot);
+        }
+        ts = System.currentTimeMillis() - ts;
+        RythmPlugin.trace("%sms to preload templates", ts);
     }
 
     private static Object lock_ = new Object();

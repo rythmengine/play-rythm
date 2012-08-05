@@ -320,7 +320,7 @@ bc. <ul>
     <li>@error</li>
 }
 
-The tag defines implicit variables in its body.
+The <code>@error</code> tag defines implicit variables in its body.
 
 * @error@, the error
 * @error_index@, the error’s index, starting at 1
@@ -428,7 +428,7 @@ bc. <ul>
 
 <a name="loop_variables"></a>
 
-The tag defines implicit variables in it's body. The variable names are prefixed with loop variable name:
+The <code>@for</code> tag defines implicit variables in it's body. The variable names are prefixed with loop variable name:
 
 * @name_index@, the item's index, start with 1
 * @name_isFirst@, true for the first element

@@ -4,14 +4,16 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
 
-h2. <a name="v1.0.0-20120719b">v1.0.0-20120719b</a>
+h2. <a name="v1.0.0-head">v1.0.0-head</a>
 
 * Enhancement
+** Scan template root to preload template classes on start up if running in product mode
 ** "Executing macro like invoking a tag":user_guide#other-methods-execute-macro
 ** "New loop variables (separator and utils) inside @for loop":reference#loop_variables
 * Bug fix
 ** "Unclear error report when routes file configured bad static URL mapping":https://github.com/greenlaw110/play-rythm/issues/45
 ** "StringIndexOutOfBoundsException when calling Rythm.toString() in PlayRythm":https://github.com/greenlaw110/play-rythm/issues/46
+** Resolve NPE issue on TagContext.enter() call in some rare cases
 
 h2. <a name="v1.0.0-20120718">v1.0.0-20120718</a>
 

@@ -35,6 +35,7 @@ import play.mvc.results.NotFound;
 import play.mvc.results.Redirect;
 import play.mvc.results.RenderTemplate;
 import play.mvc.results.Result;
+import play.templates.RythmTagContext;
 import play.templates.TagContext;
 import play.templates.Template;
 import play.vfs.VirtualFile;
@@ -51,7 +52,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-20120719b";
+    public static final String VERSION = "1.0.0-head";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -405,11 +406,11 @@ public class RythmPlugin extends PlayPlugin {
             }).registerExpressionProcessor(new ActionInvokeProcessor()).registerTagInvoeListener(new ITagInvokeListener() {
                 @Override
                 public void onInvoke(ITag tag) {
-                    TagContext.enterTag(tag.getName());
+                    RythmTagContext.enterTag(tag.getName());
                 }
                 @Override
                 public void tagInvoked(ITag tag) {
-                    TagContext.exitTag();
+                    RythmTagContext.exitTag();
                 }
             });
             debug("Play specific parser registered");
@@ -460,10 +461,12 @@ public class RythmPlugin extends PlayPlugin {
 
     @Override
     public void onApplicationStart() {
-        long l = System.currentTimeMillis();
-        RythmTemplateLoader.scanTagFolder();
+        if (engine.mode.isDev()) {
+            warn("Rythm engine started in dev mode");
+        } else {
+            if (engine.classes.clsNameIdx.isEmpty()) RythmTemplateLoader.scanRythmFolder();
+        }
         engine.preCompiling = false;
-        debug("%sms to load Rythm tags", System.currentTimeMillis() - l);
     }
 
     private void registerJavaTags(RythmEngine engine) {
