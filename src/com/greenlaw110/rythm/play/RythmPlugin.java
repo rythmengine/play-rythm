@@ -52,7 +52,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-head";
+    public static final String VERSION = "1.0.0-20120806b";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -464,7 +464,11 @@ public class RythmPlugin extends PlayPlugin {
         if (engine.mode.isDev()) {
             warn("Rythm engine started in dev mode");
         } else {
-            if (engine.classes.clsNameIdx.isEmpty()) RythmTemplateLoader.scanRythmFolder();
+            info("Rythm engine started in prod mode");
+            // pre load template classes if they are not loaded yet
+            VirtualFile vf = Play.getVirtualFile("app/rythm/welcome.html");
+            String key = vf.relativePath().replaceFirst("\\{.*?\\}", "");
+            if (!engine.classes.tmplIdx.containsKey(key)) RythmTemplateLoader.scanRythmFolder();
         }
         engine.preCompiling = false;
     }

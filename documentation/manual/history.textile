@@ -4,10 +4,15 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
 
-h2. <a name="v1.0.0-head">v1.0.0-head</a>
+h2. <a name="v1.0.0-20120806b">v1.0.0-20120806b</a>
+
+Emergency fix to NPE on prod mode of v1.0.0-20120806
+* Bug fix:
+** "'@url' is separating the parameters using '&amp;' instead '&'":https://github.com/greenlaw110/play-rythm/issues/48
+h2. <a name="v1.0.0-20120806">v1.0.0-20120806</a>
 
 * Enhancement
-** Scan template root to preload template classes on start up if running in product mode
+** Scan template root to pre-load template classes on start up if running in product mode
 ** "Executing macro like invoking a tag":user_guide#other-methods-execute-macro
 ** "New loop variables (separator and utils) inside @for loop":reference#loop_variables
 * Bug fix

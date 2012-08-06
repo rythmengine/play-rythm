@@ -1,5 +1,9 @@
 # History
-# 1.0.0-head
+# 1.0.0-20120806b
+#        emergency fix to NPE on prod mode
+#        Bug fixes:
+#        - https://github.com/greenlaw110/play-rythm/issues/48
+# 1.0.0-20120806
 #        scan template root on start up if in prod mode
 #        new loop variables: separator and utils
 #        Better way to invoke an macro
@@ -141,7 +145,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-head
+self: play -> rythm 1.0.0-20120806b
 
 require:
     - play 1.2

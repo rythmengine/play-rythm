@@ -33,9 +33,14 @@ import java.util.Map;
 public class ActionBridge {
 
     boolean absolute = false;
+    boolean escapeXML = false;
 
     public ActionBridge(boolean absolute) {
         this.absolute = absolute;
+    }
+    public ActionBridge(boolean absolute, boolean escapeXML) {
+        this.absolute = absolute;
+        this.escapeXML = escapeXML;
     }
 
     public Object _abs() {
@@ -93,10 +98,9 @@ public class ActionBridge {
                 def.absolute();
             }
 
-            // if (template.template.name.endsWith(".html") ||
-            // template.template.name.endsWith(".xml")) {
-            def.url = def.url.replace("&", "&amp;");
-            // }
+            if (escapeXML) {
+                def.url = def.url.replace("&", "&amp;");
+            }
             return def;
         } catch (Exception e) {
             if (e instanceof PlayException) {
