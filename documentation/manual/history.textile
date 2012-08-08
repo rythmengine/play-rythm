@@ -4,11 +4,17 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
 
+h2. <a name="v1.0.0-20120806b">v1.0.0-20120808</a>
+
+* Enhancement:
+** "Support line breaks into tags":https://github.com/greenlaw110/Rythm/issues/73
+
 h2. <a name="v1.0.0-20120806b">v1.0.0-20120806b</a>
 
-Emergency fix to NPE on prod mode of v1.0.0-20120806
 * Bug fix:
+** An emergency fix to NPE on prod mode of v1.0.0-20120806
 ** "'@url' is separating the parameters using '&amp;' instead '&'":https://github.com/greenlaw110/play-rythm/issues/48
+
 h2. <a name="v1.0.0-20120806">v1.0.0-20120806</a>
 
 * Enhancement
