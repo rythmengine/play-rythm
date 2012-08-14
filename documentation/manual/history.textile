@@ -5,13 +5,17 @@ h2. <a name="roadmap">What's left for R1.0</a>
 * "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
 * "Support switch/case and while loop":https://github.com/greenlaw110/Rythm/issues/71
 
-h2. <a name="v1.0.0-20120814">v1.0.0-20120814</a>
+h2. <a name="v1.0.0-20120814a">v1.0.0-20120814a</a>
+
+p(note). Break change: any "\" in template will be automatically doubled in Java code to prevent "Invalid escape sequence" compilation error
 
 * Enhancement:
+** Add @String render()@ interface to @ITag.Body@, support fix of https://github.com/greenlaw110/greenscript/issues/58
 ** "Support line breaks into tags":https://github.com/greenlaw110/Rythm/issues/73
 * Buf fixes:
-** "Call @chain().raw().assign('foo'){...} not work as expected":https://github.com/greenlaw110/Rythm/issues/74
+** "'\/' in template cause 'Invalid escape sequence' compilation error":https://github.com/greenlaw110/Rythm/issues/77
 ** "Use @chain() in a `@include` template cause compilation exception":https://github.com/greenlaw110/Rythm/issues/76
+** "Call @chain().raw().assign('foo'){...} not work as expected":https://github.com/greenlaw110/Rythm/issues/74
 ** "Unexpected behaviour on error reporting":https://github.com/greenlaw110/play-rythm/issues/35
 
 h2. <a name="v1.0.0-20120806b">v1.0.0-20120806b</a>
