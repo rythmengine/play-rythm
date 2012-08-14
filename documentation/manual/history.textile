@@ -3,11 +3,15 @@ h1. PlayRythm version history
 h2. <a name="roadmap">What's left for R1.0</a>
 
 * "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
+* "Support switch/case and while loop":https://github.com/greenlaw110/Rythm/issues/71
 
-h2. <a name="v1.0.0-20120806b">v1.0.0-20120808</a>
+h2. <a name="v1.0.0-20120814">v1.0.0-20120814</a>
 
 * Enhancement:
 ** "Support line breaks into tags":https://github.com/greenlaw110/Rythm/issues/73
+* Buf fixes:
+** "Call @chain().raw().assign('foo'){...} not work as expected":https://github.com/greenlaw110/Rythm/issues/74
+** "Use @chain() in a `@include` template cause compilation exception":https://github.com/greenlaw110/Rythm/issues/76
 
 h2. <a name="v1.0.0-20120806b">v1.0.0-20120806b</a>
 

@@ -1,6 +1,8 @@
 # History
-# 1.0.0-20120808
+# 1.0.0-20120814
 #        Bug fixes:
+#        - https://github.com/greenlaw110/Rythm/issues/76
+#        - https://github.com/greenlaw110/Rythm/issues/74
 #        - https://github.com/greenlaw110/Rythm/issues/73
 # 1.0.0-20120806b
 #        emergency fix to NPE on prod mode
@@ -148,7 +150,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-20120808
+self: play -> rythm 1.0.0-20120814
 
 require:
     - play 1.2

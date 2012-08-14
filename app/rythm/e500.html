@@ -1,4 +1,4 @@
-@import play.templates.JavaExtensions, play.Play, play.utils.Utils, play.exceptions.SourceAttachment
+@import play.templates.JavaExtensions, play.Play, play.utils.Utils, play.exceptions.*
 @args play.exceptions.PlayException exception
 <style type="text/css">
     html, body, pre {
@@ -113,9 +113,10 @@
 @if (exception.isSourceAvailable() && (null != exception.getLineNumber()) && "DEV".equals(Play.mode.name())) {
     <h2>In @exception.getSourceFile() (around line @exception.getLineNumber())</h2>
     <div>
+    @// [workaround] https://play.lighthouseapp.com/projects/57987-play-framework/tickets/1580-playexceptionscacheexception-should-implement-sourceattachment
     @{
-        final List<String> source = ((SourceAttachment)exception).getSource();
-        int lineNumber = ((SourceAttachment)exception).getLineNumber();
+        final List<String> source = (exception instanceof CacheException) ? ((CacheException)exception).getSource() : ((SourceAttachment)exception).getSource();
+        int lineNumber = (exception instanceof CacheException) ? ((CacheException)exception).getLineNumber() : ((SourceAttachment)exception).getLineNumber();
         final int from = lineNumber - 5 >= 0 && lineNumber < source.size() ? lineNumber - 5 : 0;
         final int to = lineNumber + 5  < source.size() ? lineNumber + 5 : source.size()-1;
         final List<String> lines = new ArrayList();
