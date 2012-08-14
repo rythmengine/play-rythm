@@ -318,7 +318,7 @@ public class RythmPlugin extends PlayPlugin {
 //        if (Logger.isDebugEnabled()) debug("rythm tag root set to %s", p.get("rythm.tag.root"));
 
         // set tmp dir
-        boolean gae = Play.standalonePlayServer
+        boolean gae = !Play.standalonePlayServer
             || Boolean.valueOf(p.getProperty("rythm.gae", "false"))
             || Boolean.valueOf(p.getProperty("rythm.noFileWrite", "false"));
         if (!gae) {
@@ -343,7 +343,7 @@ public class RythmPlugin extends PlayPlugin {
             });
         }
 
-        p.put("rythm.mode", Play.mode.isDev() && !Play.standalonePlayServer ? Rythm.Mode.dev : Rythm.Mode.prod);
+        p.put("rythm.mode", Play.mode.isDev() && Play.standalonePlayServer ? Rythm.Mode.dev : Rythm.Mode.prod);
         p.put("rythm.playHost", true);
 
         if (null == engine) {
