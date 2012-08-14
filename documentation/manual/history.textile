@@ -12,6 +12,7 @@ h2. <a name="v1.0.0-20120814">v1.0.0-20120814</a>
 * Buf fixes:
 ** "Call @chain().raw().assign('foo'){...} not work as expected":https://github.com/greenlaw110/Rythm/issues/74
 ** "Use @chain() in a `@include` template cause compilation exception":https://github.com/greenlaw110/Rythm/issues/76
+** "Unexpected behaviour on error reporting":https://github.com/greenlaw110/play-rythm/issues/35
 
 h2. <a name="v1.0.0-20120806b">v1.0.0-20120806b</a>
 
