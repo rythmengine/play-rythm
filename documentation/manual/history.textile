@@ -3,7 +3,11 @@ h1. PlayRythm version history
 h2. <a name="roadmap">What's left for R1.0</a>
 
 * "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
-* "Support switch/case and while loop":https://github.com/greenlaw110/Rythm/issues/71
+
+h2. <a name="v1.0.0-20120815a">v1.0.0-20120815a</a>
+
+* Buf fixes:
+** "The render result of calling tag inside a body of another tag call is disordered":https://github.com/greenlaw110/Rythm/issues/78
 
 h2. <a name="v1.0.0-20120814a">v1.0.0-20120814a</a>
 

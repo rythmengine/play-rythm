@@ -1,4 +1,7 @@
 # History
+# 1.0.0-20120815a
+#        Bug fixes:
+#        - https://github.com/greenlaw110/Rythm/issues/78
 # 1.0.0-20120814a
 #        Add render() interface to ITag.Body -> fix https://github.com/greenlaw110/greenscript/issues/58
 #        Bug fixes:
@@ -152,7 +155,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-20120814a
+self: play -> rythm 1.0.0-20120815a
 
 require:
     - play 1.2
