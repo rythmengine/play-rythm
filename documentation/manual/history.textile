@@ -4,6 +4,11 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
 
+h2. <a name="v1.0.0-20120817">v1.0.0-20120817</a>
+
+* New feature
+** "https://github.com/greenlaw110/play-rythm/issues/50":https://github.com/greenlaw110/play-rythm/issues/50
+
 h2. <a name="v1.0.0-20120815a">v1.0.0-20120815a</a>
 
 * Buf fixes:

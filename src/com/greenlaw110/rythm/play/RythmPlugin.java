@@ -7,29 +7,21 @@ import com.greenlaw110.rythm.logger.ILoggerFactory;
 import com.greenlaw110.rythm.play.parsers.*;
 import com.greenlaw110.rythm.play.utils.ActionInvokeProcessor;
 import com.greenlaw110.rythm.play.utils.StaticRouteResolver;
-import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.runtime.ITag;
 import com.greenlaw110.rythm.spi.*;
 import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.template.TemplateBase;
-import com.greenlaw110.rythm.utils.IDurationParser;
-import com.greenlaw110.rythm.utils.IImplicitRenderArgProvider;
-import com.greenlaw110.rythm.utils.IRythmListener;
-import com.greenlaw110.rythm.utils.S;
+import com.greenlaw110.rythm.utils.*;
 import com.stevesoft.pat.Regex;
 import play.Logger;
 import play.Play;
 import play.PlayPlugin;
 import play.cache.Cache;
-import play.cache.CacheFor;
 import play.classloading.ApplicationClasses;
 import play.classloading.HotswapAgent;
 import play.classloading.enhancers.ControllersEnhancer;
-import play.exceptions.ConfigurationException;
 import play.exceptions.UnexpectedException;
-import play.libs.IO;
 import play.mvc.Http;
-import play.mvc.Router;
 import play.mvc.Scope;
 import play.mvc.results.NotFound;
 import play.mvc.results.Redirect;
@@ -52,7 +44,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-20120815a";
+    public static final String VERSION = "1.0.0-20120817";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -373,6 +365,20 @@ public class RythmPlugin extends PlayPlugin {
                     }
                     if (!f.delete()) f.deleteOnExit();
                     return applicationClass.enhancedByteCode;
+                }
+
+                @Override
+                public String sourceCode() {
+                    // add String _url(String) method to template class
+                    TextBuilder b = new TextBuilder();
+                    String s = "\n    protected String _url(String action, Object... params) {return _url(false, action, params);}" +
+                        "\n   protected String _url(boolean isAbsolute, String action, Object... params) {" +
+                        "\n       com.greenlaw110.rythm.internal.compiler.TemplateClass tc = getTemplateClass(true);" +
+                        "\n       boolean escapeXML = (!tc.isStringTemplate() && tc.templateResource.getKey().toString().endsWith(\".xml\"));" +
+                        "\n       return new com.greenlaw110.rythm.play.utils.ActionBridge(isAbsolute, escapeXML).invokeMethod(action, params).toString();" +
+                        "\n   }";
+
+                    return s;
                 }
             });
             debug("Template class enhancer registered");
