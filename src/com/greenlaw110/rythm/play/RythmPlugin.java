@@ -2,17 +2,20 @@ package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.*;
 import com.greenlaw110.rythm.cache.ICacheService;
+import com.greenlaw110.rythm.internal.compiler.ClassReloadException;
 import com.greenlaw110.rythm.logger.ILogger;
 import com.greenlaw110.rythm.logger.ILoggerFactory;
 import com.greenlaw110.rythm.play.parsers.*;
 import com.greenlaw110.rythm.play.utils.ActionInvokeProcessor;
 import com.greenlaw110.rythm.play.utils.StaticRouteResolver;
+import com.greenlaw110.rythm.play.utils.TemplateClassAppEnhancer;
 import com.greenlaw110.rythm.runtime.ITag;
 import com.greenlaw110.rythm.spi.*;
 import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.template.TemplateBase;
 import com.greenlaw110.rythm.utils.*;
 import com.stevesoft.pat.Regex;
+import org.apache.commons.io.FileUtils;
 import play.Logger;
 import play.Play;
 import play.PlayPlugin;
@@ -32,10 +35,7 @@ import play.templates.TagContext;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.UnmodifiableClassException;
 import java.lang.reflect.Constructor;
@@ -344,7 +344,7 @@ public class RythmPlugin extends PlayPlugin {
                 @Override
                 public void onRender(ITemplate template) {
                     Map<String, Object> m = new HashMap<String, Object>();
-                    for (ImplicitVariables.Var var: ImplicitVariables.vars) {
+                    for (ImplicitVariables.Var var : ImplicitVariables.vars) {
                         m.put(var.name(), var.evaluate());
                     }
                     template.setRenderArgs(m);
@@ -376,11 +376,12 @@ public class RythmPlugin extends PlayPlugin {
                         "\n       com.greenlaw110.rythm.internal.compiler.TemplateClass tc = getTemplateClass(true);" +
                         "\n       boolean escapeXML = (!tc.isStringTemplate() && tc.templateResource.getKey().toString().endsWith(\".xml\"));" +
                         "\n       return new com.greenlaw110.rythm.play.utils.ActionBridge(isAbsolute, escapeXML).invokeMethod(action, params).toString();" +
-                        "\n   }";
-
+                        "\n   }\n";
+                    s = s + TemplateClassAppEnhancer.sourceCode();
                     return s;
                 }
             });
+            TemplateClassAppEnhancer.clearCache();
             debug("Template class enhancer registered");
             //Rythm.engine.cacheService.shutdown();
             Rythm.engine = engine;
@@ -534,6 +535,18 @@ public class RythmPlugin extends PlayPlugin {
     @Override
     public void detectChange() {
         if (!refreshOnRender) engine.classLoader.detectChanges();
+        if (TemplateClassAppEnhancer.changed()) {
+            File f = new File(Play.tmpDir, "rythm");
+            if (f.exists() && f.isDirectory()) {
+                try {
+                    FileUtils.cleanDirectory(f);
+                } catch (IOException e) {
+                    // just ignore
+                }
+            }
+            engine.restart(new ClassReloadException(""));
+            TemplateClassAppEnhancer.sourceCode(); // reload the cache
+        }
     }
 
     @Override
