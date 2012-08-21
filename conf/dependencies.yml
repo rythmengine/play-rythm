@@ -1,6 +1,12 @@
 # History
-# 1.0.0-20120817
+# 1.0.0-20120821
+#        - Support add custom imports via app/rythm/__add_on.import file in both project and module folder
+#        - support add custom source code via app/rythm/__add_on.src file in both project and module folder
 #        - Add String _url([boolean,] String, Object...) method to generated template class
+#        - support add custom source code via app/rythm/__add_on.src file in project folder
+#        Bug fixes:
+#        - https://github.com/greenlaw110/play-rythm/issues/53
+#        - https://github.com/greenlaw110/Rythm/issues/80
 # 1.0.0-20120815a
 #        Bug fixes:
 #        - https://github.com/greenlaw110/Rythm/issues/78
@@ -157,7 +163,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-20120817
+self: play -> rythm 1.0.0-20120821
 
 require:
     - play 1.2

@@ -44,7 +44,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-20120817";
+    public static final String VERSION = "1.0.0-20120821";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -380,8 +380,23 @@ public class RythmPlugin extends PlayPlugin {
                     s = s + TemplateClassAppEnhancer.sourceCode();
                     return s;
                 }
+
+                @Override
+                public boolean equals(Object obj) {
+                    if (obj == this) return true;
+                    if (obj instanceof ITemplateClassEnhancer) {
+                        ITemplateClassEnhancer that = (ITemplateClassEnhancer)obj;
+
+                    }
+                    return false;
+                }
             });
-            TemplateClassAppEnhancer.clearCache();
+            engine.registerGlobalImportProvider(new IImportProvider() {
+                @Override
+                public List<String> imports() {
+                    return Arrays.asList(TemplateClassAppEnhancer.imports().split("[,\n]+"));
+                }
+            });
             debug("Template class enhancer registered");
             //Rythm.engine.cacheService.shutdown();
             Rythm.engine = engine;
@@ -470,10 +485,7 @@ public class RythmPlugin extends PlayPlugin {
 
     @Override
     public void onApplicationStart() {
-        if (engine.mode.isDev()) {
-            warn("Rythm engine started in dev mode");
-        } else {
-            info("Rythm engine started in prod mode");
+        if (engine.mode.isProd()) {
             // pre load template classes if they are not loaded yet
             VirtualFile vf = Play.getVirtualFile("app/rythm/welcome.html");
             String key = vf.relativePath().replaceFirst("\\{.*?\\}", "");
@@ -535,18 +547,25 @@ public class RythmPlugin extends PlayPlugin {
     @Override
     public void detectChange() {
         if (!refreshOnRender) engine.classLoader.detectChanges();
-        if (TemplateClassAppEnhancer.changed()) {
-            File f = new File(Play.tmpDir, "rythm");
-            if (f.exists() && f.isDirectory()) {
-                try {
-                    FileUtils.cleanDirectory(f);
-                } catch (IOException e) {
-                    // just ignore
-                }
-            }
-            engine.restart(new ClassReloadException(""));
-            TemplateClassAppEnhancer.sourceCode(); // reload the cache
-        }
+//        if (TemplateClassAppEnhancer.changed()) {
+//            File f = new File(Play.tmpDir, "rythm");
+//            if (f.exists() && f.isDirectory()) {
+//                try {
+//                    Iterator<File> itr = FileUtils.iterateFiles(f, new String[]{"rythm"}, true);
+//                    while (itr.hasNext()) {
+//                        File f0 = itr.next();
+//                        f0.delete();
+//                    }
+//                } catch (Exception e) {
+//                    error(e, "error clear rythm template class cache files");
+//                    // just ignore
+//                }
+//            }
+//            engine.restart(new ClassReloadException(""));
+//            engine = null;
+//            onConfigurationRead();
+//            //TemplateClassAppEnhancer.sourceCode(); // reload the cache
+//        }
     }
 
     @Override

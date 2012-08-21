@@ -4,10 +4,15 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
 
-h2. <a name="v1.0.0-20120817">v1.0.0-20120817</a>
+h2. <a name="v1.0.0-20120821">v1.0.0-20120821</a>
 
 * New feature
-** "https://github.com/greenlaw110/play-rythm/issues/50":https://github.com/greenlaw110/play-rythm/issues/50
+** "Support add user defined imports to generated template java source":https://github.com/greenlaw110/play-rythm/issues/52
+** "support add user defined methods to generated template class source code":https://github.com/greenlaw110/play-rythm/issues/51
+** "add method to template class to do reverse url lookup":https://github.com/greenlaw110/play-rythm/issues/50
+* Bug fix
+** "Field access in <code>@for</code> has not been enhanced":https://github.com/greenlaw110/play-rythm/issues/53
+** "Embedded class byte code not enhanced":https://github.com/greenlaw110/Rythm/issues/80
 
 h2. <a name="v1.0.0-20120815a">v1.0.0-20120815a</a>
 

@@ -35,6 +35,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
         private VirtualFile file;
 
         VirtualFileTemplateResource(VirtualFile file) {
+            if (null == file) throw new NullPointerException();
             this.file = file;
             this.tagName = getFullTagName(getKey());
 //            String tagRoot = RythmPlugin.tagRoot;
@@ -89,6 +90,24 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
             return tagName;
         }
 
+        public boolean exists() {
+            return null != file && file.exists();
+        }
+
+        @Override
+        public int hashCode() {
+            return file.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj instanceof VirtualFileTemplateResource) {
+                VirtualFileTemplateResource that = (VirtualFileTemplateResource)obj;
+                return (that.file == this.file) || that.file.equals(this.file);
+            }
+            return false;
+        }
     }
 
     public static boolean isValid(VirtualFile file) {
@@ -141,13 +160,13 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
         return load(vf, false);
     }
 
-    private ITemplateResource load(VirtualFile file, boolean checkBWList) {
+    private VirtualFileTemplateResourceLoader.VirtualFileTemplateResource load(VirtualFile file, boolean checkBWList) {
         String path = file.relativePath();
         if (path.contains(".svn")) return null; // definitely we don't want to load anything inside there
         return new VirtualFileTemplateResource(file);
     }
 
-    public ITemplateResource load(VirtualFile file) {
+    public VirtualFileTemplateResourceLoader.VirtualFileTemplateResource load(VirtualFile file) {
         return load(file, true);
     }
 
