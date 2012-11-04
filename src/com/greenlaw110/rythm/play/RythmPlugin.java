@@ -353,6 +353,7 @@ public class RythmPlugin extends PlayPlugin {
             engine.registerTemplateClassEnhancer(new ITemplateClassEnhancer() {
                 @Override
                 public byte[] enhance(String className, byte[] classBytes) throws  Exception {
+                    if (engine.noFileWrite) return classBytes;
                     ApplicationClasses.ApplicationClass applicationClass = new ApplicationClasses.ApplicationClass();
                     applicationClass.javaByteCode = classBytes;
                     applicationClass.enhancedByteCode = classBytes;
