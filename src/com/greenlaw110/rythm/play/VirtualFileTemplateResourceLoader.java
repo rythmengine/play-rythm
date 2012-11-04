@@ -2,7 +2,6 @@ package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.RythmEngine;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
-import com.greenlaw110.rythm.internal.dialect.DialectManager;
 import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.resource.ITemplateResourceLoader;
 import com.greenlaw110.rythm.resource.TemplateResourceBase;
@@ -251,7 +250,9 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
                     }
                     ITag tag = (ITag) tc.asTemplate();
                     if (null != tag) {
-                        engine.registerTag(origName, tag);
+                        String fullName = getFullTagName(tc);
+                        tc.setFullName(fullName);
+                        engine.registerTag(fullName, tag);
                         return tc;
                     }
                 }

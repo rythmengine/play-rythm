@@ -32,7 +32,7 @@ public class ActionTagBridge extends JavaTagBase {
 
     private ActionTagBridge(Class controller, Method action, boolean stripController) {
         name = controller.getName() + "." + action.getName();
-        if (stripController) name = name.replaceFirst("controller.", "");
+        if (stripController) name = name.replaceFirst("controllers\\.", "");
         paramNumber = action.getParameterTypes().length;
         method = action;
     }

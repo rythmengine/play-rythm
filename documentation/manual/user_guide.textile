@@ -545,12 +545,12 @@ h3. <img src="http://www.naccas.org/_layouts/1033/images/new.gif" style="border:
 
 Starting from v1.0.0-RC9 it can define return type of the inline tag:
 
-bc. @def boolean isMobile() {
-    @{
+<pre><code>@def boolean isMobile() {
+    <strike>@{</strike> [script block no longer needed for inline tag with return type other than *void*]
         UserAgent ua = getRenderArg("userAgent");
         return ua.isMobile();
-    }
-}
+    <strike>}</strike>
+}</code></pre>
 
 And later on it can be used as:
 
@@ -563,6 +563,19 @@ bc. @if (isMobile()) {
 So this actually the scope from defining an inline tag to defining a reusable method. This feature allows developer to actually extends a template class and greatly improve the reusability.
 
 The cool part of this feature is it allows developer to define inline tag in the parent (layout) template and used in the descendant templates. Furthermore, the inline tag method is also available to templates which "included":reference#include the template defined it.
+
+<a name="break-change-in-inline-tag-definition"></a>
+
+p(note). Start from version 1.0.0-20121103, if an inline tag has return type other than @void@, the code inside tag body shall NOT be enclosed with <code>@{"</code>, @}@ pair. And Rythm is now intelligent to determine whether an inline tag is defined with return type of not, and hence makes proper process to the handling code:
+
+bc. @def foo() {
+<p>Foo</p>
+}
+@def String bar() {
+return "bar"
+}
+@foo() @// output foo() in generated code
+@bar() @// output p(bar()) in generated code
 
 h2. <a name="java_tags">Custom Java tags</a>
 

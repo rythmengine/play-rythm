@@ -3,15 +3,21 @@ h1. PlayRythm version history
 h2. <a name="roadmap">What's left for R1.0</a>
 
 * "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
+* html helpers
+* While loop
+* Switch case
 
-h2. <a name="v1.0.0-20120821">v1.0.0-20120821</a>
+h2. <a name="v1.0.0-20120821">v1.0.0-20121103</a>
+
+p(note). There is a "break change":user_guide#break-change-in-inline-tag-definition in inline tag definition
 
 * New feature
-** "Support add user defined imports to generated template java source":https://github.com/greenlaw110/play-rythm/issues/52
-** "support add user defined methods to generated template class source code":https://github.com/greenlaw110/play-rythm/issues/51
-** "add method to template class to do reverse url lookup":https://github.com/greenlaw110/play-rythm/issues/50
+** "Support customize template class by adding imports and methods to all template classes in one place":integration#customize-template-class
+** "Common method in template class to do reverse url lookup":integration#_url
 * Bug fix
 ** "Field access in <code>@for</code> has not been enhanced":https://github.com/greenlaw110/play-rythm/issues/53
+** "Invoking Inline tag defined in base template cause error":https://github.com/greenlaw110/Rythm/issues/87
+** "relative path tag and extended template resolution doesn't work at some time":https://github.com/greenlaw110/Rythm/issues/86
 ** "Embedded class byte code not enhanced":https://github.com/greenlaw110/Rythm/issues/80
 
 h2. <a name="v1.0.0-20120815a">v1.0.0-20120815a</a>
