@@ -7,7 +7,7 @@ h2. <a name="roadmap">What's left for R1.0</a>
 * While loop
 * Switch case
 
-h2. <a name="v1.0.0-20120821">v1.0.0-20121103</a>
+h2. <a name="v1.0.0-20121106">v1.0.0-20121106</a>
 
 p(note). There is a "break change":user_guide#break-change-in-inline-tag-definition in inline tag definition
 
@@ -15,7 +15,7 @@ p(note). There is a "break change":user_guide#break-change-in-inline-tag-definit
 ** "Support customize template class by adding imports and methods to all template classes in one place":integration#customize-template-class
 ** "Common method in template class to do reverse url lookup":integration#_url
 * Bug fix
-** "Field access in <code>@for</code> has not been enhanced":https://github.com/greenlaw110/play-rythm/issues/53
+** "the render result of calling inline tag inside the body of another tag call is disordered":https://github.com/greenlaw110/Rythm/issues/89
 ** "Invoking Inline tag defined in base template cause error":https://github.com/greenlaw110/Rythm/issues/87
 ** "relative path tag and extended template resolution doesn't work at some time":https://github.com/greenlaw110/Rythm/issues/86
 ** "Embedded class byte code not enhanced":https://github.com/greenlaw110/Rythm/issues/80
