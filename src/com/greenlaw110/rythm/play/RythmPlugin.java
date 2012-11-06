@@ -44,7 +44,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-20121106";
+    public static final String VERSION = "1.0.0-20121106a";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -372,14 +372,15 @@ public class RythmPlugin extends PlayPlugin {
                 public String sourceCode() {
                     // add String _url(String) method to template class
                     TextBuilder b = new TextBuilder();
-                    String s = "\n    protected String _url(String action, Object... params) {return _url(false, action, params);}" +
+                    String url = "\n    protected String _url(String action, Object... params) {return _url(false, action, params);}" +
                         "\n   protected String _url(boolean isAbsolute, String action, Object... params) {" +
                         "\n       com.greenlaw110.rythm.internal.compiler.TemplateClass tc = getTemplateClass(true);" +
                         "\n       boolean escapeXML = (!tc.isStringTemplate() && tc.templateResource.getKey().toString().endsWith(\".xml\"));" +
                         "\n       return new com.greenlaw110.rythm.play.utils.ActionBridge(isAbsolute, escapeXML).invokeMethod(action, params).toString();" +
                         "\n   }\n";
-                    s = s + TemplateClassAppEnhancer.sourceCode();
-                    return s;
+
+                    String msg = "\n    protected String _msg(String key, Object ... params) {return play.i18n.Messages.get(key, params);}";
+                    return msg + url + TemplateClassAppEnhancer.sourceCode();
                 }
 
                 @Override

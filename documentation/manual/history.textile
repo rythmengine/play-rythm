@@ -7,6 +7,10 @@ h2. <a name="roadmap">What's left for R1.0</a>
 * While loop
 * Switch case
 
+h2. <a name="v1.0.0-20121106a">v1.0.0-20121106a</a>
+
+* Emergency bug fix to inline tag in include file cause compilation error
+
 h2. <a name="v1.0.0-20121106">v1.0.0-20121106</a>
 
 p(note). There is a "break change":user_guide#break-change-in-inline-tag-definition in inline tag definition
