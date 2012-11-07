@@ -7,6 +7,13 @@ h2. <a name="roadmap">What's left for R1.0</a>
 * While loop
 * Switch case
 
+h2. <a name="v1.0.0-201211xx">v1.0.0-201211xx</a>
+
+* New Feature
+** <a href="">Add @_renderArgs@ implicit template variable</a>
+
+* Emergency bug fix to inline tag in include file cause compilation error
+
 h2. <a name="v1.0.0-20121106a">v1.0.0-20121106a</a>
 
 * Emergency bug fix to inline tag in include file cause compilation error

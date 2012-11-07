@@ -310,6 +310,7 @@ public class RythmPlugin extends PlayPlugin {
 //        if (Logger.isDebugEnabled()) debug("rythm tag root set to %s", p.get("rythm.tag.root"));
 
         // set tmp dir
+        debug("Play standalone play server? %s", Play.standalonePlayServer);
         boolean gae = !Play.standalonePlayServer
             || Boolean.valueOf(p.getProperty("rythm.gae", "false"))
             || Boolean.valueOf(p.getProperty("rythm.noFileWrite", "false"));

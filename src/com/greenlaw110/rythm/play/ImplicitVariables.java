@@ -81,6 +81,12 @@ class ImplicitVariables {
                 protected Object evaluate() {
                     return RythmPlugin.engine;
                 }
+            },
+            new Var("_renderArgs", Scope.RenderArgs.class.getName()) {
+                @Override
+                protected Object evaluate() {
+                    return Scope.RenderArgs.current();
+                }
             }
     };
 
