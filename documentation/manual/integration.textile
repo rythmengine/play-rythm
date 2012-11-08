@@ -122,6 +122,30 @@ Passing parameter to @_url() method call:
 
 bc. @{String link = _url("Application.myProfile", user.getId())}
 
+h3. <a name="_msg">_msg methods in template class</a>
+
+Specifically, PlayRythm (start from v1.0.0-20121106) add an new method named @_msg()@ to all template class so that you can lookup message files easily in function call:
+
+Example 1: use <code>@msg()</code> tag:
+
+bc. <h1>@msg("application.title")</h1>
+
+Example 2:  use @_msg()@ method in script block:
+
+bc. @{String title = _msg("application.title");}
+
+Example 3: use @_msg()@ method in tag call:
+
+bc. @def link(String label, String link, boolean showLink) {
+    @if(showLink) {<a href="@link">@label</a>}
+    else {<span>@label</span>}
+}
+@section("topactions") {
+    @link(_msg("client.profile"), _url("client", client.getId()), !_profile)
+    @link(_msg("client.user"), _url("clientUser", client.getId()), !_user)
+    @link(_msg("client.subscription"), _url("clientSubscription", client.getId()), !_sub)
+}
+
 h2. <a name="tag">More about tags</a>
 
 -So far you can keep rythm tags file under @app/views/tags/rythm@ folder. However it is recommened not to use tags folder at all since every rythm template is a tag and can be called from any other rythm templates.-
