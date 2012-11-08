@@ -7,10 +7,15 @@ h2. <a name="roadmap">What's left for R1.0</a>
 * While loop
 * Switch case
 
-h2. <a name="v1.0.0-201211xx">v1.0.0-201211xx</a>
+h2. <a name="v1.0.0-20121109">v1.0.0-20121109</a>
 
 * New Feature
 ** <a href="">Add @_renderArgs@ implicit template variable</a>
+** <a href="">Add @_render(String, Object...)@ interface to @TemplateBase@ to allow recursive render template
+** "Do not detect template changes when "rythm.loadPreCompiled" is true":https://github.com/greenlaw110/Rythm/pull/90
+*** Thanks "Jérôme BENOIS":https://github.com/jeromebenois for his "contribution":https://github.com/greenlaw110/Rythm/pull/90
+* Improvement
+** Improve reverse URL lookup performance
 
 * Emergency bug fix to inline tag in include file cause compilation error
 

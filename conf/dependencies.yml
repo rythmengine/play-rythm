@@ -1,4 +1,10 @@
 # History
+# 1.0.0-20121109
+#        - Improve reverse url lookup performance
+#        - Add @_renderArgs@ implicit template variable
+#        - Add @_render(String, Object...)@ interface to @TemplateBase@ to allow recursive render template
+#        Bug fixes:
+#        - https://github.com/greenlaw110/Rythm/pull/90
 # 1.0.0-20121106a
 #        - Add _getSection() interface to TemplateBase
 #        - Support add custom imports via app/rythm/__add_on.import file in both project and module folder
@@ -165,7 +171,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-20121106a
+self: play -> rythm 1.0.0-20121109
 
 require:
     - play 1.2

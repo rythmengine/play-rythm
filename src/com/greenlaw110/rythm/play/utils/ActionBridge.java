@@ -8,10 +8,12 @@ package com.greenlaw110.rythm.play.utils;
  * To change this template use File | Settings | File Templates.
  */
 
+import play.Play;
 import play.data.binding.Unbinder;
 import play.exceptions.NoRouteFoundException;
 import play.exceptions.PlayException;
 import play.exceptions.UnexpectedException;
+import play.libs.F;
 import play.mvc.ActionInvoker;
 import play.mvc.Http;
 import play.mvc.Router;
@@ -48,6 +50,8 @@ public class ActionBridge {
         return this;
     }
 
+    // cache the action method lookup result
+    private static Map<String, F.Tuple<Method, String[]>> _m = new HashMap<String, F.Tuple<Method, String[]>>();
     /**
      * this is really to do the reverse url lookup
      *
@@ -70,28 +74,41 @@ public class ActionBridge {
             }
 
             Map<String, Object> r = new HashMap<String, Object>();
-            Method actionMethod = (Method) ActionInvoker.getActionMethod(action)[1];
-            String[] names = (String[]) actionMethod
-                    .getDeclaringClass()
-                    .getDeclaredField("$" + actionMethod.getName() + computeMethodHash(actionMethod.getParameterTypes())).get(null);
-            if (param instanceof Object[]) {
+            Method actionMethod = null;
+            String[] names = null;
+            F.Tuple<Method, String[]> v = null;
+            if (Play.mode.isProd()) v = _m.get(action);
+            if (null == v) {
+                actionMethod = (Method) ActionInvoker.getActionMethod(action)[1];
+                names = (String[]) actionMethod
+                        .getDeclaringClass()
+                        .getDeclaredField("$" + actionMethod.getName() + computeMethodHash(actionMethod.getParameterTypes())).get(null);
+                if (Play.mode.isProd()) _m.put(action, new F.Tuple(actionMethod, names));
+            } else {
+                actionMethod = v._1;
+                names = v._2;
+            }
+            while (param instanceof Object[]) {
                 // too many parameters versus action, possibly a developer
                 // error. we must warn him.
-                if (names.length < ((Object[]) param).length) {
+                Object[] oa = (Object[])param;
+                if (names.length < oa.length) {
                     throw new NoRouteFoundException(action, null);
                 }
+                if (oa.length == 0) break;
                 Annotation[] annos = actionMethod.getAnnotations();
-                for (int i = 0; i < ((Object[]) param).length; i++) {
-                    if (((Object[]) param)[i] instanceof Router.ActionDefinition && ((Object[]) param)[i] != null) {
-                        Unbinder.unBind(r, ((Object[]) param)[i].toString(), i < names.length ? names[i] : "", annos);
+                for (int i = 0; i < oa.length; i++) {
+                    if (oa[i] instanceof Router.ActionDefinition && oa[i] != null) {
+                        Unbinder.unBind(r, oa[i].toString(), i < names.length ? names[i] : "", annos);
                     } else if (isSimpleParam(actionMethod.getParameterTypes()[i])) {
-                        if (((Object[]) param)[i] != null) {
-                            Unbinder.unBind(r, ((Object[]) param)[i].toString(), i < names.length ? names[i] : "", annos);
+                        if (oa[i] != null) {
+                            Unbinder.unBind(r, oa[i].toString(), i < names.length ? names[i] : "", annos);
                         }
                     } else {
-                        Unbinder.unBind(r, ((Object[]) param)[i], i < names.length ? names[i] : "", annos);
+                        Unbinder.unBind(r, oa[i], i < names.length ? names[i] : "", annos);
                     }
                 }
+                break;
             }
             Router.ActionDefinition def = Router.reverse(action, r);
             if (absolute) {

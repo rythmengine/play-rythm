@@ -82,7 +82,7 @@ class ImplicitVariables {
                     return RythmPlugin.engine;
                 }
             },
-            new Var("_renderArgs", Scope.RenderArgs.class.getName()) {
+            new Var("_renderArgs", "play.mvc.Scope.RenderArgs") {
                 @Override
                 protected Object evaluate() {
                     return Scope.RenderArgs.current();
