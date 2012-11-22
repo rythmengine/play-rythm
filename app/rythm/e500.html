@@ -133,7 +133,7 @@
 	@{ String moreHtml = exception.getMoreHTML() }@
 	@if (null != moreHtml) {
 		<div id="specific" class="block">
-			@moreHtml
+                        @moreHtml.raw()
 		</div>
 	}
     <div id="more" class="block">
