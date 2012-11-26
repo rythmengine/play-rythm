@@ -182,6 +182,7 @@ Though not so relevant to a template engine, Rythm still provides an new annotat
 * An additional @useSessionData@ attribute allow cache key generation to check the session data, which create a per-user-cache mechanism. This adds an new granularity to the cache system
 * It does not cache a @Redirect@ that is not permanent, which enable some modules like *secure* that might trigger a temporary redirect to pass through cache mechanism
 * It does not cache @Error@ and @NotFound@ which enable the system to recover from external problems like database error or a network fault.
+* Enable cache POST requests when @cachePost@ is set to true. Very useful to deal with certain context like Facebook IFrame tab page
 
 Sample:
 
@@ -198,6 +199,31 @@ bc. cron.top10.cache=5mn
 
 bc. @Cache4(useSessionData = true, value="1h")
 public static void showMyInterests() {
+...
+}
+
+<a name="custom_key_provider"></a>Use @key@ parameter if you want to define a customized key provider class:
+
+bc. @Cache4(key = MyCacheKeyProvider.class)
+public static void load(String pageId) {
+...
+}
+
+Where @MyCacheKeyProvider@ could be:
+
+bc. public class MyCacheKeyProvider extends extends ICacheKeyProvider.Default {
+    @Override
+    public String getKey() {
+        return params().get("pageId");
+    }
+}
+
+p(note). The default key provider returns @"rythm-urlcache:" + request.url + request.querystring@ as the cache key.
+
+<a name="cache_post_request"></a>In certain cases you probably want to cache post requests. For example, facebook always use POST requests when needs to load the tab page inside it's iframe. In this case you can set @cachePost@ to true:
+
+bc. @Cache4(cachePost = true)
+public static void loadLandingPage() {
 ...
 }
 

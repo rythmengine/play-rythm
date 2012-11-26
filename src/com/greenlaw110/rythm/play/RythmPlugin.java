@@ -44,7 +44,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-20121109";
+    public static final String VERSION = "1.0.0-20121126";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -150,11 +150,16 @@ public class RythmPlugin extends PlayPlugin {
 //        }
     }
 
+    private boolean logActionInvocationTime;
     @Override
     public void onConfigurationRead() {
         if (null != engine && Play.mode.isProd()) return; // already configured
 
         Properties playConf = Play.configuration;
+
+        // workaround for https://play.lighthouseapp.com/projects/57987-play-framework/tickets/1614-calling-to-plugins-beforeactioninvocation-and-afteractioninvocation-should-be-symmetric
+        logActionInvocationTime = Boolean.parseBoolean(Play.configuration.getProperty("betterlogs.trace.actionInvocation.time", Play.mode.isDev() ? "true":"false"));
+        // eof workaround for https://play.lighthouseapp.com/projects/57987-play-framework/tickets/1614-calling-to-plugins-beforeactioninvocation-and-afteractioninvocation-should-be-symmetric
 
         // special configurations
         underscoreImplicitVariableName = Boolean.parseBoolean(playConf.getProperty("rythm.implicitVariable.underscore", "false"));
@@ -170,6 +175,12 @@ public class RythmPlugin extends PlayPlugin {
         p.put("rythm.classLoader.parent", Play.classloader);
         p.put("rythm.resource.refreshOnRender", "true");
         p.put("rythm.loadPreCompiled", Play.usePrecompiled);
+        boolean isProd = Play.mode.isProd();
+        p.put("rythm.recordTemplateSourceOnRuntimeError", isProd);
+        p.put("rythm.recordJavaSourceOnRuntimeError", isProd);
+        p.put("rythm.recordTemplateSourceOnError", isProd);
+        p.put("rythm.recordTemplateSourceOnError", isProd);
+        p.put("rythm.logSourceInfoOnRuntimeError", true);
         if (Play.usePrecompiled || Play.getFile("precompiled").exists()) {
             File preCompiledRoot = new File(Play.getFile("precompiled"), "rythm");
             if (!preCompiledRoot.exists()) preCompiledRoot.mkdirs();
@@ -572,6 +583,8 @@ public class RythmPlugin extends PlayPlugin {
 //        }
     }
 
+    private Map<Class<? extends ICacheKeyProvider>, ICacheKeyProvider> keyProviders = new HashMap<Class<? extends ICacheKeyProvider>, ICacheKeyProvider>();
+
     @Override
     public void beforeActionInvocation(Method actionMethod) {
         TagContext.init();
@@ -579,11 +592,35 @@ public class RythmPlugin extends PlayPlugin {
             return;
         }
         Http.Request request = Http.Request.current();
-        if ((request.method.equals("GET") || request.method.equals("HEAD")) && actionMethod.isAnnotationPresent(Cache4.class)) {
-            Cache4 cache4 = actionMethod.getAnnotation(Cache4.class);
+        Cache4 cache4 = actionMethod.getAnnotation(Cache4.class);
+        if (null == cache4) {
+            return;
+        }
+        if (logActionInvocationTime) {
+            Logger.info("");
+            Logger.info("[BL]>>>>>>> [%s]", Http.Request.current().action);
+            Http.Request.current().args.put("__BL_COUNTER__", System.currentTimeMillis());
+        }
+        String m = request.method;
+        if ("GET".equals(m) || "HEAD".equals(m) || (cache4.cachePost() && "POST".equals(m))) {
             String cacheKey = cache4.id();
             if (S.isEmpty(cacheKey)) {
-                cacheKey = "rythm-urlcache:" + request.url + request.querystring;
+                Class<? extends ICacheKeyProvider> kpFact = cache4.key();
+                try {
+                    ICacheKeyProvider keyProvider = keyProviders.get(kpFact);
+                    if (null == keyProvider) {
+                        keyProvider = kpFact.newInstance();
+                        keyProviders.put(kpFact, keyProvider);
+                    }
+                    cacheKey = keyProvider.getKey();
+                    if (S.isEmpty(cacheKey)) {
+                        warn("empty cache key found");
+                        return;
+                    }
+                } catch (Exception e) {
+                    error(e, "error get key from key provider");
+                    return;
+                }
                 if (cache4.useSessionData()) {
                     cacheKey = cacheKey + Scope.Session.current().toString();
                 }

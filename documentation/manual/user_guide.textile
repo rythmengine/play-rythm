@@ -260,13 +260,13 @@ or this is also good:
 
 bc. @hello(title: "Mr.", who: "Green")
 
-<img src="http://www.naccas.org/_layouts/1033/images/new.gif" style="border: none !important">Start from v1.0.0-20120808 you can have line breaks inside parameters:
+<img src="http://www.epa.gov/watersense/images/new-en.gif" style="border: none !important">Start from v1.0.0-20120808 you can have line breaks inside parameters:
 
 bc. @hello(
     title: "Mr",
     who: "Green")
 
-<img src="http://www.naccas.org/_layouts/1033/images/new.gif" style="border: none !important">Or using JavaScript style:
+<img src="http://www.epa.gov/watersense/images/new-en.gif" style="border: none !important">Or using JavaScript style:
 
 bc. @hello({
     title: "Mr",
@@ -541,7 +541,7 @@ p(note). You cannot pass argument by name when invoking inline tag. *ALWAYS pass
 bc. @myInlineTag(varName: "value") @// this will cause compilation error
 @myInlineTag("value") @// this is okay
 
-h3. <img src="http://www.naccas.org/_layouts/1033/images/new.gif" style="border: none !important"><a name="inline_tag_return_type">Define return type of inline tag</a>
+h3. <img src="http://www.epa.gov/watersense/images/new-en.gif" style="border: none !important"><a name="inline_tag_return_type">Define return type of inline tag</a>
 
 Starting from v1.0.0-RC9 it can define return type of the inline tag:
 
@@ -763,7 +763,7 @@ You can also use <a href="reference#expand"><code>@expand</code></a> to execute 
 
 bc. @expand(myMacro)
 
-<img src="http://www.naccas.org/_layouts/1033/images/new.gif" style="border: none !important"> Start from v1.0.0-20120719 you can invoke macro like invoke a tag:
+<img src="http://www.epa.gov/watersense/images/new-en.gif" style="border: none !important"> Start from v1.0.0-20120719 you can invoke macro like invoke a tag:
 
 bc. @myMacro()
 

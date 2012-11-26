@@ -113,7 +113,8 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
                     s = new TextBuilder().p("p(s().raw(new com.greenlaw110.rythm.play.utils.ActionBridge(").p(isAbsolute).p(",").p(escapeXML).p(").invokeMethod(\"").p(action).p("\", new Object[] {").p(s).p("})));").toString();
                     return new CodeToken(s, ctx());
                 } else {
-                    throw new ParseException(ctx().getTemplateClass(), ctx().currentLine(), "Error parsing url reverse lookup");
+                    raiseParseException("Error parsing url reverse lookup");
+                    return null;
                 }
             }
         };

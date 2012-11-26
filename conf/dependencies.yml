@@ -1,15 +1,27 @@
 # History
-# 1.0.0-20121109
+# 1.0.0-20121126
+#        - Cache4 annotation new parameters: ICacheKeyProvider key(), boolean cachePost()
+#        - Add escapeJson to Java extension
+#        - "else" branch for "for" loop for empty looper case
+#        Buf fixes:
+#        - https://github.com/greenlaw110/Rythm/issues/94
+# 1.0.0-20121110a
+#        - Fix incorrect line number of compilation exception when source code using \r in line break
+# 1.0.0-20121110
 #        - Improve reverse url lookup performance
 #        - Add @_renderArgs@ implicit template variable
 #        - Add @_render(String, Object...)@ interface to @TemplateBase@ to allow recursive render template
 #        Bug fixes:
+#        - https://github.com/greenlaw110/Rythm/issues/92
+#        - https://github.com/greenlaw110/Rythm/pull/91
 #        - https://github.com/greenlaw110/Rythm/pull/90
+#        - https://github.com/greenlaw110/play-rythm/issues/55
 # 1.0.0-20121106a
 #        - Add _getSection() interface to TemplateBase
 #        - Support add custom imports via app/rythm/__add_on.import file in both project and module folder
 #        - support add custom source code via app/rythm/__add_on.src file in both project and module folder
-#        - Add String _url([boolean,] String, Object...) method to generated template class
+#        - Add String _url([boolean,] String, Object...) template method to do reverse url lookup
+#        - Add String _msg(String, Object...) template method to do message lookup in template
 #        Bug fixes:
 #        - https://github.com/greenlaw110/Rythm/issues/89
 #        - https://github.com/greenlaw110/Rythm/issues/87
@@ -171,7 +183,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-20121109
+self: play -> rythm 1.0.0-20121126
 
 require:
     - play 1.2

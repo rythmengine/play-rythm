@@ -423,8 +423,12 @@ Use @for@ to iterate a collection of objects. The syntax is the same as for loop
 bc. <ul>
 @for (Product product: products) {
     <li>@product</li>
+} else {
+    <div class="alert">No product found</div>
 }
 </ul>
+
+p(note). The @else@ branch syntax is an new feature starting from v1.0.0-20121126 version.
 
 <a name="loop_variables"></a>
 
@@ -436,8 +440,8 @@ The <code>@for</code> tag defines implicit variables in it's body. The variable 
 * @name_parity@, alternates between @odd@ and @even@
 * @name__isOdd@, true if the current element is odd in sequence
 * @name_size@, the size of the collection
-* <img src="http://www.naccas.org/_layouts/1033/images/new.gif" style="border: none !important"> @name_sep@, "," if the current loop is not at the last item
-* <img src="http://www.naccas.org/_layouts/1033/images/new.gif" style="border: none !important"> @name_utils@, the loop utils object
+* <img src="http://www.epa.gov/watersense/images/new-en.gif" style="border: none !important"> @name_sep@, "," if the current loop is not at the last item
+* <img src="http://www.epa.gov/watersense/images/new-en.gif" style="border: none !important"> @name_utils@, the loop utils object
 
 bc. <ul>
 @for (Product product: products) {
@@ -476,7 +480,7 @@ bc. @for(int i = 0; i < 6; ++i) {
     <li>the current index is @i</li>
 }
 
-p(note). You don't have access to loop variables if you use the second <code>@for</code> loop form.
+p(note). You don't have access to loop variables if you use the second <code>@for</code> loop form. Neither can you use @else@ branch along with this second for loop style
 
 h3. <a name="get">get</a>
 

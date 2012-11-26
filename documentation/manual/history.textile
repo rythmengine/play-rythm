@@ -7,17 +7,33 @@ h2. <a name="roadmap">What's left for R1.0</a>
 * While loop
 * Switch case
 
-h2. <a name="v1.0.0-20121109">v1.0.0-20121109</a>
+h2. <a name="v1.0.0-20121126">v1.0.0-20121126</a>
 
-* New Feature
-** <a href="">Add @_renderArgs@ implicit template variable</a>
-** <a href="">Add @_render(String, Object...)@ interface to @TemplateBase@ to allow recursive render template
-** "Do not detect template changes when "rythm.loadPreCompiled" is true":https://github.com/greenlaw110/Rythm/pull/90
+* New Features
+** Add @escapeJson@ java extension
+** Cache4 annotation new parameters: <a href="integration#custom_key_provider"><code>ICacheKeyProvider key()</code></a>, <a href="integration#cache_post_request"><code>boolean cachePost()</code></a>.
+** "Support @else@ statement for @for@ loop":reference#for
+** Improved error message handling
+* Buf fixes
+** "int argument with default value bug":https://github.com/greenlaw110/Rythm/issues/94
+
+h2. <a name="v1.0.0-20121110a">v1.0.0-20121110a</a>
+
+* Fix incorrect line number of compilation exception when source code using \r in line break
+
+h2. <a name="v1.0.0-20121110">v1.0.0-20121110</a>
+
+* New Features
+** <a href="user_guide#implicit_object">Add @_renderArgs@ implicit template variable</a>
+** Add @_render(String, Object...)@ interface to @TemplateBase@ to allow recursive render template
+** <a href="https://github.com/greenlaw110/Rythm/pull/90">Do not detect template changes when <code>rythm.loadPreCompiled</code> is true</a>
 *** Thanks "Jérôme BENOIS":https://github.com/jeromebenois for his "contribution":https://github.com/greenlaw110/Rythm/pull/90
 * Improvement
 ** Improve reverse URL lookup performance
-
-* Emergency bug fix to inline tag in include file cause compilation error
+* Bug fixes:
+** "NPE loading non-exists tag":https://github.com/greenlaw110/Rythm/issues/92
+** "Logic error in TemplateBase.clone":https://github.com/greenlaw110/Rythm/issues/91
+** "Concurrency problem in TemplateBase class":https://github.com/greenlaw110/play-rythm/issues/55
 
 h2. <a name="v1.0.0-20121106a">v1.0.0-20121106a</a>
 

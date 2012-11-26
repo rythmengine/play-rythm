@@ -36,11 +36,16 @@ public @interface Cache4 {
     String value() default "1h";
 
     /**
+     * @deprecated
+     */
+    String id() default "";
+
+    /**
      * Define the cache key. Leave it empty if you want system to generate key from request automatically
      *
      * @return
      */
-    String id() default "";
+    Class<? extends ICacheKeyProvider> key() default ICacheKeyProvider.Default.class;
 
     /**
      * Whether use session data to generate key
@@ -48,6 +53,12 @@ public @interface Cache4 {
      * @return
      */
     boolean useSessionData() default false;
+
+    /**
+     * Indicate whether cache post request. Useful for certain case, e.g. facebook always post to tab page in iframe
+     * @return
+     */
+    boolean cachePost() default false;
 
     /**
      * Wrap action result so that system know whether it comes out from cache or a real execution result

@@ -70,13 +70,15 @@ public class MessageLookupParser extends KeywordParserFactory {
                         }
                     };
                 } else {
-                    throw new ParseException(ctx().getTemplateClass(), ctx().currentLine(), "Error parsing message lookup");
+                    raiseParseException("Error parsing message lookup");
+                    return null;
                 }
             }
         };
     }
 
     public static void main(String[] args) {
+
         MessageLookupParser p = new MessageLookupParser();
         Regex r = p.reg(new Rythm());
         String s = "@msg(x, \"rythm\")";
