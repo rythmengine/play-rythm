@@ -8,6 +8,7 @@ import com.greenlaw110.rythm.internal.compiler.ClassReloadException;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.template.ITemplate;
+import com.greenlaw110.rythm.utils.TextBuilder;
 import play.Logger;
 import play.Play;
 import play.classloading.enhancers.ControllersEnhancer;
@@ -152,6 +153,11 @@ public class RythmTemplate extends Template {
     }
 
     static TemplateInfo handleRythmException(RythmException e) {
+        TextBuilder tb = new TextBuilder();
+        tb.p("rythm exception captured on [").p(e.getTemplateName()).p("]: ").pn(e.originalMessage);
+        tb.pn(e.javaSourceInfo());
+        tb.pn(e.templateSourceInfo());
+        Logger.error(tb.toString());
         int line = e.templateLineNumber;
         TemplateInfo t;
         if (-1 == line) {
