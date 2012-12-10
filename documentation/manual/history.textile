@@ -7,12 +7,17 @@ h2. <a name="roadmap">What's left for R1.0</a>
 * While loop
 * Switch case
 
-h2. <a name="v1.0.0-20121126">v1.0.0-20121126</a>
+h2. <a name="v1.0.0-20121210">v1.0.0-20121210</a>
+
+* Buf fixes
+** <a href="https://github.com/greenlaw110/Rythm/issues/96"><code>@if{} else {}</code> parsing error in Simple Mode</a>
+
+h2. <a name="v1.0.0-20121128">v1.0.0-20121128</a>
 
 * New Features
 ** Add @escapeJson@ java extension
 ** Cache4 annotation new parameters: <a href="integration#custom_key_provider"><code>ICacheKeyProvider key()</code></a>, <a href="integration#cache_post_request"><code>boolean cachePost()</code></a>.
-** "Support @else@ statement for @for@ loop":reference#for
+** <a href="reference#for">Support <code>else</code> statement for <code>for</code> loop</a>
 ** Improved error message handling
 * Buf fixes
 ** "int argument with default value bug":https://github.com/greenlaw110/Rythm/issues/94

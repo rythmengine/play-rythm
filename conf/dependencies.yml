@@ -1,4 +1,6 @@
 # History
+# 1.0.0-20121210
+#        - fix bug: https://github.com/greenlaw110/Rythm/issues/96
 # 1.0.0-20121128
 #        - slightly perf improvement by concatenating static strings at parsing time
 #        - Cache4 annotation new parameters: ICacheKeyProvider key(), boolean cachePost()
@@ -184,7 +186,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-20121128
+self: play -> rythm 1.0.0-20121210
 
 require:
     - play 1.2
