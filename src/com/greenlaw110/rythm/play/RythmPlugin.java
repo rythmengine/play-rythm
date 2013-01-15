@@ -25,6 +25,7 @@ import play.classloading.HotswapAgent;
 import play.classloading.enhancers.ControllersEnhancer;
 import play.exceptions.UnexpectedException;
 import play.mvc.Http;
+import play.mvc.Router;
 import play.mvc.Scope;
 import play.mvc.results.NotFound;
 import play.mvc.results.Redirect;
@@ -44,7 +45,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-20121210";
+    public static final String VERSION = "1.0.0-20130108";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -382,17 +383,29 @@ public class RythmPlugin extends PlayPlugin {
 
                 @Override
                 public String sourceCode() {
-                    // add String _url(String) method to template class
-                    TextBuilder b = new TextBuilder();
-                    String url = "\n    protected String _url(String action, Object... params) {return _url(false, action, params);}" +
-                        "\n   protected String _url(boolean isAbsolute, String action, Object... params) {" +
-                        "\n       com.greenlaw110.rythm.internal.compiler.TemplateClass tc = getTemplateClass(true);" +
-                        "\n       boolean escapeXML = (!tc.isStringTemplate() && tc.templateResource.getKey().toString().endsWith(\".xml\"));" +
-                        "\n       return new com.greenlaw110.rythm.play.utils.ActionBridge(isAbsolute, escapeXML).invokeMethod(action, params).toString();" +
-                        "\n   }\n";
+                    String prop = "\n\tprotected <T> T _getBeanProperty(Object o, String prop) {"
+                        + "\n\t\treturn (T)com.greenlaw110.rythm.play.utils.JavaHelper.getProperty(o, prop);"
+                        + "\n\t}\n"
+                        + "\n\tprotected void _setBeanProperty(Object o, String prop, Object val) {"
+                        + "\n\t\tcom.greenlaw110.rythm.play.utils.JavaHelper.setProperty(o, prop, val);"
+                        + "\n\t}\n"
+                        + "\n\tprotected boolean _hasBeanProperty(Object o, String prop) {"
+                        + "\n\t\treturn com.greenlaw110.rythm.play.utils.JavaHelper.hasProperty(o, prop);"
+                        + "\n\t}\n";
+                    String url = "\n    protected play.mvc.Router.ActionDefinition _act(String action, Object... params) {return _act(false, action, params);}" +
+                            "\n    protected play.mvc.Router.ActionDefinition _act(boolean isAbsolute, String action, Object... params) {" +
+                            "\n        com.greenlaw110.rythm.internal.compiler.TemplateClass tc = getTemplateClass(true);" +
+                            "\n        boolean escapeXML = (!tc.isStringTemplate() && tc.templateResource.getKey().toString().endsWith(\".xml\"));" +
+                            "\n        return new com.greenlaw110.rythm.play.utils.ActionBridge(isAbsolute, escapeXML).invokeMethod(action, params);" +
+                            "\n   }\n" +
+                            "\n    protected String _url(String action, Object... params) {return _url(false, action, params);}" +
+                            "\n    protected String _url(boolean isAbsolute, String action, Object... params) { return _act(isAbsolute, action, params).toString();" +
+                            "\n   }\n";
 
                     String msg = "\n    protected String _msg(String key, Object ... params) {return play.i18n.Messages.get(key, params);}";
-                    return msg + url + TemplateClassAppEnhancer.sourceCode();
+                    // add String _url(String) method to template class
+                    TextBuilder b = new TextBuilder();
+                    return prop + msg + url + TemplateClassAppEnhancer.sourceCode();
                 }
 
                 @Override
@@ -614,7 +627,7 @@ public class RythmPlugin extends PlayPlugin {
                     }
                     cacheKey = keyProvider.getKey();
                     if (S.isEmpty(cacheKey)) {
-                        warn("empty cache key found");
+                        //warn("empty cache key found");
                         return;
                     }
                 } catch (Exception e) {

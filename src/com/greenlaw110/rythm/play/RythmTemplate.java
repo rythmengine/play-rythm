@@ -18,6 +18,8 @@ import play.exceptions.UnexpectedException;
 import play.templates.TagContext;
 import play.templates.Template;
 
+import static play.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation.*;
+
 import java.util.Map;
 
 /**
@@ -102,13 +104,14 @@ public class RythmTemplate extends Template {
     private static final ThreadLocal<Integer> refreshCounter = new ThreadLocal<Integer>();
     @Override
     protected String internalRender(Map<String, Object> args) {
+        boolean isActionCallAllowed = isActionCallAllowed();
         try {
             if (Logger.isTraceEnabled()) RythmPlugin.trace("prepare template to render");
             ITemplate t = tc.asTemplate();
             if (Logger.isTraceEnabled()) RythmPlugin.trace("about to set render args");
             t.setRenderArgs(args);
             // allow invoke controller method without redirect
-            ControllersEnhancer.ControllerInstrumentation.initActionCall();
+            if (!isActionCallAllowed) initActionCall();
             // moved to RythmPlugin.beforeActionInvocation()
 //            if (!RythmPlugin.isActionCall()) {
 //                TagContext.init();
@@ -135,6 +138,8 @@ public class RythmTemplate extends Template {
 //            return handleClassCastException(e, args);
         } catch (Exception e) {
             throw new TemplateExecutionException(this, -1, e.getMessage(), e);
+        } finally {
+            if (!isActionCallAllowed) stopActionCall();
         }
     }
 

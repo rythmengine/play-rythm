@@ -164,17 +164,24 @@ public class FastTagBridge extends JavaTagBase {
                 ns = a.value().trim();
             }
             for (Method m: jc.getDeclaredMethods()) {
-                int flag = m.getModifiers();
-                if (!Modifier.isPublic(flag) || !Void.TYPE.equals(m.getReturnType())) continue;
-                if (m.getParameterTypes().length != 5) continue;
-                //note, need to strip off leading '_' from method name
-                FastTagBridge tag = new FastTagBridge(ns, m.getName().substring(1), jc);
-                ITag tag0 = engine.tags.get(tag.getName());
-                // FastTagBridge has lowest priority, thus if there are other tags already registered
-                // with the same name, FastTag bridge will not be registered again
-                if (null == tag0 || (tag0 instanceof FastTagBridge)) engine.registerTag(tag);
+                registerFastTag(engine, m, ns, jc);
             }
         }
+        for (Method m: play.templates.FastTags.class.getDeclaredMethods()) {
+            registerFastTag(engine, m, "play", play.templates.FastTags.class);
+        }
         RythmPlugin.debug("%sms to register play fast tags", System.currentTimeMillis() - l);
+    }
+
+    private static void registerFastTag(RythmEngine engine, Method m, String ns, Class<?> jc) {
+        int flag = m.getModifiers();
+        if (!Modifier.isPublic(flag) || !Void.TYPE.equals(m.getReturnType())) return;
+        if (m.getParameterTypes().length != 5) return;
+        //note, need to strip off leading '_' from method name
+        FastTagBridge tag = new FastTagBridge(ns, m.getName().substring(1), jc);
+        ITag tag0 = engine.tags.get(tag.getName());
+        // FastTagBridge has lowest priority, thus if there are other tags already registered
+        // with the same name, FastTag bridge will not be registered again
+        if (null == tag0 || (tag0 instanceof FastTagBridge)) engine.registerTag(tag);
     }
 }

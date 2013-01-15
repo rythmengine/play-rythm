@@ -1,5 +1,5 @@
 @import play.templates.JavaExtensions, play.Play, play.utils.Utils, play.exceptions.*
-@args play.exceptions.PlayException exception
+@args Exception exception
 <style type="text/css">
     html, body, pre {
         margin: 0;
@@ -103,20 +103,21 @@
 </style>
 
 @if (exception instanceof play.exceptions.PlayException) {
-    <h1>@exception.getErrorTitle()</h1>
+    @{final PlayException pex = (PlayException)exception}
+    <h1>@pex.getErrorTitle()</h1>
     @if ("DEV".equals(Play.mode.name())) {
-        <p id="detail">@exception.getErrorDescription().raw()</p>
+        <p id="detail">@pex.getErrorDescription().raw()</p>
     } else if ("PROD".equals(Play.mode.name())) {
         <p>Error details are not displayed when Play! is in PROD mode. Check server logs for detail.</p>
     }
 
-@if (exception.isSourceAvailable() && (null != exception.getLineNumber()) && "DEV".equals(Play.mode.name())) {
-    <h2>In @exception.getSourceFile() (around line @exception.getLineNumber())</h2>
+@if (pex.isSourceAvailable() && (null != pex.getLineNumber()) && "DEV".equals(Play.mode.name())) {
+    <h2>In @pex.getSourceFile() (around line @pex.getLineNumber())</h2>
     <div>
     @// [workaround] https://play.lighthouseapp.com/projects/57987-play-framework/tickets/1580-playexceptionscacheexception-should-implement-sourceattachment
     @{
-        final List<String> source = (exception instanceof CacheException) ? ((CacheException)exception).getSource() : ((SourceAttachment)exception).getSource();
-        int lineNumber = (exception instanceof CacheException) ? ((CacheException)exception).getLineNumber() : ((SourceAttachment)exception).getLineNumber();
+        final List<String> source = (pex instanceof CacheException) ? ((CacheException)pex).getSource() : ((SourceAttachment)pex).getSource();
+        int lineNumber = (pex instanceof CacheException) ? ((CacheException)pex).getLineNumber() : ((SourceAttachment)pex).getLineNumber();
         final int from = lineNumber - 5 >= 0 && lineNumber < source.size() ? lineNumber - 5 : 0;
         final int to = lineNumber + 5  < source.size() ? lineNumber + 5 : source.size()-1;
         final List<String> lines = new ArrayList();
@@ -125,19 +126,19 @@
         }
     }
     @for (String line: lines) {
-        <pre @if(exception.getLineNumber() == line_index+from) {class="error"}><span class="line">@(line_index+from)</span><span class="code">&nbsp;@com.greenlaw110.rythm.utils.S.escape(line).toString().replace("&darr;", "<strong>&darr;</strong>").replace("\000", "<em>").replace("\001", "</em>").raw()</span></pre>
+        <pre @if(pex.getLineNumber() == line_index+from) {class="error"}><span class="line">@(line_index+from)</span><span class="code">&nbsp;@com.greenlaw110.rythm.utils.S.escape(line).toString().replace("&darr;", "<strong>&darr;</strong>").replace("\000", "<em>").replace("\001", "</em>").raw()</span></pre>
     }
     </div>
 }
 
-	@{ String moreHtml = exception.getMoreHTML() }@
+	@{ String moreHtml = pex.getMoreHTML() }@
 	@if (null != moreHtml) {
 		<div id="specific" class="block">
                         @moreHtml.raw()
 		</div>
 	}
     <div id="more" class="block">
-        This exception has been logged with id <strong>@exception.getId()</strong>
+        This pex has been logged with id <strong>@pex.getId()</strong>
     </div>
 } else {
     <div id="header" class="block">

@@ -1,0 +1,11 @@
+@__simple__
+@args String name
+@play.field(name) {
+    @{
+        Map<String, Object> _field = getRenderArg("field");
+        Object _errorClass = _field.get("errorClass"),
+            _name = _field.get("name"),
+            _error = _field.get("error")
+    }
+    @doBody(_errorClass, _name, _error)
+}
