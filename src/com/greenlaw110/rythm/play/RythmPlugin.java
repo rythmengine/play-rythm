@@ -3,6 +3,7 @@ package com.greenlaw110.rythm.play;
 import com.greenlaw110.rythm.*;
 import com.greenlaw110.rythm.cache.ICacheService;
 import com.greenlaw110.rythm.internal.compiler.ClassReloadException;
+import com.greenlaw110.rythm.internal.dialect.SimpleRythm;
 import com.greenlaw110.rythm.logger.ILogger;
 import com.greenlaw110.rythm.logger.ILoggerFactory;
 import com.greenlaw110.rythm.play.parsers.*;
@@ -45,7 +46,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-20130108";
+    public static final String VERSION = "1.0.0-20130121";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -431,7 +432,7 @@ public class RythmPlugin extends PlayPlugin {
 
             IParserFactory[] factories = {new AbsoluteUrlReverseLookupParser(), new UrlReverseLookupParser(),
                     new MessageLookupParser(), new GroovyVerbatimTagParser(), new ExitIfNoModuleParser()};
-            engine.getExtensionManager().registerUserDefinedParsers(factories).registerUserDefinedParsers("simple_rythm", factories).registerTemplateExecutionExceptionHandler(new ITemplateExecutionExceptionHandler() {
+            engine.getExtensionManager().registerUserDefinedParsers(factories).registerUserDefinedParsers(SimpleRythm.ID, factories).registerTemplateExecutionExceptionHandler(new ITemplateExecutionExceptionHandler() {
                 @Override
                 public boolean handleTemplateExecutionException(Exception e, TemplateBase template) {
                     if (e instanceof Result) {
@@ -440,7 +441,7 @@ public class RythmPlugin extends PlayPlugin {
                         } else {
                             Http.Response resp = new Http.Response();
                             resp.out = new ByteArrayOutputStream();
-                            ((Result)e).apply(null, resp);
+                            ((Result) e).apply(null, resp);
                             try {
                                 template.p(resp.out.toString("utf-8"));
                             } catch (UnsupportedEncodingException e0) {

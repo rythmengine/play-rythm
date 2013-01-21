@@ -122,7 +122,7 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
 
     public static void main(String[] args) {
         UrlReverseLookupParser p = new UrlReverseLookupParser();
-        Regex r = p.reg(new Rythm());
+        Regex r = p.reg(Rythm.INSTANCE);
         String s = "@url() abc";
         if (r.search(s)) {
             System.out.println(r.stringMatched());

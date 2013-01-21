@@ -51,7 +51,7 @@ public class ExitIfNoModuleParser extends KeywordParserFactory {
     public static void main(String[] args) {
         String s = "@__exitIfNoPlayModule__(rythm)\nabc";
         ExitIfNoModuleParser ap = new ExitIfNoModuleParser();
-        Regex r = ap.reg(new Rythm());
+        Regex r = ap.reg(Rythm.INSTANCE);
         p(s, r);
     }
 }

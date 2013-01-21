@@ -80,7 +80,7 @@ public class MessageLookupParser extends KeywordParserFactory {
     public static void main(String[] args) {
 
         MessageLookupParser p = new MessageLookupParser();
-        Regex r = p.reg(new Rythm());
+        Regex r = p.reg(Rythm.INSTANCE);
         String s = "@msg(x, \"rythm\")";
         if (r.search(s)) {
             System.out.println(r.stringMatched());
