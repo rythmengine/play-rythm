@@ -3,14 +3,15 @@
 # ~~~~
 
 # Home page
-GET     /                                       Application.index
+GET / Application.index
 
 # Ignore favicon requests
-GET     /favicon.ico                            404
+GET /favicon.ico 404
 
 # Map static resources from the /app/public folder to the /public path
-GET /bs/ staticDir:bootstrap
 GET /public/ staticDir:public
+GET /js/ /staticDir:public/js
+GET /css/ /staticDir:public/css
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}
