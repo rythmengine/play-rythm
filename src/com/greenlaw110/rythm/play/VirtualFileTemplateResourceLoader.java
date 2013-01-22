@@ -81,7 +81,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
 
         @Override
         public String getSuggestedClassName() {
-            return path2CN(file.relativePath().replaceFirst("\\{.*\\}", ""));
+            return path2CN(file.relativePath().replaceFirst("\\{.*\\}", "")).replaceFirst("app_rythm_", "");
         }
 
         @Override

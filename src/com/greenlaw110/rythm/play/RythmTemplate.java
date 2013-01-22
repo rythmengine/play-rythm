@@ -104,7 +104,14 @@ public class RythmTemplate extends Template {
     private static final ThreadLocal<Integer> refreshCounter = new ThreadLocal<Integer>();
     @Override
     protected String internalRender(Map<String, Object> args) {
-        boolean isActionCallAllowed = isActionCallAllowed();
+        boolean isActionCallAllowed = false;
+        try {
+            isActionCallAllowed = isActionCallAllowed();
+        } catch (NullPointerException e) {
+            // rendering mail from an non action handler thread
+            initActionCall();
+            isActionCallAllowed = true;
+        }
         try {
             if (Logger.isTraceEnabled()) RythmPlugin.trace("prepare template to render");
             ITemplate t = tc.asTemplate();
