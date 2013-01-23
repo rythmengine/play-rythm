@@ -1,6 +1,8 @@
 # History
-# 1.0.0-20130122b
+# 1.0.0-20130124
 #        - strip "app_rythm_" from generated template class name
+#        - changed for loop code generation and make it slightly faster
+#        - https://github.com/greenlaw110/play-rythm/issues/63
 #        - https://github.com/greenlaw110/play-rythm/issues/62
 #        - https://github.com/greenlaw110/play-rythm/issues/58
 #        - https://github.com/greenlaw110/play-rythm/issues/57
@@ -197,7 +199,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-20130122b
+self: play -> rythm 1.0.0-20130124
 
 require:
     - play 1.2

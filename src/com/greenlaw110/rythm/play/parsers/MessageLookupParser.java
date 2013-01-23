@@ -32,21 +32,33 @@ public class MessageLookupParser extends KeywordParserFactory {
         return "^(%s%s[\\t ]*((?@())))";
     }
 
-    protected String innerPattern() {
+    protected static String innerPattern() {
         return "(((?@\"\")|(?@())|(?@'')|[a-zA-Z_][\\w$_\\.]*)(?@())?)(.*)";
     }
+    
+    protected static final String groovyPattern = "^&((?@{}))"; 
 
     @Override
     public IParser create(IContext ctx) {
         return new ParserBase(ctx) {
             public TextBuilder go() {
+                String remain = remain();
                 Regex r = reg(dialect());
-                if (!r.search(remain())) return null;
-                String s = r.stringMatched();
-                step(s.length());
-                s = r.stringMatched(3);
-                //strip off ( and )
-                s = S.stripBrace(s);
+                String sMatched;
+                String sInside;
+                if (!r.search(remain)) {
+                    return null;
+                    // groovy pattern has no chance to get resolved because '&' does not drive parsing machine
+//                    r = new Regex(groovyPattern);
+//                    if (!r.search(remain)) return null;
+//                    sInside = S.strip(r.stringMatched(1), "{", "}");
+                } else {
+                    sInside = S.stripBrace(r.stringMatched(3));
+                }
+                sMatched = r.stringMatched();
+                step(sMatched.length());
+                String s = sInside;
+
                 // now parse message string and parameters
                 r = new Regex(innerPattern());
                 if (r.search(s)) {
@@ -78,47 +90,21 @@ public class MessageLookupParser extends KeywordParserFactory {
     }
 
     public static void main(String[] args) {
+        testRythm();
+        System.out.println("------------------------------------");
+        testGroovy();
+    }
+    
+    private static void testGroovy() {
+        String s = "&{'abc', d}";
+        Regex r = new Regex(groovyPattern);
+        p(s, r);
+    }
 
+    private static void testRythm() {
         MessageLookupParser p = new MessageLookupParser();
         Regex r = p.reg(Rythm.INSTANCE);
         String s = "@msg(x, \"rythm\")";
-        if (r.search(s)) {
-            System.out.println(r.stringMatched());
-            s = (r.stringMatched(3));
-            System.out.println(">>" + s);
-            s = s.substring(1).substring(0, s.length() - 2);
-            System.out.println("<<" + s);
-//            s = s.substring(0, s.length() - 1);
-//            System.out.println(">>" + s);
-            //System.out.println(s);
-            r = new Regex(p.innerPattern());
-            if (r.search(s)) {
-                System.out.println("1>>" + r.stringMatched(1));
-                System.out.println("2>>" + r.stringMatched(2));
-                System.out.println("3>>" + r.stringMatched(3));
-                System.out.println("4>>" + r.stringMatched(4));
-            }
-        }
-
-//        s = "RythmTester.test(a.boc(), 14, '3', \"aa\")";
-//        //s = "getId()";
-//        r = new Regex("([a-zA-Z_][\\w$_\\.]*)((?@())?)");
-//        if (r.search(s)) {
-//            System.out.println(r.stringMatched());
-//            System.out.println(r.stringMatched(1));
-//            System.out.println(r.stringMatched(2));
-//            System.out.println(r.stringMatched(3));
-//
-//            s = r.substring(2);
-//            //strip off ( and ) if there is
-//            if (null == s) s = "";
-//            if (s.startsWith("(")) {
-//                s = s.substring(1);
-//            }
-//            if (s.endsWith(")")) {
-//                s = s.substring(0, s.length() - 1);
-//            }
-//            System.out.println(s);
-//        }
+        p(s, r);
     }
 }

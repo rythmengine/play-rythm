@@ -310,6 +310,11 @@ public class RythmPlugin extends PlayPlugin {
             }
         }
         debug("User defined rythm properties configured");
+        
+        // restricted class in sandbox mode
+        String appRestricted = p.getProperty("rythm.restrictedClasses", "");
+        appRestricted += ";play.Play;play.classloading;play.server";
+        p.setProperty("rythm.restrictedClasses", appRestricted);
 
         // set template root
         templateRoot = p.getProperty("rythm.root", templateRoot);

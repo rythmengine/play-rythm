@@ -126,6 +126,7 @@
         }
     }
     @for (String line: lines) {
+        @//line_index + @from | @pex.getLineNumber()
         <pre @if(pex.getLineNumber() == line_index+from) {class="error"}><span class="line">@(line_index+from)</span><span class="code">&nbsp;@com.greenlaw110.rythm.utils.S.escape(line).toString().replace("&darr;", "<strong>&darr;</strong>").replace("\000", "<em>").replace("\001", "</em>").raw()</span></pre>
     }
     </div>
