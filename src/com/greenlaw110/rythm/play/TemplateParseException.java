@@ -12,8 +12,8 @@ import play.templates.Template;
  * To change this template use File | Settings | File Templates.
  */
 public class TemplateParseException extends TemplateException {
-    public TemplateParseException(Template template, ParseException pe) {
-        super(template, pe.templateLineNumber, pe.originalMessage);
+    public TemplateParseException(Template template, Integer lineNumber, String message) {
+        super(template, lineNumber, message);
     }
 
     @Override

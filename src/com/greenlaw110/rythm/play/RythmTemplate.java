@@ -74,12 +74,8 @@ public class RythmTemplate extends Template {
             RythmPlugin.debug("restart rythm engine to reload changed template...");
             engine().restart(e);
             refresh(forceRefresh);
-        } catch (ParseException e) {
-            TemplateInfo t = handleRythmException(e);
-            throw new TemplateParseException(t, e);
-        } catch (CompileException e) {
-            TemplateInfo t = handleRythmException(e);
-            throw new TemplateCompilationException(t, t.lineNo, e.originalMessage);
+        } catch (RythmException e) {
+            handleRythmException(e);
         } catch (RuntimeException e) {
             throw new UnexpectedException(String.format("Unknown error when refreshing rythm template: %s", tc.getKey()), e);
         }
@@ -131,18 +127,8 @@ public class RythmTemplate extends Template {
             if (Logger.isTraceEnabled()) RythmPlugin.trace("render completed");
             return s;
         } catch (RythmException e) {
-            Throwable cause = e.getCause();
-//            if (null != cause && cause instanceof ClassCastException) {
-//                return handleClassCastException((ClassCastException)cause, args);
-//            }
-            TemplateInfo t = handleRythmException(e);
-            if (e instanceof CompileException) {
-                throw new TemplateCompilationException(t, t.lineNo, e.getMessage());
-            } else {
-                throw new TemplateExecutionException(t, t.lineNo, e.errorMessage, e);
-            }
-//        } catch (ClassCastException e) {
-//            return handleClassCastException(e, args);
+            handleRythmException(e);
+            return null; // honestly you will never arrive here
         } catch (Exception e) {
             throw new TemplateExecutionException(this, -1, e.getMessage(), e);
         } finally {
@@ -164,10 +150,15 @@ public class RythmTemplate extends Template {
         }
     }
 
-    static TemplateInfo handleRythmException(RythmException e) {
+    private static enum _ErrType {parsing, compilation, runtime}
+    static void handleRythmException(RythmException e) {
+        _ErrType errType = _ErrType.runtime;
+        if (e instanceof ParseException)  errType = _ErrType.parsing;
+        else if (e instanceof CompileException) errType = _ErrType.compilation;
+        
         if (Play.mode.isDev()) {
             TextBuilder tb = new TextBuilder();
-            tb.p("rythm exception captured on [").p(e.getTemplateName()).p("]: ").pn(e.originalMessage);
+            tb.p("rythm ").p(errType).p(" exception captured on [").p(e.getTemplateName()).p("]: ").pn(e.originalMessage);
             tb.pn(e.templateSourceInfo());
             tb.pn(e.javaSourceInfo());
             Logger.error(tb.toString());
@@ -180,7 +171,12 @@ public class RythmTemplate extends Template {
         } else {
             t = new TemplateInfo(e.getTemplateName(), e.getTemplateSource(), line);
         }
-        return t;
+
+        switch (errType) {
+            case parsing: throw new TemplateParseException(t, t.lineNo, e.originalMessage);
+            case compilation: throw new TemplateCompilationException(t, t.lineNo, e.originalMessage);
+            default: throw new TemplateExecutionException(t, t.lineNo, e.originalMessage, e);
+        }
     }
 
     @Override

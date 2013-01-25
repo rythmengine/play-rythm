@@ -92,14 +92,7 @@ public class RythmTemplateLoader {
                     ITag tag = (ITag)templateClass.asTemplate();
                     if (null != tag)RythmPlugin.engine.registerTag(tag);
                 } catch (RythmException e) {
-                    RythmTemplate.TemplateInfo t = RythmTemplate.handleRythmException(e);
-                    if (e instanceof ParseException) {
-                        throw new TemplateParseException(t, (ParseException)e);
-                    } else if (e instanceof CompileException) {
-                        throw new TemplateCompilationException(t, t.lineNo, e.getMessage());
-                    } else {
-                        throw new UnexpectedException("Don't know why I am here");
-                    }
+                    RythmTemplate.handleRythmException(e);
                 } catch (Exception e) {
                     Logger.warn(e, "error pre-loading template: %s", f.relativePath());
                     // might be groovy template, let's ignore it
