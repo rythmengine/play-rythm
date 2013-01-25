@@ -165,11 +165,13 @@ public class RythmTemplate extends Template {
     }
 
     static TemplateInfo handleRythmException(RythmException e) {
-        TextBuilder tb = new TextBuilder();
-        tb.p("rythm exception captured on [").p(e.getTemplateName()).p("]: ").pn(e.originalMessage);
-        tb.pn(e.javaSourceInfo());
-        tb.pn(e.templateSourceInfo());
-        Logger.error(tb.toString());
+        if (Play.mode.isDev()) {
+            TextBuilder tb = new TextBuilder();
+            tb.p("rythm exception captured on [").p(e.getTemplateName()).p("]: ").pn(e.originalMessage);
+            tb.pn(e.templateSourceInfo());
+            tb.pn(e.javaSourceInfo());
+            Logger.error(tb.toString());
+        }
         int line = e.templateLineNumber;
         TemplateInfo t;
         if (-1 == line) {

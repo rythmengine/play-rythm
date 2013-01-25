@@ -1,6 +1,8 @@
 # History
 # 1.0.0-20130124
 #        - strip "app_rythm_" from generated template class name
+#        - support sandbox and substitute mode
+#        - for loop can omit type declaration in most cases
 #        - changed for loop code generation and make it slightly faster
 #        - https://github.com/greenlaw110/play-rythm/issues/63
 #        - https://github.com/greenlaw110/play-rythm/issues/62

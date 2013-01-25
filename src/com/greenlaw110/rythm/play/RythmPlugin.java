@@ -181,7 +181,7 @@ public class RythmPlugin extends PlayPlugin {
         p.put("rythm.recordTemplateSourceOnRuntimeError", isProd);
         p.put("rythm.recordJavaSourceOnRuntimeError", isProd);
         p.put("rythm.recordTemplateSourceOnError", isProd);
-        p.put("rythm.recordTemplateSourceOnError", isProd);
+        p.put("rythm.recordJavaSourceOnError", isProd);
         p.put("rythm.logSourceInfoOnRuntimeError", true);
         if (Play.usePrecompiled || Play.getFile("precompiled").exists()) {
             File preCompiledRoot = new File(Play.getFile("precompiled"), "rythm");
