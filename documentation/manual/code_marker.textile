@@ -1,0 +1,25 @@
+h1. Using CodeMarker utility
+
+p(note). This *IS* a Play specific feature.
+
+Rythm (starts from v1.0.0-20130131) provides a tool called code marker which enable you to locate source code file and line from the web page directly. This includes code locate from error page and any web page with @codeMarker()@ tag used.
+
+The best way to understand codeMarker is to watch a 1 min video at "here":http://www.youtube.com/watch?v=uVXFu9c4qAQ
+
+In order to use this tool, you needs
+
+1. Intellj IDEA
+2. "RemoteCall plugin for Intellj IDEA":http://plugins.jetbrains.net/plugin?pr=webide&pluginId=6027
+3. set @rythm.enableCodeMarker@ to @true@ in your @application.conf@
+4. Set your jquery url to @rythm.jquery@. The default is to load from jQuery CDN
+5. If you have fontawesome used in your project, set @rythm.fontawesome@ to @true@
+
+There are 2 ways to use codeMarker:
+
+1. From the error page. Just click the error line, your IDEA will open the source file (Java or template) and goes to the error line
+
+2. From any webpage. Put <code>@codeMarker()</code> tag in the place you want to jump back from web page. When viewing the page in the browser, hold on ctrl key, you will see spinners which mark the place of <code>@codeMarker()</code> tag. Click on the spinner your IDEA will load the corresponding template source file and goes to the line.  You can pass a string to <code>@codeMarker()</code> tag, and the string will be displayed as tooltip when you hover the mouse on the activated spinner.
+
+Disclaim: the CodeMarker utility is inspired by another Chinese programmer Freewind's blog: http://freewind.me/blog/20130129/2044.html
+
+# "Rythm Manual Home Page":home

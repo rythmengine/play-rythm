@@ -5,10 +5,13 @@
 <head>
     <title>Application error</title>
     <meta http-equiv="Content-Type" content="text/html; charset=@_response_encoding"/>
+    @if(_rythmPlugin.enableCodeMarker) {
+        <script src="@_rythmPlugin.jquery"></script>
+    }
 </head>
 <body>
 
-@if ("DEV".equals(_play.mode.name())) {
+@if (_play.mode.isDev()) {
 @e500(exception)
 } else {
 <h1>Oops, an error occured</h1>

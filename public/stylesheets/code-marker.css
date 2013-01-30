@@ -1,0 +1,13 @@
+span.code-marker {
+    position: absolute;
+    display: none;
+    z-index: 999999;
+    color: #f00;
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+    background: url(/public/images/code-marker-spinner.gif) no-repeat;
+}
+span.code-marker.code-marker-active{
+    display: inline-block;
+}

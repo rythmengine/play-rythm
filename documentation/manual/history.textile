@@ -7,6 +7,30 @@ h2. <a name="roadmap">What's left for R1.0</a>
 * While loop
 * Switch case
 
+h2. <a name="v1.0.0-20130131">v1.0.0-20130131</a>
+
+* New Features
+** "CodeMarker utility":code_marker (see "online demo":http://www.screenr.com/fJr7)
+** support sandbox and substitute mode
+** for loop can omit type declaration in most cases
+** strip "app_rythm_" off from generated template class name
+** changed for loop code generation and make it slightly faster
+* Bug fixes
+** https://github.com/greenlaw110/play-rythm/issues/64
+** https://github.com/greenlaw110/play-rythm/issues/63
+** https://github.com/greenlaw110/play-rythm/issues/62
+** https://github.com/greenlaw110/play-rythm/issues/58
+** https://github.com/greenlaw110/play-rythm/issues/57
+** https://github.com/greenlaw110/Rythm/issues/110
+** https://github.com/greenlaw110/Rythm/issues/108
+** https://github.com/greenlaw110/Rythm/issues/107
+** https://github.com/greenlaw110/Rythm/issues/106
+** https://github.com/greenlaw110/Rythm/issues/104
+** https://github.com/greenlaw110/Rythm/issues/101
+** https://github.com/greenlaw110/Rythm/issues/100
+** https://github.com/greenlaw110/Rythm/issues/98
+
+
 h2. <a name="v1.0.0-20121210">v1.0.0-20121210</a>
 
 * Buf fixes

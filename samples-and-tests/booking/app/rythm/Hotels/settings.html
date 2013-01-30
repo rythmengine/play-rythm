@@ -1,0 +1,35 @@
+@extends(main)
+@set(title: "Setting")
+@args User connected, String verifyPassword
+<h1>Change your password</h1>
+
+@play.form(_act("saveSettings()")) {
+    @play.field("connected.password") {
+        @{
+            Map<String, Object> field = getRenderArg("field");
+            Object errorClass = field.get("errorClass"),
+                name = field.get("name"),
+                error = field.get("error")
+        }
+        <p class="@errorClass">
+            <strong>Password:</strong> <input type="password" name="password" size="16" value="@connected?.password"> *
+            <span class="error">@error</span>
+        </p>
+    }
+    @play.field("verifyPassword") {
+        @{
+            Map<String, Object> field = getRenderArg("field");
+            Object errorClass = field.get("errorClass"),
+                name = field.get("name"),
+                error = field.get("error")
+        }
+        <p class="@errorClass">
+            <strong>Verify password:</strong> <input type="password" name="@name" size="16" value="@verifyPassword"> *
+            <span class="error">@error</span>
+        </p>
+    }
+
+    <p class="buttons">
+        <input type="submit" value="Save"> <a href='@url("index()")'>Cancel</a>
+    </p>
+}

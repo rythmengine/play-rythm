@@ -1,18 +1,23 @@
 # History
-# 1.0.0-20130124
-#        - strip "app_rythm_" from generated template class name
+# 1.0.0-20130131
+#        - update RythmEngine version
+#        - CodeMarker utility (see http://www.screenr.com/fJr7)
+#        - strip "app_rythm_" off from generated template class name
 #        - support sandbox and substitute mode
 #        - for loop can omit type declaration in most cases
 #        - changed for loop code generation and make it slightly faster
+#        - https://github.com/greenlaw110/play-rythm/issues/64
 #        - https://github.com/greenlaw110/play-rythm/issues/63
 #        - https://github.com/greenlaw110/play-rythm/issues/62
 #        - https://github.com/greenlaw110/play-rythm/issues/58
 #        - https://github.com/greenlaw110/play-rythm/issues/57
+#        - https://github.com/greenlaw110/Rythm/issues/110
+#        - https://github.com/greenlaw110/Rythm/issues/108
 #        - https://github.com/greenlaw110/Rythm/issues/107
 #        - https://github.com/greenlaw110/Rythm/issues/106
 #        - https://github.com/greenlaw110/Rythm/issues/104
-#        - https://github.com/greenlaw110/Rythm/issues/100
 #        - https://github.com/greenlaw110/Rythm/issues/101
+#        - https://github.com/greenlaw110/Rythm/issues/100
 #        - https://github.com/greenlaw110/Rythm/issues/98
 # 1.0.0-20121210
 #        - fix bug: https://github.com/greenlaw110/Rythm/issues/96
@@ -201,7 +206,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-20130124
+self: play -> rythm 1.0.0-20130131
 
 require:
     - play 1.2

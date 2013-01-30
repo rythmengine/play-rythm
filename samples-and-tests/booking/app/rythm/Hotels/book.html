@@ -1,0 +1,133 @@
+@extends(main)
+@args Hotel hotel, Booking booking
+@set(title: "Book " + hotel.name)
+@section(moreScripts) {
+    <script src='@url("/public/javascripts/jquery-ui-1.7.2.custom.min.js")' type="text/javascript" charset="@_response_encoding"></script>
+}
+@section(moreStyles) {
+    <link rel="stylesheet" type="text/css" media="screen" href='@url("/public/ui-lightness/jquery-ui-1.7.2.custom.css")' />
+}
+
+<h1>Book hotel</h1>
+
+@play.form(_act("confirmBooking", hotel.id)) {
+    <p>
+        <strong>Name:</strong> @hotel.name
+    </p>
+    <p>
+        <strong>Address:</strong> @hotel.address
+    </p>
+    <p>
+        <strong>City:</strong> @hotel.city
+    </p>
+    <p>
+        <strong>State:</strong> @hotel.state
+    </p>
+    <p>
+        <strong>Zip:</strong> @hotel.zip
+    </p>
+    <p>
+        <strong>Country:</strong> @hotel.country
+    </p>
+    <p>
+        <strong>Nightly rate:</strong> @hotel.price
+    </p>
+    @play.field("booking.checkinDate") {
+        @{
+            Map<String, Object> field = getRenderArg("field");
+            Object errorClass = field.get("errorClass"),
+                   name = field.get("name"),
+                   error = field.get("error")
+        }
+        <p class='@errorClass'>
+            <strong>Check In Date:</strong> <input type="text" size="10" name='@name' class="datepicker" value='@booking?.checkinDate?.format("yyyy-MM-dd")'> *
+            <span class="error">@error</span>
+        </p>
+    }
+    @play.field("booking.checkoutDate") {
+        @{
+            Map<String, Object> field = getRenderArg("field");
+            Object errorClass = field.get("errorClass"),
+                   name = field.get("name"),
+                   error = field.get("error")
+        }
+        <p class='@errorClass'>
+            <strong>Check Out Date:</strong> <input type="text" size="10" name='@name' class="datepicker" value='@booking?.checkoutDate?.format("yyyy-MM-dd")'> *
+            <span class="error">@error</span>
+        </p>
+    }
+    <p>
+        <strong>Room preference:</strong>
+        @select("booking.beds", value:booking?.beds) {
+            @play.option(1){One king-size bed}
+            @play.option(2){Two double beds}
+            @play.option(3){Three beds}
+        }
+    </p>
+    <p>
+        <strong>Smoking preference:</strong>
+        @{
+            boolean smoking = false;
+            if (null != booking) smoking = booking.smoking;
+        }
+        <input type="radio" name="booking.smoking" value="true" @(smoking ? "checked" : "")> Smoking
+        <input type="radio" name="booking.smoking" value="false" @(!smoking ? "checked" : "")> Non smoking
+    </p>
+    @play.field("booking.creditCard") {
+        @{
+            Map<String, Object> field = getRenderArg("field");
+            Object errorClass = field.get("errorClass"),
+                name = field.get("name"),
+                error = field.get("error")
+        }
+        <p class="@errorClass">
+            <strong>Credit Card #:</strong> <input type="text" name="@name" size="16" value="@booking?.creditCard"> *
+            <span class="error">@error</span>
+        </p>
+    }
+    @play.field("booking.creditCardName") {
+        @{
+            Map<String, Object> field = getRenderArg("field");
+            Object errorClass = field.get("errorClass"),
+                   name = field.get("name"),
+                   error = field.get("error")
+        }
+        <p class="@errorClass">
+            <strong>Credit Card Name:</strong> <input type="text" name="@name" size="16" value="@booking?.creditCardName"> *
+            <span class="error">@error</span>
+        </p>
+    }
+    <p>
+        <strong>Credit Card Expiry:</strong>
+        @select("booking.creditCardExpiryMonth", value:booking?.creditCardExpiryMonth) {
+            @play.option(1){Jan}
+            @play.option(2){Feb}
+            @play.option(3){Mar}
+            @play.option(4){Apr}
+            @play.option(5){May}
+            @play.option(6){Jun}
+            @play.option(7){Jul}
+            @play.option(8){Aug}
+            @play.option(9){Sep}
+            @play.option(10){Oct}
+            @play.option(11){Nov}
+            @play.option(12){Dec}
+        }
+        @select("booking.creditCardExpiryYear", value:booking?.creditCardExpiryYear) {
+            @play.option(2008){2008}
+            @play.option(2009){2009}
+            @play.option(2010){2010}
+            @play.option(2011){2011}
+            @play.option(2012){2012}
+        }
+    </p>
+    <p class="buttons">
+        <input type="submit" value="Proceed"> <a href='@url("show()", hotel.id)'>Cancel</a>
+    </p>
+}
+
+<script type="text/javascript" charset="@_response_encoding">
+    $(function() {
+		$(".datepicker").datepicker({dateFormat: 'yy-mm-dd'});
+	});
+</script>

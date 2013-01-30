@@ -15,6 +15,7 @@ import play.classloading.enhancers.ControllersEnhancer;
 import play.exceptions.TemplateCompilationException;
 import play.exceptions.TemplateExecutionException;
 import play.exceptions.UnexpectedException;
+import play.mvc.results.Result;
 import play.templates.TagContext;
 import play.templates.Template;
 
@@ -129,6 +130,8 @@ public class RythmTemplate extends Template {
         } catch (RythmException e) {
             handleRythmException(e);
             return null; // honestly you will never arrive here
+        } catch (Result e) {
+            throw e;
         } catch (Exception e) {
             throw new TemplateExecutionException(this, -1, e.getMessage(), e);
         } finally {

@@ -2,6 +2,8 @@ package com.greenlaw110.rythm.play.utils;
 
 import com.greenlaw110.rythm.spi.IExpressionProcessor;
 import com.greenlaw110.rythm.spi.Token;
+import com.greenlaw110.rythm.utils.S;
+import com.greenlaw110.rythm.utils.TextBuilder;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,16 +14,21 @@ import com.greenlaw110.rythm.spi.Token;
  */
 public class ActionInvokeProcessor implements IExpressionProcessor {
     @Override
-    public boolean process(String exp, Token token) {
-        String s = exp;
+    public String process(String exp, Token token) {
+        String s = S.stripBrace(exp);
         if (s.indexOf("(") > 0 && s.startsWith("controllers.")) {
             String action = s.replaceFirst("controllers.", "");
             int pos = action.indexOf("(");
             action = action.substring(0, pos);
-            token.p("com.greenlaw110.rythm.play.RythmPlugin.setActionCallFlag();play.mvc.Http.Request.current().action=\"").p(action).p("\";\ntry{").p(s).p(";} catch (RuntimeException e) {handleTemplateExecutionException(e);}");
-            token.pline();
-            return true;
+            TextBuilder tb = new TextBuilder();
+            tb.p("new com.greenlaw110.rythm.spi.IExpressionProcessor.IResult(){\n" +
+                    "\tpublic String get() { \n" +
+                    "\tcom.greenlaw110.rythm.play.RythmPlugin.setActionCallFlag(); \n" +
+                    "\tplay.mvc.Http.Request.current().action=\"");
+            tb.p(action);
+            tb.p("\";\n").p(s).p(";return null;\n\t}\n}.get()");
+            return tb.toString();
         }
-        return false;
+        return null;
     }
 }

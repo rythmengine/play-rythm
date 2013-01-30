@@ -1,0 +1,34 @@
+@extends(main)
+@set(title: "Register")
+@args User user, String verifyPassword
+<h1>Register</h1>
+
+@play.form (_act("saveUser()")) {
+    @field("user.username").callback(String _errorClass, String _name, String _error) {
+        <p class="@_errorClass">
+            <strong>Username:</strong> <input type="text" name="@_name" size="16" value="@user?.username"> *
+            <span class="error">@_error</span>
+        </p>
+    }
+    @field("user.name").callback(String _errorClass, String _name, String _error) {
+        <p class="@_errorClass">
+            <strong>Real name:</strong> <input type="text" name="@_name" size="16" value="@user?.name"> *
+            <span class="error">@_error</span>
+        </p>
+    }
+    @field("user.password").callback(String _errorClass, String _name, String _error) {
+        <p class="@_errorClass">
+            <strong>Password:</strong> <input type="password" name="@_name" size="16" value="@user?.password"> *
+            <span class="error">@_error</span>
+        </p>
+    }
+    @field("verifyPassword").callback(String _errorClass, String _name, String _error) {
+        <p class="@_errorClass">
+            <strong>Verify password:</strong> <input type="password" name="@_name" size="16" value="@verifyPassword"> *
+            <span class="error">@_error</span>
+        </p>
+    }
+    <p class="buttons">
+        <input type="submit" value="Register"> <a href='@url(index())'>Cancel</a>
+    </p>
+}

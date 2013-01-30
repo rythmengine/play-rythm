@@ -73,7 +73,7 @@ public class MessageLookupParser extends KeywordParserFactory {
                         String fmt = hasQuotation ? "Messages.get(\"%s\" %s)" : "Messages.get(%s %s)";
                         s = String.format(fmt, msgStr, param);
                     }
-                    ctx().getCodeBuilder().addImport("play.i18n.Messages");
+                    ctx().getCodeBuilder().addImport("play.i18n.Messages", ctx().currentLine());
                     return new CodeToken(s, ctx()){
                         @Override
                         public void output() {

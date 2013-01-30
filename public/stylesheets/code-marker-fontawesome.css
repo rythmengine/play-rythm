@@ -1,0 +1,10 @@
+span.code-marker {
+    position: absolute;
+    display: none;
+    z-index: 999999;
+    color: #f00;
+    cursor: pointer;
+}
+span.code-marker.code-marker-active{
+    display: inline-block;
+}

@@ -2,6 +2,7 @@ package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.RythmEngine;
 import com.greenlaw110.rythm.runtime.ITag;
+import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.template.JavaTagBase;
 import com.greenlaw110.rythm.template.TemplateBase;
 import groovy.lang.Closure;
@@ -33,8 +34,8 @@ public class FastTagBridge extends JavaTagBase {
 
     public static class RythmExecutableTemplate extends GroovyTemplate.ExecutableTemplate {
 
-        public TemplateBase caller;
-        RythmExecutableTemplate(TemplateBase caller) {
+        public ITemplate caller;
+        RythmExecutableTemplate(ITemplate caller) {
             this.caller = caller;
         }
 
@@ -136,7 +137,7 @@ public class FastTagBridge extends JavaTagBase {
             }
         }
         try {
-            method.invoke(null, paramMap, null == body ? null : new TagBodyClosure(body, w), w, new RythmExecutableTemplate(caller()), 0);
+            method.invoke(null, paramMap, null == body ? null : new TagBodyClosure(body, w), w, new RythmExecutableTemplate(caller()), _line());
         } catch (InvocationTargetException e) {
             throw new UnexpectedException("cannot invoke fast tag method: " + tagName, e);
         } catch (IllegalAccessException e) {

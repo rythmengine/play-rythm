@@ -2,7 +2,6 @@ package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.*;
 import com.greenlaw110.rythm.cache.ICacheService;
-import com.greenlaw110.rythm.internal.compiler.ClassReloadException;
 import com.greenlaw110.rythm.internal.dialect.SimpleRythm;
 import com.greenlaw110.rythm.logger.ILogger;
 import com.greenlaw110.rythm.logger.ILoggerFactory;
@@ -11,12 +10,13 @@ import com.greenlaw110.rythm.play.utils.ActionInvokeProcessor;
 import com.greenlaw110.rythm.play.utils.StaticRouteResolver;
 import com.greenlaw110.rythm.play.utils.TemplateClassAppEnhancer;
 import com.greenlaw110.rythm.runtime.ITag;
-import com.greenlaw110.rythm.spi.*;
+import com.greenlaw110.rythm.spi.IParserFactory;
+import com.greenlaw110.rythm.spi.ITemplateClassEnhancer;
+import com.greenlaw110.rythm.spi.ITemplateExecutionExceptionHandler;
 import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.template.TemplateBase;
 import com.greenlaw110.rythm.utils.*;
 import com.stevesoft.pat.Regex;
-import org.apache.commons.io.FileUtils;
 import play.Logger;
 import play.Play;
 import play.PlayPlugin;
@@ -26,18 +26,17 @@ import play.classloading.HotswapAgent;
 import play.classloading.enhancers.ControllersEnhancer;
 import play.exceptions.UnexpectedException;
 import play.mvc.Http;
-import play.mvc.Router;
 import play.mvc.Scope;
-import play.mvc.results.NotFound;
-import play.mvc.results.Redirect;
-import play.mvc.results.RenderTemplate;
-import play.mvc.results.Result;
+import play.mvc.results.*;
 import play.templates.RythmTagContext;
 import play.templates.TagContext;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.UnmodifiableClassException;
 import java.lang.reflect.Constructor;
@@ -46,7 +45,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-20130122b";
+    public static final String VERSION = "1.0.0-20130131";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -107,6 +106,10 @@ public class RythmPlugin extends PlayPlugin {
     public static boolean underscoreImplicitVariableName = false;
     public static boolean refreshOnRender = true;
     public static String templateRoot = R_VIEW_ROOT;
+    
+    public static boolean enableCodeMarker = false;
+    public static String jquery = "http://code.jquery.com/jquery-1.9.0.min.js";
+    public static boolean fontawesome = false;
     //public static String templateRoot2 = R_VIEW_ROOT;
     //public static String tagRoot = "app/views/tags/rythm";
 
@@ -122,7 +125,7 @@ public class RythmPlugin extends PlayPlugin {
     }
 
     public static void loadTemplatePaths() {
-        for (VirtualFile mroot: Play.modules.values()) {
+        for (VirtualFile mroot : Play.modules.values()) {
             VirtualFile mviews = mroot.child(R_VIEW_ROOT);
             if (mviews.exists()) {
                 Play.templatesPath.add(0, mviews);
@@ -135,6 +138,7 @@ public class RythmPlugin extends PlayPlugin {
     }
 
     private boolean loadingRoute = false;
+
     @Override
     public void onLoad() {
         loadTemplatePaths();
@@ -153,6 +157,7 @@ public class RythmPlugin extends PlayPlugin {
     }
 
     private boolean logActionInvocationTime;
+
     @Override
     public void onConfigurationRead() {
         if (null != engine && Play.mode.isProd()) return; // already configured
@@ -160,12 +165,16 @@ public class RythmPlugin extends PlayPlugin {
         Properties playConf = Play.configuration;
 
         // workaround for https://play.lighthouseapp.com/projects/57987-play-framework/tickets/1614-calling-to-plugins-beforeactioninvocation-and-afteractioninvocation-should-be-symmetric
-        logActionInvocationTime = Boolean.parseBoolean(Play.configuration.getProperty("betterlogs.trace.actionInvocation.time", Play.mode.isDev() ? "true":"false"));
+        logActionInvocationTime = Boolean.parseBoolean(Play.configuration.getProperty("betterlogs.trace.actionInvocation.time", Play.mode.isDev() ? "true" : "false"));
         // eof workaround for https://play.lighthouseapp.com/projects/57987-play-framework/tickets/1614-calling-to-plugins-beforeactioninvocation-and-afteractioninvocation-should-be-symmetric
 
         // special configurations
         underscoreImplicitVariableName = Boolean.parseBoolean(playConf.getProperty("rythm.implicitVariable.underscore", "false"));
         refreshOnRender = Boolean.parseBoolean(playConf.getProperty("rythm.resource.refreshOnRender", "true"));
+        
+        enableCodeMarker = Play.mode.isDev() && Boolean.parseBoolean(playConf.getProperty("rythm.enableCodeMarker", "false"));
+        jquery = playConf.getProperty("rythm.jquery", "http://code.jquery.com/jquery-1.9.0.min.js");
+        fontawesome = Boolean.parseBoolean(playConf.getProperty("rythm.fontawesome", "false"));
 
         Properties p = new Properties();
 
@@ -215,11 +224,11 @@ public class RythmPlugin extends PlayPlugin {
             public Map<String, ?> getRenderArgDescriptions() {
                 Map<String, Object> m = new HashMap<String, Object>();
                 // App registered render args
-                for (ImplicitVariables.Var var: implicitRenderArgs) {
+                for (ImplicitVariables.Var var : implicitRenderArgs) {
                     m.put(var.name(), var.type);
                 }
                 // Play default render args
-                for (ImplicitVariables.Var var: ImplicitVariables.vars) {
+                for (ImplicitVariables.Var var : ImplicitVariables.vars) {
                     m.put(var.name(), var.type);
                 }
                 return m;
@@ -229,7 +238,7 @@ public class RythmPlugin extends PlayPlugin {
             public void setRenderArgs(ITemplate template) {
                 Map<String, Object> m = new HashMap<String, Object>();
                 // some system implicit render args are not set, so we need to set them here.
-                for (ImplicitVariables.Var var: ImplicitVariables.vars) {
+                for (ImplicitVariables.Var var : ImplicitVariables.vars) {
                     m.put(var.name(), var.evaluate());
                 }
                 // application render args should already be set in controller methods
@@ -247,6 +256,7 @@ public class RythmPlugin extends PlayPlugin {
         p.put("rythm.cache.defaultTTL", 60 * 60);
         p.put("rythm.cache.service", new ICacheService() {
             private int defaultTTL = 60 * 60;
+
             @Override
             public void put(String key, Serializable value, int ttl) {
                 Cache.cacheImpl.set(key, value, ttl);
@@ -261,13 +271,13 @@ public class RythmPlugin extends PlayPlugin {
             public Serializable remove(String key) {
                 Object o = Cache.get(key);
                 Cache.delete(key);
-                return null == o ? null : (o instanceof Serializable ? (Serializable)o : o.toString());
+                return null == o ? null : (o instanceof Serializable ? (Serializable) o : o.toString());
             }
 
             @Override
             public Serializable get(String key) {
                 Object o = Cache.get(key);
-                return null == o ? null : (o instanceof Serializable ? (Serializable)o : o.toString());
+                return null == o ? null : (o instanceof Serializable ? (Serializable) o : o.toString());
             }
 
             @Override
@@ -304,13 +314,13 @@ public class RythmPlugin extends PlayPlugin {
         });
 
         // set user configurations - coming from application.conf
-        for (String key: playConf.stringPropertyNames()) {
+        for (String key : playConf.stringPropertyNames()) {
             if (key.startsWith("rythm.")) {
                 p.setProperty(key, playConf.getProperty(key));
             }
         }
         debug("User defined rythm properties configured");
-        
+
         // restricted class in sandbox mode
         String appRestricted = p.getProperty("rythm.restrictedClasses", "");
         appRestricted += ";play.Play;play.classloading;play.server";
@@ -330,8 +340,8 @@ public class RythmPlugin extends PlayPlugin {
         // set tmp dir
         debug("Play standalone play server? %s", Play.standalonePlayServer);
         boolean gae = !Play.standalonePlayServer
-            || Boolean.valueOf(p.getProperty("rythm.gae", "false"))
-            || Boolean.valueOf(p.getProperty("rythm.noFileWrite", "false"));
+                || Boolean.valueOf(p.getProperty("rythm.gae", "false"))
+                || Boolean.valueOf(p.getProperty("rythm.noFileWrite", "false"));
         if (!gae) {
             File tmpDir = new File(Play.tmpDir, "rythm");
             tmpDir.mkdirs();
@@ -371,7 +381,7 @@ public class RythmPlugin extends PlayPlugin {
             });
             engine.registerTemplateClassEnhancer(new ITemplateClassEnhancer() {
                 @Override
-                public byte[] enhance(String className, byte[] classBytes) throws  Exception {
+                public byte[] enhance(String className, byte[] classBytes) throws Exception {
                     if (engine.noFileWrite) return classBytes;
                     ApplicationClasses.ApplicationClass applicationClass = new ApplicationClasses.ApplicationClass();
                     applicationClass.javaByteCode = classBytes;
@@ -390,14 +400,14 @@ public class RythmPlugin extends PlayPlugin {
                 @Override
                 public String sourceCode() {
                     String prop = "\n\tprotected <T> T _getBeanProperty(Object o, String prop) {"
-                        + "\n\t\treturn (T)com.greenlaw110.rythm.play.utils.JavaHelper.getProperty(o, prop);"
-                        + "\n\t}\n"
-                        + "\n\tprotected void _setBeanProperty(Object o, String prop, Object val) {"
-                        + "\n\t\tcom.greenlaw110.rythm.play.utils.JavaHelper.setProperty(o, prop, val);"
-                        + "\n\t}\n"
-                        + "\n\tprotected boolean _hasBeanProperty(Object o, String prop) {"
-                        + "\n\t\treturn com.greenlaw110.rythm.play.utils.JavaHelper.hasProperty(o, prop);"
-                        + "\n\t}\n";
+                            + "\n\t\treturn (T)com.greenlaw110.rythm.play.utils.JavaHelper.getProperty(o, prop);"
+                            + "\n\t}\n"
+                            + "\n\tprotected void _setBeanProperty(Object o, String prop, Object val) {"
+                            + "\n\t\tcom.greenlaw110.rythm.play.utils.JavaHelper.setProperty(o, prop, val);"
+                            + "\n\t}\n"
+                            + "\n\tprotected boolean _hasBeanProperty(Object o, String prop) {"
+                            + "\n\t\treturn com.greenlaw110.rythm.play.utils.JavaHelper.hasProperty(o, prop);"
+                            + "\n\t}\n";
                     String url = "\n    protected play.mvc.Router.ActionDefinition _act(String action, Object... params) {return _act(false, action, params);}" +
                             "\n    protected play.mvc.Router.ActionDefinition _act(boolean isAbsolute, String action, Object... params) {" +
                             "\n        com.greenlaw110.rythm.internal.compiler.TemplateClass tc = getTemplateClass(true);" +
@@ -418,7 +428,7 @@ public class RythmPlugin extends PlayPlugin {
                 public boolean equals(Object obj) {
                     if (obj == this) return true;
                     if (obj instanceof ITemplateClassEnhancer) {
-                        ITemplateClassEnhancer that = (ITemplateClassEnhancer)obj;
+                        ITemplateClassEnhancer that = (ITemplateClassEnhancer) obj;
 
                     }
                     return false;
@@ -432,7 +442,7 @@ public class RythmPlugin extends PlayPlugin {
             });
             debug("Template class enhancer registered");
             //Rythm.engine.cacheService.shutdown();
-            Rythm.engine = engine;
+            Rythm.init(engine);
             engine.preCompiling = true;
 
             IParserFactory[] factories = {new AbsoluteUrlReverseLookupParser(), new UrlReverseLookupParser(),
@@ -440,19 +450,20 @@ public class RythmPlugin extends PlayPlugin {
             engine.getExtensionManager().registerUserDefinedParsers(factories).registerUserDefinedParsers(SimpleRythm.ID, factories).registerTemplateExecutionExceptionHandler(new ITemplateExecutionExceptionHandler() {
                 @Override
                 public boolean handleTemplateExecutionException(Exception e, TemplateBase template) {
-                    if (e instanceof Result) {
-                        if (e instanceof RenderTemplate) {
-                            template.p(((RenderTemplate) e).getContent());
-                        } else {
-                            Http.Response resp = new Http.Response();
-                            resp.out = new ByteArrayOutputStream();
-                            ((Result) e).apply(null, resp);
-                            try {
-                                template.p(resp.out.toString("utf-8"));
-                            } catch (UnsupportedEncodingException e0) {
-                                throw new UnexpectedException("utf-8 not supported?");
-                            }
+                    boolean handled = false;
+                    if (e instanceof RenderTemplate) {
+                        template.p(((RenderTemplate) e).getContent());
+                    } else if (e instanceof RenderHtml || e instanceof RenderJson || e instanceof RenderStatic || e instanceof RenderXml || e instanceof RenderText) {
+                        Http.Response resp = new Http.Response();
+                        resp.out = new ByteArrayOutputStream();
+                        ((Result) e).apply(null, resp);
+                        try {
+                            template.p(resp.out.toString("utf-8"));
+                        } catch (UnsupportedEncodingException e0) {
+                            throw new UnexpectedException("utf-8 not supported?");
                         }
+                    }
+                    if (handled) {
                         // allow next controller action call
                         ControllersEnhancer.ControllerInstrumentation.initActionCall();
                         resetActionCallFlag();
@@ -465,6 +476,7 @@ public class RythmPlugin extends PlayPlugin {
                 public void onInvoke(ITag tag) {
                     RythmTagContext.enterTag(tag.getName());
                 }
+
                 @Override
                 public void tagInvoked(ITag tag) {
                     RythmTagContext.exitTag();
@@ -531,13 +543,13 @@ public class RythmPlugin extends PlayPlugin {
         long l = System.currentTimeMillis();
         // -- register application java tags
         List<ApplicationClasses.ApplicationClass> classes = Play.classes.getAssignableClasses(FastRythmTag.class);
-        for (ApplicationClasses.ApplicationClass ac: classes) {
+        for (ApplicationClasses.ApplicationClass ac : classes) {
             registerJavaTag(ac.javaClass, engine);
         }
 
         // -- register PlayRythm build-in tags
         Class<?>[] ca = FastRythmTags.class.getDeclaredClasses();
-        for (Class<?> c: ca) {
+        for (Class<?> c : ca) {
             registerJavaTag(c, engine);
         }
         debug("%sms to register rythm java tags", System.currentTimeMillis() - l);
@@ -549,7 +561,7 @@ public class RythmPlugin extends PlayPlugin {
         try {
             Constructor<?> c = jc.getConstructor(new Class[]{});
             c.setAccessible(true);
-            FastRythmTag tag = (FastRythmTag)c.newInstance();
+            FastRythmTag tag = (FastRythmTag) c.newInstance();
             engine.registerTag(tag);
         } catch (Exception e) {
             throw new UnexpectedException("Error initialize JavaTag: " + jc.getName(), e);
@@ -561,6 +573,7 @@ public class RythmPlugin extends PlayPlugin {
         public void compile() {
             //
         }
+
         @Override
         protected String internalRender(Map<String, Object> args) {
             throw new UnexpectedException("It's not supposed to be called");
@@ -662,7 +675,7 @@ public class RythmPlugin extends PlayPlugin {
             return;
         }
         if (result instanceof Redirect) {
-            Redirect r = (Redirect)result;
+            Redirect r = (Redirect) result;
             if (r.code != Http.StatusCode.MOVED) {
                 // not permanent redirect, don't cache it
                 return;
@@ -675,7 +688,7 @@ public class RythmPlugin extends PlayPlugin {
         Object o = Http.Request.current().args.get("rythm-urlcache-key");
         if (null == o) return;
         String cacheKey = o.toString();
-        Method actionMethod = (Method)Http.Request.current().args.get("rythm-urlcache-actionMethod");
+        Method actionMethod = (Method) Http.Request.current().args.get("rythm-urlcache-actionMethod");
         String duration = actionMethod.getAnnotation(Cache4.class).value();
         if (S.isEmpty(duration)) duration = "1h";
         if (duration.startsWith("cron.")) {

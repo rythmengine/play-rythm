@@ -100,6 +100,12 @@
         padding: 8px;
         font-size: 12px;
     }
+    pre.error:hover {
+        cursor: pointer;
+    }
+    pre.error:hover span.code {
+        background-color: #D38989;
+    }
 </style>
 
 @if (exception instanceof play.exceptions.PlayException) {
@@ -112,7 +118,11 @@
     }
 
 @if (pex.isSourceAvailable() && (null != pex.getLineNumber()) && "DEV".equals(Play.mode.name())) {
-    <h2>In @pex.getSourceFile() (around line @pex.getLineNumber())</h2>
+    @{
+        String src = pex.getSourceFile();
+        int errLineNo = pex.getLineNumber();
+    }
+    <h2>In @src (around line @errLineNo)</h2>
     <div>
     @// [workaround] https://play.lighthouseapp.com/projects/57987-play-framework/tickets/1580-playexceptionscacheexception-should-implement-sourceattachment
     @{
@@ -127,7 +137,7 @@
     }
     @for (String line: lines) {
         @//line_index + @from | @pex.getLineNumber()
-        <pre @if(pex.getLineNumber() == line_index+from) {class="error"}><span class="line">@(line_index+from)</span><span class="code">&nbsp;@com.greenlaw110.rythm.utils.S.escape(line).toString().replace("&darr;", "<strong>&darr;</strong>").replace("\000", "<em>").replace("\001", "</em>").raw()</span></pre>
+        <pre @if(pex.getLineNumber() == line_index+from) {class="error" data-src="@src" data-line="@errLineNo"}><span class="line">@(line_index+from)</span><span class="code">&nbsp;@com.greenlaw110.rythm.utils.S.escape(line).toString().replace("&darr;", "<strong>&darr;</strong>").replace("\000", "<em>").replace("\001", "</em>").raw()</span></pre>
     }
     </div>
 }
@@ -145,4 +155,12 @@
     <div id="header" class="block">
         <h1>@(null == exception.getMessage() ? "" : exception.getMessage())</h1>
     </div>
+}
+@if(_rythmPlugin.enableCodeMarker) {
+<script type="text/javascript">
+    $('body').on('click', 'pre.error', function(){
+        var $me = $(this), src = $me.data('src'), line = $me.data('line');
+        $.get('http://localhost:8091?message='+src+":"+line);
+    })
+</script>
 }

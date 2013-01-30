@@ -1,0 +1,34 @@
+@args Collection<Hotel> hotels, int page, int size, String search
+@if (null != hotels && !hotels.isEmpty())
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>City, State</th>
+                <th width="8%">Zip</th>
+                <th width="13%">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (Hotel hotel: hotels) {
+                <tr>
+                    <td>@hotel.name</td>
+                    <td>@hotel.address</td>
+                    <td>@hotel.city, @hotel.state, @hotel.country</td>
+                    <td>@hotel.zip</td>
+                    <td>
+                        <a href='@url("show(hotel.id)")'>View Hotel</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p>
+        <a id="nextPage" href="@(page+1)">More results</a>
+    </p>
+} else {
+    <p>
+        No more results
+    </p>
+}
