@@ -55,6 +55,17 @@ public @interface Cache4 {
     boolean useSessionData() default false;
 
     /**
+     * Whether the cache key is sensitive to request.secure. When this parameter
+     * is set to <code>true</code>, then the request coming from http and https channel
+     * will result in different cached copy
+     * 
+     * default: false
+     * 
+     * @return
+     */
+    boolean schemeSensitive() default false;
+
+    /**
      * Indicate whether cache post request. Useful for certain case, e.g. facebook always post to tab page in iframe
      * @return
      */

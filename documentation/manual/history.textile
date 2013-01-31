@@ -7,9 +7,11 @@ h2. <a name="roadmap">What's left for R1.0</a>
 * While loop
 * Switch case
 
-h2. <a name="v1.0.0-20130131">v1.0.0-20130131</a>
+h2. <a name="v1.0.0-20130131a">v1.0.0-20130131a</a>
 
 * New Features
+** Cache4 now has schemeSensitive attributes enable requests coming from http and https get
+   the different cached data
 ** "CodeMarker utility":code_marker (see "online demo":http://www.screenr.com/fJr7)
 ** support sandbox and substitute mode
 ** for loop can omit type declaration in most cases
