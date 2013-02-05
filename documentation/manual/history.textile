@@ -2,35 +2,38 @@ h1. PlayRythm version history
 
 h2. <a name="roadmap">What's left for R1.0</a>
 
-* "Support java extension in tag invocation":https://github.com/greenlaw110/Rythm/issues/37
-* html helpers
-* While loop
-* Switch case
+* "Enable nature template support":https://github.com/greenlaw110/Rythm/issues/114
+* "Switch default escape scheme in different code section":https://github.com/greenlaw110/Rythm/issues/113
+* "Enable user to turn off built-in java extensions":https://github.com/greenlaw110/Rythm/issues/112
+* "Support passing template parameters by JSON type":https://github.com/greenlaw110/Rythm/issues/109
+
+h2. <a name="v1.0.0-20130132">v1.0.0-20130132</a>
+
+* Bug fixes:
+** "Error in the logic to handle CacheKeyProvider":https://github.com/greenlaw110/play-rythm/issues/66
 
 h2. <a name="v1.0.0-20130131a">v1.0.0-20130131a</a>
 
 * New Features
-** Cache4 now has schemeSensitive attributes enable requests coming from http and https get
-   the different cached data
-** "CodeMarker utility":code_marker (see "online demo":http://www.screenr.com/fJr7)
-** support sandbox and substitute mode
-** for loop can omit type declaration in most cases
+** "New schemeSensitive attribute for @Cache4 annotation":https://github.com/greenlaw110/play-rythm/issues/65
+** "A really nice CodeMarker utility":code_marker (see "online demo":http://www.screenr.com/fJr7)
+** "Support variable notation by position":https://github.com/greenlaw110/Rythm/issues/110
+** "Intelligent @for loop variable type interference":https://github.com/greenlaw110/Rythm/issues/107
+** "Rythm substitute mode":https://github.com/greenlaw110/Rythm/issues/106
+** "Support Sandbox mode":https://github.com/greenlaw110/Rythm/issues/104
+* Enhancements
 ** strip "app_rythm_" off from generated template class name
-** changed for loop code generation and make it slightly faster
+** changed @for@ loop code generation and makes it slightly faster
 * Bug fixes
-** https://github.com/greenlaw110/play-rythm/issues/64
-** https://github.com/greenlaw110/play-rythm/issues/63
-** https://github.com/greenlaw110/play-rythm/issues/62
-** https://github.com/greenlaw110/play-rythm/issues/58
-** https://github.com/greenlaw110/play-rythm/issues/57
-** https://github.com/greenlaw110/Rythm/issues/110
-** https://github.com/greenlaw110/Rythm/issues/108
-** https://github.com/greenlaw110/Rythm/issues/107
-** https://github.com/greenlaw110/Rythm/issues/106
-** https://github.com/greenlaw110/Rythm/issues/104
-** https://github.com/greenlaw110/Rythm/issues/101
-** https://github.com/greenlaw110/Rythm/issues/100
-** https://github.com/greenlaw110/Rythm/issues/98
+** "Throw play.mvc.Forbidden is not properly handled":https://github.com/greenlaw110/play-rythm/issues/64
+** "NPE while sending email (rendered with Rythm) in a separate thread":https://github.com/greenlaw110/play-rythm/issues/63
+** "Call `mvc.controller.Error(...)` cause issue":https://github.com/greenlaw110/play-rythm/issues/62
+** "Display 'getMoreHTML' messages nicely in 500 error template":https://github.com/greenlaw110/play-rythm/issues/58
+** "Action chain not work after calling to Mails.send()":https://github.com/greenlaw110/play-rythm/issues/57
+** "Passing params by position logic is not correct":https://github.com/greenlaw110/Rythm/issues/108
+** "Default value of @args declaration tranformed to lowercase which breaks compilation":https://github.com/greenlaw110/Rythm/issues/101
+** "NPE with Boolean type @args":https://github.com/greenlaw110/Rythm/issues/100
+** "Filename of 3 clases renamed":https://github.com/greenlaw110/Rythm/issues/98
 
 
 h2. <a name="v1.0.0-20121210">v1.0.0-20121210</a>

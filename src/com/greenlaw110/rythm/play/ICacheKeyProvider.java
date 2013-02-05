@@ -12,7 +12,9 @@ import play.mvc.Scope;
  * To change this template use File | Settings | File Templates.
  */
 public interface ICacheKeyProvider {
-    String getKey();
+
+    String getKey(boolean sessionSensitive, boolean schemeSensitive);
+
     public static class Default implements ICacheKeyProvider {
         protected final Http.Request req() {
             return Http.Request.current();
@@ -20,11 +22,21 @@ public interface ICacheKeyProvider {
         protected final Scope.Params params() {
             return Scope.Params.current();
         }
+        protected final Scope.Session session() {
+            return Scope.Session.current();
+        }
         @Override
-        public String getKey() {
+        public String getKey(boolean sessionSensitive, boolean schemeSensitive) {
             Http.Request req = Http.Request.current();
             if (null != req) {
-                return "rythm-urlcache:" + req.url + req.querystring;
+                String key = "rythm-urlcache:" + req.url + req.querystring;
+                if (sessionSensitive) {
+                    key += session().getId();
+                }
+                if (schemeSensitive) {
+                    key += req().secure ? "1" : "0";
+                }
+                return key;
             } else {
                 throw new IllegalStateException("HTTP.Request expected");
             }

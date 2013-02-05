@@ -50,9 +50,18 @@ public @interface Cache4 {
     /**
      * Whether use session data to generate key
      *
+     * @deprecated use {@link #sessionSensitive()} instead 
      * @return
      */
     boolean useSessionData() default false;
+    
+    /**
+     * Whether use session id to generate the cache key, meaning if the cached copy is 
+     * for session specific or not
+     *
+     * @return
+     */
+    boolean sessionSensitive() default false;
 
     /**
      * Whether the cache key is sensitive to request.secure. When this parameter

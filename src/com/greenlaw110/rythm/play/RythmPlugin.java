@@ -45,7 +45,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-20130131a";
+    public static final String VERSION = "1.0.0-20130132";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -636,6 +636,11 @@ public class RythmPlugin extends PlayPlugin {
         String m = request.method;
         if ("GET".equals(m) || "HEAD".equals(m) || (cache4.cachePost() && "POST".equals(m))) {
             String cacheKey = cache4.id();
+            boolean sessSensitive = cache4.sessionSensitive();
+            if (!sessSensitive) {
+                sessSensitive = cache4.useSessionData();
+            }
+            boolean schemeSensitive = cache4.schemeSensitive();
             if (S.isEmpty(cacheKey)) {
                 Class<? extends ICacheKeyProvider> kpFact = cache4.key();
                 try {
@@ -644,7 +649,7 @@ public class RythmPlugin extends PlayPlugin {
                         keyProvider = kpFact.newInstance();
                         keyProviders.put(kpFact, keyProvider);
                     }
-                    cacheKey = keyProvider.getKey();
+                    cacheKey = keyProvider.getKey(sessSensitive, schemeSensitive);
                     if (S.isEmpty(cacheKey)) {
                         //warn("empty cache key found");
                         return;
@@ -653,10 +658,21 @@ public class RythmPlugin extends PlayPlugin {
                     error(e, "error get key from key provider");
                     return;
                 }
-                if (cache4.useSessionData()) {
+                // Note we cannot do any transform on user supplied key
+                // as it might be used to deprecate cache. So we will leave
+                // the cache key provider to handle session and scheme
+
+                //if (cache4.useSessionData()) {
+                    //cacheKey = cacheKey + Scope.Session.current().toString();
+                //}
+                //if (cache4.schemeSensitive()) cacheKey += request.secure;
+            } else {
+                if (sessSensitive) {
                     cacheKey = cacheKey + Scope.Session.current().toString();
                 }
-                if (cache4.schemeSensitive()) cacheKey += request.secure;
+                if (schemeSensitive) {
+                    cacheKey += request.secure;
+                }
             }
             request.args.put("rythm-urlcache-key", cacheKey);
             request.args.put("rythm-urlcache-actionMethod", actionMethod);

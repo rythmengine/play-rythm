@@ -1,4 +1,4 @@
-h1. String Interpolation Mode
+h1. Substitute mode (Previously called String Interpolation Mode)
 
 p(note). This is *NOT* a Play specific feature.
 
