@@ -1,7 +1,7 @@
 package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.RythmEngine;
-import com.greenlaw110.rythm.runtime.ITag;
+import com.greenlaw110.rythm.template.ITag;
 import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.template.JavaTagBase;
 import com.greenlaw110.rythm.template.TemplateBase;
@@ -11,7 +11,6 @@ import play.classloading.ApplicationClasses;
 import play.exceptions.UnexpectedException;
 import play.templates.FastTags;
 import play.templates.GroovyTemplate;
-import play.templates.TagContext;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -118,7 +117,7 @@ public class FastTagBridge extends JavaTagBase {
         PrintWriter w = new PrintWriter(new Writer() {
             @Override
             public void write(char[] cbuf, int off, int len) throws IOException {
-                out().append(cbuf, off, len);
+                buffer().append(cbuf, off, len);
             }
 
             @Override
@@ -180,7 +179,7 @@ public class FastTagBridge extends JavaTagBase {
         if (m.getParameterTypes().length != 5) return;
         //note, need to strip off leading '_' from method name
         FastTagBridge tag = new FastTagBridge(ns, m.getName().substring(1), jc);
-        ITag tag0 = engine.tags.get(tag.getName());
+        ITag tag0 = engine.getTag(tag.getName());
         // FastTagBridge has lowest priority, thus if there are other tags already registered
         // with the same name, FastTag bridge will not be registered again
         if (null == tag0 || (tag0 instanceof FastTagBridge)) engine.registerTag(tag);

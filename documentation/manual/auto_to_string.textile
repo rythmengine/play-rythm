@@ -22,7 +22,7 @@ You can also pass option and style to fine tune to toString result:
 
 bc. @Override public String toString() {
     return Rythm.toString(this,
-        com.greenlaw110.rythm.toString.ToStringOption.defaultOption.setAppendTransient(true),
+        DEFAULT_OPTION.setAppendTransient(true),
         com.greenlaw110.rythm.toString.ToStringStyle.MULTI_LINE_STYLE);
 }
 

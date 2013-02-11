@@ -1,7 +1,7 @@
 package com.greenlaw110.rythm.play.utils;
 
-import com.greenlaw110.rythm.spi.IExpressionProcessor;
-import com.greenlaw110.rythm.spi.Token;
+import com.greenlaw110.rythm.internal.IExpressionProcessor;
+import com.greenlaw110.rythm.internal.Token;
 import com.greenlaw110.rythm.utils.S;
 import com.greenlaw110.rythm.utils.TextBuilder;
 

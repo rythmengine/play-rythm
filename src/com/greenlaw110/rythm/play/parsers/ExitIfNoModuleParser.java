@@ -1,21 +1,16 @@
 package com.greenlaw110.rythm.play.parsers;
 
-import com.greenlaw110.rythm.exception.ParseException;
-import com.greenlaw110.rythm.internal.Keyword;
 import com.greenlaw110.rythm.internal.TemplateParser;
 import com.greenlaw110.rythm.internal.dialect.Rythm;
 import com.greenlaw110.rythm.internal.parser.ParserBase;
 import com.greenlaw110.rythm.internal.parser.build_in.KeywordParserFactory;
-import com.greenlaw110.rythm.logger.Logger;
-import com.greenlaw110.rythm.spi.IContext;
-import com.greenlaw110.rythm.spi.IParser;
-import com.greenlaw110.rythm.spi.Token;
+import com.greenlaw110.rythm.internal.IContext;
+import com.greenlaw110.rythm.internal.IParser;
+import com.greenlaw110.rythm.internal.Token;
 import com.greenlaw110.rythm.utils.S;
 import com.greenlaw110.rythm.utils.TextBuilder;
 import com.stevesoft.pat.Regex;
 import play.Play;
-import play.mvc.Router;
-import play.vfs.VirtualFile;
 
 public class ExitIfNoModuleParser extends KeywordParserFactory {
 

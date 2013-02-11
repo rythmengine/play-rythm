@@ -2,6 +2,8 @@ package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.*;
 import com.greenlaw110.rythm.cache.ICacheService;
+import com.greenlaw110.rythm.extension.*;
+import com.greenlaw110.rythm.extension.IRythmListener;
 import com.greenlaw110.rythm.internal.dialect.SimpleRythm;
 import com.greenlaw110.rythm.logger.ILogger;
 import com.greenlaw110.rythm.logger.ILoggerFactory;
@@ -9,10 +11,8 @@ import com.greenlaw110.rythm.play.parsers.*;
 import com.greenlaw110.rythm.play.utils.ActionInvokeProcessor;
 import com.greenlaw110.rythm.play.utils.StaticRouteResolver;
 import com.greenlaw110.rythm.play.utils.TemplateClassAppEnhancer;
-import com.greenlaw110.rythm.runtime.ITag;
-import com.greenlaw110.rythm.spi.IParserFactory;
-import com.greenlaw110.rythm.spi.ITemplateClassEnhancer;
-import com.greenlaw110.rythm.spi.ITemplateExecutionExceptionHandler;
+import com.greenlaw110.rythm.template.ITag;
+import com.greenlaw110.rythm.internal.IParserFactory;
 import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.template.TemplateBase;
 import com.greenlaw110.rythm.utils.*;
@@ -369,17 +369,7 @@ public class RythmPlugin extends PlayPlugin {
 
         if (null == engine) {
             engine = new RythmEngine(p);
-            engine.registerListener(new IRythmListener() {
-                @Override
-                public void onRender(ITemplate template) {
-                    Map<String, Object> m = new HashMap<String, Object>();
-                    for (ImplicitVariables.Var var : ImplicitVariables.vars) {
-                        m.put(var.name(), var.evaluate());
-                    }
-                    template.setRenderArgs(m);
-                }
-            });
-            engine.registerTemplateClassEnhancer(new ITemplateClassEnhancer() {
+            engine.registerTemplateClassEnhancer(new IByteCodeEnhancer() {
                 @Override
                 public byte[] enhance(String className, byte[] classBytes) throws Exception {
                     if (engine.noFileWrite) return classBytes;
@@ -427,14 +417,14 @@ public class RythmPlugin extends PlayPlugin {
                 @Override
                 public boolean equals(Object obj) {
                     if (obj == this) return true;
-                    if (obj instanceof ITemplateClassEnhancer) {
-                        ITemplateClassEnhancer that = (ITemplateClassEnhancer) obj;
+                    if (obj instanceof IByteCodeEnhancer) {
+                        IByteCodeEnhancer that = (IByteCodeEnhancer) obj;
 
                     }
                     return false;
                 }
             });
-            engine.registerGlobalImportProvider(new IImportProvider() {
+            engine.registerGlobalImportProvider(new ISourceCodeEnhancer() {
                 @Override
                 public List<String> imports() {
                     return Arrays.asList(TemplateClassAppEnhancer.imports().split("[,\n]+"));
@@ -447,7 +437,7 @@ public class RythmPlugin extends PlayPlugin {
 
             IParserFactory[] factories = {new AbsoluteUrlReverseLookupParser(), new UrlReverseLookupParser(),
                     new MessageLookupParser(), new GroovyVerbatimTagParser(), new ExitIfNoModuleParser()};
-            engine.getExtensionManager().registerUserDefinedParsers(factories).registerUserDefinedParsers(SimpleRythm.ID, factories).registerTemplateExecutionExceptionHandler(new ITemplateExecutionExceptionHandler() {
+            engine.getExtensionManager().registerUserDefinedParsers(factories).registerUserDefinedParsers(SimpleRythm.ID, factories).registerTemplateExecutionExceptionHandler(new IRenderExceptionHandler() {
                 @Override
                 public boolean handleTemplateExecutionException(Exception e, TemplateBase template) {
                     boolean handled = false;

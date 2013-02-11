@@ -1,17 +1,12 @@
 package com.greenlaw110.rythm.play;
 
-import com.greenlaw110.rythm.exception.CompileException;
-import com.greenlaw110.rythm.exception.ParseException;
 import com.greenlaw110.rythm.exception.RythmException;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
-import com.greenlaw110.rythm.runtime.ITag;
+import com.greenlaw110.rythm.template.ITag;
 import play.Logger;
 import play.Play;
 import play.classloading.ApplicationClasses;
-import play.exceptions.TemplateCompilationException;
-import play.exceptions.UnexpectedException;
-import play.mvc.Controller;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 

@@ -1,7 +1,7 @@
 package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.RythmEngine;
-import com.greenlaw110.rythm.utils.IJavaExtension;
+import com.greenlaw110.rythm.internal.IJavaExtension;
 import play.Play;
 import play.classloading.ApplicationClasses;
 import play.templates.JavaExtensions;
@@ -45,9 +45,9 @@ public class JavaExtensionBridge {
                 String cn0 = jc.getName();
                 String mn = m.getName();
                 if (len == 1) {
-                    engine.registerJavaExtension(new IJavaExtension.VoidParameterExtension(cn, mn, String.format("%s.%s", cn0, mn)));
+                    engine.registerTransformer(new IJavaExtension.VoidParameterExtension(cn, mn, String.format("%s.%s", cn0, mn)));
                 } else {
-                    engine.registerJavaExtension(new IJavaExtension.ParameterExtension(cn, mn, ".+", String.format("%s.%s", cn0, mn)));
+                    engine.registerTransformer(new IJavaExtension.ParameterExtension(cn, mn, ".+", String.format("%s.%s", cn0, mn)));
                 }
             }
         }
@@ -94,10 +94,10 @@ public class JavaExtensionBridge {
                 "join"
         };
         for (String s : voidExtensions) {
-            engine.registerJavaExtension(new PlayVoidParameterExtension(s));
+            engine.registerTransformer(new PlayVoidParameterExtension(s));
         }
         for (String s : nonVoidExtensions) {
-            engine.registerJavaExtension(new PlayParameterExtension(s, ".+"));
+            engine.registerTransformer(new PlayParameterExtension(s, ".+"));
         }
         engine.registerGlobalImports("play.templates.JavaExtensions");
         RythmPlugin.debug("%sms to register play built-in java extension", System.currentTimeMillis() - l);

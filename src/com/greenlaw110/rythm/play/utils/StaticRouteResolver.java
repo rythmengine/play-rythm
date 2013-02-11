@@ -98,6 +98,11 @@ public class StaticRouteResolver {
     private static String verify(String name, boolean absolute) {
         String path = name;
         for (String url : urlList) {
+            // support /js/%{out.write(play.getVirtualFile(".version").contentAsString())}%/ style
+            int pos = url.indexOf("%{");
+            if (pos != -1) {
+                url = url.substring(0, pos);
+            }
             if (!path.startsWith(url)) continue;
             String staticDir = routes.get(url);
             if (staticDir != null) {

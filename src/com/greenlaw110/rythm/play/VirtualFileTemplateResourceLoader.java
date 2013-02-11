@@ -5,7 +5,7 @@ import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.resource.ITemplateResourceLoader;
 import com.greenlaw110.rythm.resource.TemplateResourceBase;
-import com.greenlaw110.rythm.runtime.ITag;
+import com.greenlaw110.rythm.template.ITag;
 import com.greenlaw110.rythm.utils.S;
 import play.Play;
 import play.libs.IO;
@@ -190,7 +190,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
     public TemplateClass tryLoadTag(String tagName, TemplateClass templateClass) {
 //Logger.info(">>> try to load tag: %s", tagName);
         RythmEngine engine = RythmPlugin.engine;
-        if (engine.tags.containsKey(tagName)) return null; //TODO: not consistent here
+        if (engine.hasTag(tagName)) return null; //TODO: not consistent here
 //Logger.info(">>> try to load tag: %s, tag not found in engine registry, continue loading", tagName);
         String origName = tagName;
         tagName = tagName.replace('.', '/');

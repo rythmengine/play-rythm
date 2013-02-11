@@ -1,19 +1,10 @@
 package com.greenlaw110.rythm.play;
 
-import com.greenlaw110.rythm.play.utils.ActionBridge;
-import com.greenlaw110.rythm.runtime.ITag;
-import com.greenlaw110.rythm.utils.S;
-import com.stevesoft.pat.Regex;
-import play.Play;
-import play.cache.Cache;
 import play.data.validation.Validation;
-import play.mvc.Router;
 import play.mvc.Scope;
 import play.templates.FastTags;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -80,7 +71,7 @@ public class FastRythmTags {
         protected void call(ParameterList params, Body body) {
             RythmPlugin.warn("@errorList() is deprecated, use @errors() instead");
             errors e = new errors();
-            e.setOut(getOut());
+            e.setBuffer(getBuffer());
             e.call(params, body);
         }
     }
@@ -97,7 +88,7 @@ public class FastRythmTags {
                 body.setProperty("error_isLast", (i+1) == count);
                 body.setProperty("error_isFirst", i == 0);
                 body.setProperty("error_parity", (i+1)%2==0?"even":"odd");
-                body.render(getOut());
+                body.render(getBuffer());
             }
         }
     }
