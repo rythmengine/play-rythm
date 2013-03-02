@@ -45,7 +45,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-20130132";
+    public static final String VERSION = "1.0.0-20130211a";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -576,6 +576,7 @@ public class RythmPlugin extends PlayPlugin {
         if (null == engine) {
             // in prod mode this method is called in preCompile() when onConfigurationRead() has not been called yet
             onConfigurationRead();
+            StaticRouteResolver.processVersionedRoutes();
         }
         //warn(">>>> %s", file.relativePath());
         return RythmTemplateLoader.loadTemplate(file);
