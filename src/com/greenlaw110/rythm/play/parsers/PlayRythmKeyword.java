@@ -1,6 +1,6 @@
 package com.greenlaw110.rythm.play.parsers;
 
-import com.greenlaw110.rythm.spi.IKeyword;
+import com.greenlaw110.rythm.internal.IKeyword;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,7 +40,6 @@ public enum PlayRythmKeyword implements IKeyword {
         return s;
     }
 
-    @Override
     public boolean isRegexp() {
         return !s.equals(name().toLowerCase());
     }

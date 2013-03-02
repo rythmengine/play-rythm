@@ -1,7 +1,6 @@
 package com.greenlaw110.rythm.play.utils;
 
 import com.greenlaw110.rythm.play.VirtualFileTemplateResourceLoader;
-import com.greenlaw110.rythm.resource.ITemplateResource;
 import play.Play;
 import play.vfs.VirtualFile;
 

@@ -1,23 +1,18 @@
 package com.greenlaw110.rythm.play;
 
-import com.greenlaw110.rythm.exception.CompileException;
-import com.greenlaw110.rythm.exception.ParseException;
 import com.greenlaw110.rythm.exception.RythmException;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
-import com.greenlaw110.rythm.runtime.ITag;
+import com.greenlaw110.rythm.template.ITag;
 import play.Logger;
 import play.Play;
 import play.classloading.ApplicationClasses;
-import play.exceptions.TemplateCompilationException;
-import play.exceptions.UnexpectedException;
-import play.mvc.Controller;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -85,7 +80,7 @@ public class RythmTemplateLoader {
             public void onFile( final VirtualFile f ) {
                 try {
                     VirtualFileTemplateResourceLoader.VirtualFileTemplateResource resource = new VirtualFileTemplateResourceLoader.VirtualFileTemplateResource(f);
-                    TemplateClass templateClass = RythmPlugin.engine.classes.getByTemplate(resource.getKey());
+                    TemplateClass templateClass = RythmPlugin.engine.classes().getByTemplate(resource.getKey());
                     if (null == templateClass) {
                         templateClass = new TemplateClass(resource, RythmPlugin.engine);
                     }
@@ -128,7 +123,7 @@ public class RythmTemplateLoader {
         RythmTemplate rt = cache.get(path);
         if (null != rt) {
             if (Logger.isTraceEnabled()) RythmPlugin.trace("template[%s] loaded from cache. About to refresh it", file);
-            if (RythmPlugin.engine.mode.isDev()) rt.refresh(); // check if the resource is still valid
+            if (RythmPlugin.engine.mode().isDev()) rt.refresh(); // check if the resource is still valid
             if (Logger.isTraceEnabled()) RythmPlugin.trace("template[%s] refreshed", file);
             return rt.isValid() ? rt : null;
         }

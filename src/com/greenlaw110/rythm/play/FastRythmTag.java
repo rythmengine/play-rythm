@@ -53,7 +53,7 @@ public abstract class FastRythmTag extends JavaTagBase {
     }
 
     @Override
-    public String getName() {
+    public String __getName() {
         return nameSpace + tagName;
     }
 }

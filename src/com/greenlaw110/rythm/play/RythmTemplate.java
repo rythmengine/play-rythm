@@ -11,17 +11,15 @@ import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.utils.TextBuilder;
 import play.Logger;
 import play.Play;
-import play.classloading.enhancers.ControllersEnhancer;
 import play.exceptions.TemplateCompilationException;
 import play.exceptions.TemplateExecutionException;
 import play.exceptions.UnexpectedException;
 import play.mvc.results.Result;
-import play.templates.TagContext;
 import play.templates.Template;
 
-import static play.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation.*;
-
 import java.util.Map;
+
+import static play.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -70,7 +68,7 @@ public class RythmTemplate extends Template {
     void refresh(boolean forceRefresh) {
         if (!forceRefresh && engine().isProdMode()) return;
         try {
-            engine().classLoader.detectChange(tc);
+            engine().classLoader().detectChange(tc);
         } catch (ClassReloadException e) {
             RythmPlugin.debug("restart rythm engine to reload changed template...");
             engine().restart(e);
@@ -113,7 +111,7 @@ public class RythmTemplate extends Template {
             if (Logger.isTraceEnabled()) RythmPlugin.trace("prepare template to render");
             ITemplate t = tc.asTemplate();
             if (Logger.isTraceEnabled()) RythmPlugin.trace("about to set render args");
-            t.setRenderArgs(args);
+            t.__setRenderArgs(args);
             // allow invoke controller method without redirect
             if (!isActionCallAllowed) initActionCall();
             // moved to RythmPlugin.beforeActionInvocation()
@@ -136,20 +134,6 @@ public class RythmTemplate extends Template {
             throw new TemplateExecutionException(this, -1, e.getMessage(), e);
         } finally {
             if (!isActionCallAllowed) stopActionCall();
-        }
-    }
-
-    String handleClassCastException(ClassCastException e, Map<String, Object> args) {
-        Integer I = refreshCounter.get();
-        if (null == I || I < 2) {
-            if (null == I) refreshCounter.set(1);
-            else refreshCounter.set(++I);
-            if (Logger.isDebugEnabled()) RythmPlugin.debug("ClassCastException detected, force refresh template class and continue...");
-            tc.refresh(true);
-            return internalRender(args);
-        } else {
-            refreshCounter.set(0);
-            throw new UnexpectedException("Too many ClassCastException encountered, please restart Play", e);
         }
     }
 

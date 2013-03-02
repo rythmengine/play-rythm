@@ -38,7 +38,7 @@ public class ActionTagBridge extends JavaTagBase {
     }
 
     @Override
-    protected void call(ParameterList params, Body body) {
+    protected void call(__ParameterList params, __Body body) {
         Object[] oa = new Object[paramNumber];
         try {
             for (int i = 0; i < paramNumber; ++i) {
@@ -65,7 +65,7 @@ public class ActionTagBridge extends JavaTagBase {
                 } else {
                     Http.Response resp = new Http.Response();
                     resp.out = new ByteArrayOutputStream();
-                    ((Result) r).apply(null, resp);
+                    r.apply(null, resp);
                     try {
                         p(resp.out.toString("utf-8"));
                     } catch (UnsupportedEncodingException e0) {
@@ -83,7 +83,7 @@ public class ActionTagBridge extends JavaTagBase {
     }
 
     @Override
-    public String getName() {
+    public String __getName() {
         return name;
     }
 

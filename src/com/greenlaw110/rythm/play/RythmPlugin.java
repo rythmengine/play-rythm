@@ -1,7 +1,10 @@
 package com.greenlaw110.rythm.play;
 
-import com.greenlaw110.rythm.*;
+import com.greenlaw110.rythm.Rythm;
+import com.greenlaw110.rythm.RythmEngine;
 import com.greenlaw110.rythm.cache.ICacheService;
+import com.greenlaw110.rythm.extension.*;
+import com.greenlaw110.rythm.internal.IParserFactory;
 import com.greenlaw110.rythm.internal.dialect.SimpleRythm;
 import com.greenlaw110.rythm.logger.ILogger;
 import com.greenlaw110.rythm.logger.ILoggerFactory;
@@ -9,26 +12,22 @@ import com.greenlaw110.rythm.play.parsers.*;
 import com.greenlaw110.rythm.play.utils.ActionInvokeProcessor;
 import com.greenlaw110.rythm.play.utils.StaticRouteResolver;
 import com.greenlaw110.rythm.play.utils.TemplateClassAppEnhancer;
-import com.greenlaw110.rythm.runtime.ITag;
-import com.greenlaw110.rythm.spi.IParserFactory;
-import com.greenlaw110.rythm.spi.ITemplateClassEnhancer;
-import com.greenlaw110.rythm.spi.ITemplateExecutionExceptionHandler;
+import com.greenlaw110.rythm.template.ITag;
 import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.template.TemplateBase;
-import com.greenlaw110.rythm.utils.*;
+import com.greenlaw110.rythm.utils.S;
 import com.stevesoft.pat.Regex;
 import play.Logger;
 import play.Play;
 import play.PlayPlugin;
 import play.cache.Cache;
 import play.classloading.ApplicationClasses;
-import play.classloading.HotswapAgent;
 import play.classloading.enhancers.ControllersEnhancer;
 import play.exceptions.UnexpectedException;
 import play.mvc.Http;
 import play.mvc.Scope;
 import play.mvc.results.*;
-import play.templates.RythmTagContext;
+import play.templates.JavaExtensions;
 import play.templates.TagContext;
 import play.templates.Template;
 import play.vfs.VirtualFile;
@@ -37,8 +36,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.lang.instrument.ClassDefinition;
-import java.lang.instrument.UnmodifiableClassException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -106,7 +103,7 @@ public class RythmPlugin extends PlayPlugin {
     public static boolean underscoreImplicitVariableName = false;
     public static boolean refreshOnRender = true;
     public static String templateRoot = R_VIEW_ROOT;
-    
+
     public static boolean enableCodeMarker = false;
     public static String jquery = "http://code.jquery.com/jquery-1.9.0.min.js";
     public static boolean fontawesome = false;
@@ -171,9 +168,9 @@ public class RythmPlugin extends PlayPlugin {
         // special configurations
         underscoreImplicitVariableName = Boolean.parseBoolean(playConf.getProperty("rythm.implicitVariable.underscore", "false"));
         refreshOnRender = Boolean.parseBoolean(playConf.getProperty("rythm.resource.refreshOnRender", "true"));
-        
+
         enableCodeMarker = Play.mode.isDev() && Boolean.parseBoolean(playConf.getProperty("rythm.enableCodeMarker", "false"));
-        jquery = playConf.getProperty("rythm.jquery", "http://code.jquery.com/jquery-1.9.0.min.js");
+        jquery = playConf.getProperty("rythm.jquery", "http://code.jquery.com/jquery-1.9.1.min.js");
         fontawesome = Boolean.parseBoolean(playConf.getProperty("rythm.fontawesome", "false"));
 
         Properties p = new Properties();
@@ -181,24 +178,20 @@ public class RythmPlugin extends PlayPlugin {
         // set default configurations
         // p.put("rythm.root", new File(Play.applicationPath, "app/views"));
         // p.put("rythm.tag.root", new File(Play.applicationPath, tagRoot));
-        p.put("rythm.pluginVersion", VERSION);
-        p.put("rythm.tag.autoscan", false); // we want to scan tag folder coz we have Virtual Filesystem
-        p.put("rythm.classLoader.parent", Play.classloader);
-        p.put("rythm.resource.refreshOnRender", "true");
-        p.put("rythm.loadPreCompiled", Play.usePrecompiled);
+        p.put("rythm.engine.plugin.version", VERSION);
+        p.put("rythm.engine.class_loader.parent", Play.classloader);
+        p.put("rythm.engine.load_precompiled.enabled", Play.usePrecompiled);
         boolean isProd = Play.mode.isProd();
-        p.put("rythm.recordTemplateSourceOnRuntimeError", isProd);
-        p.put("rythm.recordJavaSourceOnRuntimeError", isProd);
-        p.put("rythm.recordTemplateSourceOnError", isProd);
-        p.put("rythm.recordJavaSourceOnError", isProd);
-        p.put("rythm.logSourceInfoOnRuntimeError", true);
+        p.put("rythm.log.source.template.enabled", isProd);
+        p.put("rythm.log.source.java.enabled", isProd);
+        p.put("rythm.engine.precompile.mode", Play.mode.isProd() || System.getProperty("precompile") != null);
         if (Play.usePrecompiled || Play.getFile("precompiled").exists()) {
             File preCompiledRoot = new File(Play.getFile("precompiled"), "rythm");
             if (!preCompiledRoot.exists()) preCompiledRoot.mkdirs();
-            p.put("rythm.preCompiled.root", preCompiledRoot);
+            p.put("rythm.home.precompiled", preCompiledRoot);
         }
         p.put("rythm.resource.loader", new VirtualFileTemplateResourceLoader());
-        p.put("rythm.classLoader.byteCodeHelper", new IByteCodeHelper() {
+        p.put("rythm.class_loader.bytecode_helper", new IByteCodeHelper() {
             @Override
             public byte[] findByteCode(String typeName) {
                 ApplicationClasses classBag = Play.classes;
@@ -210,52 +203,22 @@ public class RythmPlugin extends PlayPlugin {
                 }
             }
         });
-        p.put("rythm.logger.factory", new ILoggerFactory() {
+        p.put("rythm.log.factory", new ILoggerFactory() {
             @Override
             public ILogger getLogger(Class<?> clazz) {
                 return PlayRythmLogger.instance;
             }
         });
-        p.put("rythm.enableJavaExtensions", true); // enable java extension by default
+        p.put("rythm.feature.transformer.enabled", true); // enable java extension by default
 
-        // handle implicit render args
-        p.put("rythm.implicitRenderArgProvider", new IImplicitRenderArgProvider() {
-            @Override
-            public Map<String, ?> getRenderArgDescriptions() {
-                Map<String, Object> m = new HashMap<String, Object>();
-                // App registered render args
-                for (ImplicitVariables.Var var : implicitRenderArgs) {
-                    m.put(var.name(), var.type);
-                }
-                // Play default render args
-                for (ImplicitVariables.Var var : ImplicitVariables.vars) {
-                    m.put(var.name(), var.type);
-                }
-                return m;
-            }
-
-            @Override
-            public void setRenderArgs(ITemplate template) {
-                Map<String, Object> m = new HashMap<String, Object>();
-                // some system implicit render args are not set, so we need to set them here.
-                for (ImplicitVariables.Var var : ImplicitVariables.vars) {
-                    m.put(var.name(), var.evaluate());
-                }
-                // application render args should already be set in controller methods
-                template.setRenderArgs(m);
-            }
-
-            @Override
-            public List<String> getImplicitImportStatements() {
-                return Arrays.asList(new String[]{"controllers.*", "models.*"});
-            }
-        });
-        debug("Implicit render variables set up");
-
-        p.put("rythm.cache.prodOnly", "true");
-        p.put("rythm.cache.defaultTTL", 60 * 60);
+        p.put("rythm.cache.prod_only", "true");
+        p.put("rythm.default.cache_ttl", 60 * 60);
         p.put("rythm.cache.service", new ICacheService() {
             private int defaultTTL = 60 * 60;
+
+            @Override
+            public void startup() {
+            }
 
             @Override
             public void put(String key, Serializable value, int ttl) {
@@ -287,7 +250,7 @@ public class RythmPlugin extends PlayPlugin {
             }
 
             @Override
-            public void clean() {
+            public void clear() {
                 Cache.clear();
             }
 
@@ -298,18 +261,7 @@ public class RythmPlugin extends PlayPlugin {
 
             @Override
             public void shutdown() {
-                // doing nothing as the resource is managed by Play cache service
-            }
-        });
-
-        p.put("rythm.cache.durationParser", new IDurationParser() {
-            @Override
-            public int parseDuration(String s) {
-                if (null == s) return RythmPlugin.engine.defaultTTL;
-                String confDuration = play.Play.configuration.getProperty(s);
-                if (null != confDuration) s = confDuration;
-                if ("forever".equals(confDuration)) return -1;
-                return IDurationParser.DEFAULT_PARSER.parseDuration(s);
+                clear();
             }
         });
 
@@ -322,14 +274,14 @@ public class RythmPlugin extends PlayPlugin {
         debug("User defined rythm properties configured");
 
         // restricted class in sandbox mode
-        String appRestricted = p.getProperty("rythm.restrictedClasses", "");
+        String appRestricted = p.getProperty("rythm.sandbox.restricted_classes", "");
         appRestricted += ";play.Play;play.classloading;play.server";
-        p.setProperty("rythm.restrictedClasses", appRestricted);
+        p.setProperty("rythm.sandbox.restricted_classes", appRestricted);
 
         // set template root
-        templateRoot = p.getProperty("rythm.root", templateRoot);
-        p.put("rythm.root", new File(Play.applicationPath, templateRoot));
-        if (Logger.isDebugEnabled()) debug("rythm template root set to: %s", p.get("rythm.root"));
+        templateRoot = p.getProperty("rythm.home.template", templateRoot);
+        p.put("rythm.home.template", new File(Play.applicationPath, templateRoot));
+        if (Logger.isDebugEnabled()) debug("rythm template root set to: %s", p.get("rythm.home.template"));
 
 //        // set tag root
 //        tagRoot = p.getProperty("rythm.tag.root", tagRoot);
@@ -341,156 +293,152 @@ public class RythmPlugin extends PlayPlugin {
         debug("Play standalone play server? %s", Play.standalonePlayServer);
         boolean gae = !Play.standalonePlayServer
                 || Boolean.valueOf(p.getProperty("rythm.gae", "false"))
-                || Boolean.valueOf(p.getProperty("rythm.noFileWrite", "false"));
+                || Boolean.valueOf(p.getProperty("rythm.engine.file_write", "false"));
         if (!gae) {
             File tmpDir = new File(Play.tmpDir, "rythm");
             tmpDir.mkdirs();
-            p.put("rythm.tmpDir", tmpDir);
-            if (Logger.isDebugEnabled()) debug("rythm tmp dir set to %s", p.get("rythm.tmpDir"));
+            p.put("rythm.home.tmp", tmpDir);
+            if (Logger.isDebugEnabled()) debug("rythm tmp dir set to %s", p.get("rythm.home.tmp"));
         } else {
             warn("GAE enabled");
-            p.put("rythm.noFileWrite", true);
+            p.put("rythm.engine.file_write", true);
         }
 
-        // always get "java.lang.UnsupportedOperationException: class redefinition failed: attempted to change the schema" exception
-        // from the hotswapAgent
-        boolean useHotswapAgent = Boolean.valueOf(playConf.getProperty("rythm.useHotswapAgent", "false"));
-        if (useHotswapAgent) {
-            p.put("rythm.classLoader.hotswapAgent", new IHotswapAgent() {
-                @Override
-                public void reload(ClassDefinition... definitions) throws UnmodifiableClassException, ClassNotFoundException {
-                    HotswapAgent.reload(definitions);
-                }
-            });
-        }
+        p.put("rythm.engine.mode", Play.mode.isDev() && Play.standalonePlayServer ? Rythm.Mode.dev : Rythm.Mode.prod);
+        p.put("rythm.playframework", true);
 
-        p.put("rythm.mode", Play.mode.isDev() && Play.standalonePlayServer ? Rythm.Mode.dev : Rythm.Mode.prod);
-        p.put("rythm.playHost", true);
+        p.put("rythm.render.listener", new IRythmListener.ListenerAdaptor() {
+            @Override
+            public void onInvoke(ITag tag) {
+                TagContext.enterTag(tag.__getName());
+            }
 
-        if (null == engine) {
-            engine = new RythmEngine(p);
-            engine.registerListener(new IRythmListener() {
-                @Override
-                public void onRender(ITemplate template) {
-                    Map<String, Object> m = new HashMap<String, Object>();
-                    for (ImplicitVariables.Var var : ImplicitVariables.vars) {
-                        m.put(var.name(), var.evaluate());
-                    }
-                    template.setRenderArgs(m);
+            @Override
+            public void invoked(ITag tag) {
+                TagContext.exitTag();
+            }
+        });
+
+        p.put("rythm.codegen.byte_code_enhancer", new IByteCodeEnhancer() {
+            @Override
+            public byte[] enhance(String className, byte[] classBytes) throws Exception {
+                if (engine.conf().disableFileWrite()) return classBytes;
+                ApplicationClasses.ApplicationClass applicationClass = new ApplicationClasses.ApplicationClass();
+                applicationClass.javaByteCode = classBytes;
+                applicationClass.enhancedByteCode = classBytes;
+                File f = File.createTempFile("rythm_", className.contains("$") ? "$1" : "" + ".java", Play.tmpDir);
+                applicationClass.javaFile = VirtualFile.open(f);
+                try {
+                    new TemplatePropertiesEnhancer().enhanceThisClass(applicationClass);
+                } catch (Exception e) {
+                    error(e, "Error enhancing class: %s", className);
                 }
-            });
-            engine.registerTemplateClassEnhancer(new ITemplateClassEnhancer() {
-                @Override
-                public byte[] enhance(String className, byte[] classBytes) throws Exception {
-                    if (engine.noFileWrite) return classBytes;
-                    ApplicationClasses.ApplicationClass applicationClass = new ApplicationClasses.ApplicationClass();
-                    applicationClass.javaByteCode = classBytes;
-                    applicationClass.enhancedByteCode = classBytes;
-                    File f = File.createTempFile("rythm_", className.contains("$") ? "$1" : "" + ".java", Play.tmpDir);
-                    applicationClass.javaFile = VirtualFile.open(f);
+                if (!f.delete()) f.deleteOnExit();
+                return applicationClass.enhancedByteCode;
+            }
+        });
+
+        p.put("rythm.codegen.source_code_enhancer", new ISourceCodeEnhancer() {
+            @Override
+            public List<String> imports() {
+                List<String> l = Arrays.asList(TemplateClassAppEnhancer.imports().split("[,\n]+"));
+                l.add(JavaExtensions.class.getName());
+                return l;
+            }
+
+            @Override
+            public String sourceCode() {
+                String prop = "\n\tprotected <T> T _getBeanProperty(Object o, String prop) {"
+                        + "\n\t\treturn (T)com.greenlaw110.rythm.play.utils.JavaHelper.getProperty(o, prop);"
+                        + "\n\t}\n"
+                        + "\n\tprotected void _setBeanProperty(Object o, String prop, Object val) {"
+                        + "\n\t\tcom.greenlaw110.rythm.play.utils.JavaHelper.setProperty(o, prop, val);"
+                        + "\n\t}\n"
+                        + "\n\tprotected boolean _hasBeanProperty(Object o, String prop) {"
+                        + "\n\t\treturn com.greenlaw110.rythm.play.utils.JavaHelper.hasProperty(o, prop);"
+                        + "\n\t}\n";
+                String url = "\n    protected play.mvc.Router.ActionDefinition _act(String action, Object... params) {return _act(false, action, params);}" +
+                        "\n    protected play.mvc.Router.ActionDefinition _act(boolean isAbsolute, String action, Object... params) {" +
+                        "\n        com.greenlaw110.rythm.internal.compiler.TemplateClass tc = getTemplateClass(true);" +
+                        "\n        boolean escapeXML = (!tc.isStringTemplate() && tc.templateResource.getKey().toString().endsWith(\".xml\"));" +
+                        "\n        return new com.greenlaw110.rythm.play.utils.ActionBridge(isAbsolute, escapeXML).invokeMethod(action, params);" +
+                        "\n   }\n" +
+                        "\n    protected String _url(String action, Object... params) {return _url(false, action, params);}" +
+                        "\n    protected String _url(boolean isAbsolute, String action, Object... params) { return _act(isAbsolute, action, params).toString();" +
+                        "\n   }\n";
+
+                String msg = "\n    protected String _msg(String key, Object ... params) {return play.i18n.Messages.get(key, params);}";
+                // add String _url(String) method to template class
+                return prop + msg + url + TemplateClassAppEnhancer.sourceCode();
+            }
+
+            @Override
+            public Map<String, ?> getRenderArgDescriptions() {
+                Map<String, Object> m = new HashMap<String, Object>();
+                // App registered render args
+                for (ImplicitVariables.Var var : implicitRenderArgs) {
+                    m.put(var.name(), var.type);
+                }
+                // Play default render args
+                for (ImplicitVariables.Var var : ImplicitVariables.vars) {
+                    m.put(var.name(), var.type);
+                }
+                return m;
+            }
+
+            @Override
+            public void setRenderArgs(ITemplate template) {
+                Map<String, Object> m = new HashMap<String, Object>();
+                for (ImplicitVariables.Var var : ImplicitVariables.vars) {
+                    m.put(var.name(), var.evaluate());
+                }
+                template.__setRenderArgs(m);
+            }
+        });
+        
+        p.put("rythm.render.exception_handler", new IRenderExceptionHandler() {
+            @Override
+            public boolean handleTemplateExecutionException(Exception e, TemplateBase template) {
+                boolean handled = false;
+                if (e instanceof RenderTemplate) {
+                    template.p(((RenderTemplate) e).getContent());
+                } else if (e instanceof RenderHtml || e instanceof RenderJson || e instanceof RenderStatic || e instanceof RenderXml || e instanceof RenderText) {
+                    Http.Response resp = new Http.Response();
+                    resp.out = new ByteArrayOutputStream();
+                    ((Result) e).apply(null, resp);
                     try {
-                        new TemplatePropertiesEnhancer().enhanceThisClass(applicationClass);
-                    } catch (Exception e) {
-                        error(e, "Error enhancing class: %s", className);
+                        template.p(resp.out.toString("utf-8"));
+                    } catch (UnsupportedEncodingException e0) {
+                        throw new UnexpectedException("utf-8 not supported?");
                     }
-                    if (!f.delete()) f.deleteOnExit();
-                    return applicationClass.enhancedByteCode;
                 }
+                if (handled) {
+                    // allow next controller action call
+                    ControllersEnhancer.ControllerInstrumentation.initActionCall();
+                    resetActionCallFlag();
+                    return true;
+                }
+                return false;
+            }
+        });
 
-                @Override
-                public String sourceCode() {
-                    String prop = "\n\tprotected <T> T _getBeanProperty(Object o, String prop) {"
-                            + "\n\t\treturn (T)com.greenlaw110.rythm.play.utils.JavaHelper.getProperty(o, prop);"
-                            + "\n\t}\n"
-                            + "\n\tprotected void _setBeanProperty(Object o, String prop, Object val) {"
-                            + "\n\t\tcom.greenlaw110.rythm.play.utils.JavaHelper.setProperty(o, prop, val);"
-                            + "\n\t}\n"
-                            + "\n\tprotected boolean _hasBeanProperty(Object o, String prop) {"
-                            + "\n\t\treturn com.greenlaw110.rythm.play.utils.JavaHelper.hasProperty(o, prop);"
-                            + "\n\t}\n";
-                    String url = "\n    protected play.mvc.Router.ActionDefinition _act(String action, Object... params) {return _act(false, action, params);}" +
-                            "\n    protected play.mvc.Router.ActionDefinition _act(boolean isAbsolute, String action, Object... params) {" +
-                            "\n        com.greenlaw110.rythm.internal.compiler.TemplateClass tc = getTemplateClass(true);" +
-                            "\n        boolean escapeXML = (!tc.isStringTemplate() && tc.templateResource.getKey().toString().endsWith(\".xml\"));" +
-                            "\n        return new com.greenlaw110.rythm.play.utils.ActionBridge(isAbsolute, escapeXML).invokeMethod(action, params);" +
-                            "\n   }\n" +
-                            "\n    protected String _url(String action, Object... params) {return _url(false, action, params);}" +
-                            "\n    protected String _url(boolean isAbsolute, String action, Object... params) { return _act(isAbsolute, action, params).toString();" +
-                            "\n   }\n";
-
-                    String msg = "\n    protected String _msg(String key, Object ... params) {return play.i18n.Messages.get(key, params);}";
-                    // add String _url(String) method to template class
-                    TextBuilder b = new TextBuilder();
-                    return prop + msg + url + TemplateClassAppEnhancer.sourceCode();
-                }
-
-                @Override
-                public boolean equals(Object obj) {
-                    if (obj == this) return true;
-                    if (obj instanceof ITemplateClassEnhancer) {
-                        ITemplateClassEnhancer that = (ITemplateClassEnhancer) obj;
-
-                    }
-                    return false;
-                }
-            });
-            engine.registerGlobalImportProvider(new IImportProvider() {
-                @Override
-                public List<String> imports() {
-                    return Arrays.asList(TemplateClassAppEnhancer.imports().split("[,\n]+"));
-                }
-            });
-            debug("Template class enhancer registered");
-            //Rythm.engine.cacheService.shutdown();
-            Rythm.init(engine);
-            engine.preCompiling = true;
-
-            IParserFactory[] factories = {new AbsoluteUrlReverseLookupParser(), new UrlReverseLookupParser(),
-                    new MessageLookupParser(), new GroovyVerbatimTagParser(), new ExitIfNoModuleParser()};
-            engine.getExtensionManager().registerUserDefinedParsers(factories).registerUserDefinedParsers(SimpleRythm.ID, factories).registerTemplateExecutionExceptionHandler(new ITemplateExecutionExceptionHandler() {
-                @Override
-                public boolean handleTemplateExecutionException(Exception e, TemplateBase template) {
-                    boolean handled = false;
-                    if (e instanceof RenderTemplate) {
-                        template.p(((RenderTemplate) e).getContent());
-                    } else if (e instanceof RenderHtml || e instanceof RenderJson || e instanceof RenderStatic || e instanceof RenderXml || e instanceof RenderText) {
-                        Http.Response resp = new Http.Response();
-                        resp.out = new ByteArrayOutputStream();
-                        ((Result) e).apply(null, resp);
-                        try {
-                            template.p(resp.out.toString("utf-8"));
-                        } catch (UnsupportedEncodingException e0) {
-                            throw new UnexpectedException("utf-8 not supported?");
-                        }
-                    }
-                    if (handled) {
-                        // allow next controller action call
-                        ControllersEnhancer.ControllerInstrumentation.initActionCall();
-                        resetActionCallFlag();
-                        return true;
-                    }
-                    return false;
-                }
-            }).registerExpressionProcessor(new ActionInvokeProcessor()).registerTagInvoeListener(new ITagInvokeListener() {
-                @Override
-                public void onInvoke(ITag tag) {
-                    RythmTagContext.enterTag(tag.getName());
-                }
-
-                @Override
-                public void tagInvoked(ITag tag) {
-                    RythmTagContext.exitTag();
-                }
-            });
-            debug("Play specific parser registered");
-        } else {
-            engine.init(p);
+        if (null != engine) {
+            engine.shutdown();
         }
+
+        engine = new RythmEngine(p);
+        //Rythm.engine.cacheService.shutdown();
+        Rythm.init(engine);
+
+        IParserFactory[] factories = {new AbsoluteUrlReverseLookupParser(), new UrlReverseLookupParser(),
+                new MessageLookupParser(), new GroovyVerbatimTagParser(), new ExitIfNoModuleParser()};
+        engine.extensionManager().registerUserDefinedParsers(factories).registerUserDefinedParsers(SimpleRythm.ID, factories).registerExpressionProcessor(new ActionInvokeProcessor());
+        debug("Play specific parser registered");
 
         FastTagBridge.registerFastTags(engine);
         registerJavaTags(engine);
         ActionTagBridge.registerActionTags(engine);
-        if (engine.enableJavaExtensions()) {
+        if (engine.conf().transformEnabled()) {
             JavaExtensionBridge.registerPlayBuiltInJavaExtensions(engine);
             JavaExtensionBridge.registerAppJavaExtensions(engine);
         }
@@ -530,13 +478,12 @@ public class RythmPlugin extends PlayPlugin {
 
     @Override
     public void onApplicationStart() {
-        if (engine.mode.isProd()) {
+        if (engine.mode().isProd()) {
             // pre load template classes if they are not loaded yet
             VirtualFile vf = Play.getVirtualFile("app/rythm/welcome.html");
             String key = vf.relativePath().replaceFirst("\\{.*?\\}", "");
-            if (!engine.classes.tmplIdx.containsKey(key)) RythmTemplateLoader.scanRythmFolder();
+            if (!engine.classes().tmplIdx.containsKey(key)) RythmTemplateLoader.scanRythmFolder();
         }
-        engine.preCompiling = false;
     }
 
     private void registerJavaTags(RythmEngine engine) {
@@ -594,26 +541,7 @@ public class RythmPlugin extends PlayPlugin {
 
     @Override
     public void detectChange() {
-        if (!refreshOnRender) engine.classLoader.detectChanges();
-//        if (TemplateClassAppEnhancer.changed()) {
-//            File f = new File(Play.tmpDir, "rythm");
-//            if (f.exists() && f.isDirectory()) {
-//                try {
-//                    Iterator<File> itr = FileUtils.iterateFiles(f, new String[]{"rythm"}, true);
-//                    while (itr.hasNext()) {
-//                        File f0 = itr.next();
-//                        f0.delete();
-//                    }
-//                } catch (Exception e) {
-//                    error(e, "error clear rythm template class cache files");
-//                    // just ignore
-//                }
-//            }
-//            engine.restart(new ClassReloadException(""));
-//            engine = null;
-//            onConfigurationRead();
-//            //TemplateClassAppEnhancer.sourceCode(); // reload the cache
-//        }
+        if (!refreshOnRender) engine.classLoader().detectChanges();
     }
 
     private Map<Class<? extends ICacheKeyProvider>, ICacheKeyProvider> keyProviders = new HashMap<Class<? extends ICacheKeyProvider>, ICacheKeyProvider>();
@@ -664,7 +592,7 @@ public class RythmPlugin extends PlayPlugin {
                 // the cache key provider to handle session and scheme
 
                 //if (cache4.useSessionData()) {
-                    //cacheKey = cacheKey + Scope.Session.current().toString();
+                //cacheKey = cacheKey + Scope.Session.current().toString();
                 //}
                 //if (cache4.schemeSensitive()) cacheKey += request.secure;
             } else {

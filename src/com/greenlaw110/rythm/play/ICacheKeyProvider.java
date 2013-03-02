@@ -1,6 +1,5 @@
 package com.greenlaw110.rythm.play;
 
-import org.bouncycastle.jce.spec.GOST3410PublicKeyParameterSetSpec;
 import play.mvc.Http;
 import play.mvc.Scope;
 

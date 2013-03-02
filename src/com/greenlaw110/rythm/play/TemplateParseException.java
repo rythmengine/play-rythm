@@ -1,6 +1,5 @@
 package com.greenlaw110.rythm.play;
 
-import com.greenlaw110.rythm.exception.ParseException;
 import play.exceptions.TemplateException;
 import play.templates.Template;
 

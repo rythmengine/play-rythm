@@ -5,4 +5,4 @@ lib
 dist
 *.eml
 *.iml
-targets
+target

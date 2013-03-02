@@ -1,6 +1,7 @@
 package com.greenlaw110.rythm.play.parsers;
 
-import com.greenlaw110.rythm.spi.IKeyword;
+
+import com.greenlaw110.rythm.internal.IKeyword;
 
 /**
  * Created by IntelliJ IDEA.

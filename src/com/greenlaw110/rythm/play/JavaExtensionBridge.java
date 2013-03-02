@@ -1,7 +1,8 @@
 package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.RythmEngine;
-import com.greenlaw110.rythm.utils.IJavaExtension;
+import com.greenlaw110.rythm.internal.ExtensionManager;
+import com.greenlaw110.rythm.internal.IJavaExtension;
 import play.Play;
 import play.classloading.ApplicationClasses;
 import play.templates.JavaExtensions;
@@ -33,6 +34,7 @@ public class JavaExtensionBridge {
 
     public static void registerAppJavaExtensions(RythmEngine engine) {
         long l = System.currentTimeMillis();
+        ExtensionManager em = engine.extensionManager();
         List<ApplicationClasses.ApplicationClass> classes = Play.classes.getAssignableClasses(JavaExtensions.class);
         for (ApplicationClasses.ApplicationClass ac : classes) {
             Class<?> jc = ac.javaClass;
@@ -45,9 +47,9 @@ public class JavaExtensionBridge {
                 String cn0 = jc.getName();
                 String mn = m.getName();
                 if (len == 1) {
-                    engine.registerJavaExtension(new IJavaExtension.VoidParameterExtension(cn, mn, String.format("%s.%s", cn0, mn)));
+                    em.registerJavaExtension(new IJavaExtension.VoidParameterExtension(cn, mn, String.format("%s.%s", cn0, mn)));
                 } else {
-                    engine.registerJavaExtension(new IJavaExtension.ParameterExtension(cn, mn, ".+", String.format("%s.%s", cn0, mn)));
+                    em.registerJavaExtension(new IJavaExtension.ParameterExtension(cn, mn, ".+", String.format("%s.%s", cn0, mn)));
                 }
             }
         }
@@ -59,21 +61,12 @@ public class JavaExtensionBridge {
         String[] voidExtensions = {
                 "enumValues",
                 "asXml",
-                //"capitalizeWords",
                 "eval",
-                "format",
                 "since",
-                "nl2br",
-                "urlEncode",
-                "formatSize",
                 "addSlashes",
-                //"capFirst",
-                //"capAll",
                 "pluralize",
                 "page",
-                //"noAccents",
-                //"slugify",
-                //"camelCase",
+                "slugify",
                 "last"
         };
         String[] nonVoidExtensions = {
@@ -81,11 +74,9 @@ public class JavaExtensionBridge {
                 "add",
                 "remove",
                 "pad",
-                "format",
                 "page",
                 "since",
                 "asdate",
-                "formatCurrency",
                 "cut",
                 "divisibleBy",
                 "pluralize",
@@ -93,13 +84,14 @@ public class JavaExtensionBridge {
                 "yesno",
                 "join"
         };
+        ExtensionManager em = engine.extensionManager();
         for (String s : voidExtensions) {
-            engine.registerJavaExtension(new PlayVoidParameterExtension(s));
+            em.registerJavaExtension(new PlayVoidParameterExtension(s));
         }
         for (String s : nonVoidExtensions) {
-            engine.registerJavaExtension(new PlayParameterExtension(s, ".+"));
+            em.registerJavaExtension(new PlayParameterExtension(s, ".+"));
         }
-        engine.registerGlobalImports("play.templates.JavaExtensions");
+        // moved to codegen.source_code_enhancer.impl: engine.registerGlobalImports("play.templates.JavaExtensions");
         RythmPlugin.debug("%sms to register play built-in java extension", System.currentTimeMillis() - l);
     }
 }

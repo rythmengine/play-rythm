@@ -1,10 +1,10 @@
 package com.greenlaw110.rythm.play.parsers;
 
+import com.greenlaw110.rythm.internal.IContext;
+import com.greenlaw110.rythm.internal.IParser;
+import com.greenlaw110.rythm.internal.IParserFactory;
+import com.greenlaw110.rythm.internal.Token;
 import com.greenlaw110.rythm.internal.parser.ParserBase;
-import com.greenlaw110.rythm.spi.IContext;
-import com.greenlaw110.rythm.spi.IParser;
-import com.greenlaw110.rythm.spi.IParserFactory;
-import com.greenlaw110.rythm.spi.Token;
 import com.greenlaw110.rythm.utils.TextBuilder;
 
 import java.util.regex.Matcher;

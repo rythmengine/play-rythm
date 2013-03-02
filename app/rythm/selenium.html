@@ -7,7 +7,7 @@
         </tr>
     </thead>
     <tbody>
-      @for(String command: _body.toString().split("\n")) {
+      @for(String command: __body.toString().split("\n")) {
         @if (command.trim().startsWith("//") || command.trim().startsWith("#")) {
           <tr>
               <td colspan="3" style="font-style:italic; background: #e2e2e2">${command}</td>

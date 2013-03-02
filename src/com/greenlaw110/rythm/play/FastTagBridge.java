@@ -1,7 +1,7 @@
 package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.RythmEngine;
-import com.greenlaw110.rythm.runtime.ITag;
+import com.greenlaw110.rythm.template.ITag;
 import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.template.JavaTagBase;
 import com.greenlaw110.rythm.template.TemplateBase;
@@ -11,7 +11,6 @@ import play.classloading.ApplicationClasses;
 import play.exceptions.UnexpectedException;
 import play.templates.FastTags;
 import play.templates.GroovyTemplate;
-import play.templates.TagContext;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -46,9 +45,9 @@ public class FastTagBridge extends JavaTagBase {
     }
 
     public static class TagBodyClosure extends Closure {
-        private Body _body;
+        private __Body _body;
         private PrintWriter pw;
-        public TagBodyClosure(Body body, PrintWriter pw) {
+        public TagBodyClosure(__Body body, PrintWriter pw) {
             super(null);
             _body = body;
             this.pw = pw;
@@ -80,7 +79,7 @@ public class FastTagBridge extends JavaTagBase {
                 pw = (PrintWriter)newValue;
                 return;
             }
-            _body.setProperty(property, newValue);
+            _body.__setProperty(property, newValue);
         }
 
         @Override
@@ -88,7 +87,7 @@ public class FastTagBridge extends JavaTagBase {
             if ("out".equals(property)) {
                 return pw;
             }
-            return _body.getProperty(property);
+            return _body.__getProperty(property);
         }
     }
 
@@ -109,16 +108,16 @@ public class FastTagBridge extends JavaTagBase {
     }
 
     @Override
-    public String getName() {
+    public String __getName() {
         return (null == nameSpace || "".equals(nameSpace)) ? tagName : nameSpace + "." + tagName;
     }
 
     @Override
-    public void call(ParameterList params, Body body) {
+    public void call(__ParameterList params, __Body body) {
         PrintWriter w = new PrintWriter(new Writer() {
             @Override
             public void write(char[] cbuf, int off, int len) throws IOException {
-                out().append(cbuf, off, len);
+                buffer().append(cbuf, off, len);
             }
 
             @Override
@@ -137,7 +136,7 @@ public class FastTagBridge extends JavaTagBase {
             }
         }
         try {
-            method.invoke(null, paramMap, null == body ? null : new TagBodyClosure(body, w), w, new RythmExecutableTemplate(caller()), _line());
+            method.invoke(null, paramMap, null == body ? null : new TagBodyClosure(body, w), w, new RythmExecutableTemplate(caller()), __line());
         } catch (InvocationTargetException e) {
             throw new UnexpectedException("cannot invoke fast tag method: " + tagName, e);
         } catch (IllegalAccessException e) {
@@ -146,7 +145,7 @@ public class FastTagBridge extends JavaTagBase {
     }
 
     @Override
-    protected TemplateBase internalClone() {
+    protected TemplateBase __internalClone() {
         FastTagBridge bridge = new FastTagBridge(nameSpace, tagName, targetClass);
         return bridge;
     }
@@ -180,7 +179,7 @@ public class FastTagBridge extends JavaTagBase {
         if (m.getParameterTypes().length != 5) return;
         //note, need to strip off leading '_' from method name
         FastTagBridge tag = new FastTagBridge(ns, m.getName().substring(1), jc);
-        ITag tag0 = engine.tags.get(tag.getName());
+        ITag tag0 = engine.getTag(tag.__getName());
         // FastTagBridge has lowest priority, thus if there are other tags already registered
         // with the same name, FastTag bridge will not be registered again
         if (null == tag0 || (tag0 instanceof FastTagBridge)) engine.registerTag(tag);

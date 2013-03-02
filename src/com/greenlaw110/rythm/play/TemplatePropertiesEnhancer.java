@@ -26,7 +26,7 @@ class TemplatePropertiesEnhancer extends PropertiesEnhancer {
         this.classPool.insertClassPath(new ClassPath() {
             @Override
             public InputStream openClassfile(String className) throws NotFoundException {
-                TemplateClass tc = RythmPlugin.engine.classes.getByClassName(className);
+                TemplateClass tc = RythmPlugin.engine.classes().getByClassName(className);
                 if (null != tc) {
                     if (null != tc.enhancedByteCode) return new ByteArrayInputStream(tc.enhancedByteCode);
                     else throw new FastRuntimeException("Cannot find enhanced byte class for " + className);
@@ -40,7 +40,7 @@ class TemplatePropertiesEnhancer extends PropertiesEnhancer {
                 if (pos > -1) {
                     className = className.substring(0, pos);
                 }
-                if (Rythm.engine().classes.getByClassName(className) != null) {
+                if (Rythm.engine().classes().getByClassName(className) != null) {
                     String cname = className.replace('.', '/') + ".class";
                     try {
                         // return new File(cname).toURL();
