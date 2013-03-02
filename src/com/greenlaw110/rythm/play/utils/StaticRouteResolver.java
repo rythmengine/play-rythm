@@ -1,18 +1,16 @@
 package com.greenlaw110.rythm.play.utils;
 
-import com.greenlaw110.rythm.logger.Logger;
 import com.greenlaw110.rythm.play.RythmPlugin;
-import com.greenlaw110.rythm.utils.S;
-import org.apache.commons.lang.StringUtils;
+import com.stevesoft.pat.Regex;
 import play.Play;
-import play.exceptions.ActionNotFoundException;
-import play.exceptions.ConfigurationException;
 import play.exceptions.NoRouteFoundException;
 import play.libs.IO;
 import play.mvc.Http;
-import play.mvc.Router;
+import play.templates.TemplateLoader;
 import play.vfs.VirtualFile;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +30,7 @@ public class StaticRouteResolver {
 
     private static Map<String, String> routes = new HashMap<String, String>();
     private static List<String> urlList = new ArrayList<String>();
+    private static Map<String, String> reverseRoutes = new HashMap<String, String>();
 
     public static String reverseWithCheck(String name, boolean absolute) {
         // play's reverse static url resolution has problem: it can't handle @url(/js/x.js) if you have /js shortcut to public/javascripts
@@ -51,7 +50,7 @@ public class StaticRouteResolver {
             String appBaseUrl = Play.configuration.getProperty("application.baseUrl", "application.baseUrl");
             if (appBaseUrl.endsWith("/")) {
                 // remove the trailing slash
-                appBaseUrl = appBaseUrl.substring(0, appBaseUrl.length()-1);
+                appBaseUrl = appBaseUrl.substring(0, appBaseUrl.length() - 1);
             }
             return appBaseUrl;
 
@@ -63,8 +62,12 @@ public class StaticRouteResolver {
     private static String reverse(VirtualFile file, boolean absolute) {
         String path = file.relativePath();
         path = path.substring(path.indexOf("}") + 1);
-        for (String url: urlList) {
+        for (String url : urlList) {
             String staticDir = routes.get(url);
+            if (null == staticDir) {
+                RythmPlugin.warn("url not found in routes: %s", url);
+                continue;
+            }
             if (!staticDir.startsWith("/")) {
                 staticDir = "/" + staticDir;
             }
@@ -113,6 +116,9 @@ public class StaticRouteResolver {
                 if (to.endsWith("/index.html")) {
                     to = to.substring(0, to.length() - "/index.html".length() + 1);
                 }
+                if (reverseRoutes.containsKey(staticDir)) {
+                    name = name.replace(url, reverseRoutes.get(staticDir));
+                }
                 if (absolute) {
                     boolean isSecure = Http.Request.current() == null ? false : Http.Request.current().secure;
                     String base = getBaseUrl();
@@ -140,7 +146,7 @@ public class StaticRouteResolver {
 
     private static void parse(VirtualFile vf, String prefix) {
         List<String> ls = IO.readLines(vf.inputstream());
-        for (String s: ls) {
+        for (String s : ls) {
             s = s.trim();
             if (s.startsWith("#")) continue;
             if (s.contains("module:")) {
@@ -163,7 +169,7 @@ public class StaticRouteResolver {
         }
         String moduleName = sa[2].substring("module:".length());
         if ("*".equals(moduleName)) {
-            for (String p: Play.modulesRoutes.keySet()){
+            for (String p : Play.modulesRoutes.keySet()) {
                 parse(Play.modulesRoutes.get(p), newPrefix + p);
             }
         } else if (Play.modulesRoutes.containsKey(moduleName)) {
@@ -192,6 +198,57 @@ public class StaticRouteResolver {
         }
         routes.put(url, vf.relativePath());
         if (!urlList.contains(url)) urlList.add(url);
+    }
+
+    public static void processVersionedRoutes() {
+        Map<String, String> m = new HashMap<String, String>(routes);
+        routes.clear();
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("play", new Play());
+        for (String k : m.keySet()) {
+            String v = m.get(k);
+            Regex r = new Regex(".*(%(?@{})%).*");
+            if (r.search(k)) {
+                StringWriter sw = new StringWriter();
+                params.put("out", new PrintWriter(sw));
+                String script = r.stringMatched(1);
+                TemplateLoader.loadString(script).render(params);
+                String s = sw.toString();
+                r = new Regex("(%(?@{})%)", s);
+                s = r.replaceAll(k);
+                routes.put(s, v);
+                if (!v.endsWith("/")) v = v + "/";
+                reverseRoutes.put(v, s);
+                r = new Regex("(%(?@{})%)", "");
+                s = r.replaceAll(k);
+                s = s.replace("//", "/");
+                routes.put(s, v);
+            } else {
+                routes.put(k, v);
+            }
+        }
+
+        List<String> l = new ArrayList<String>(urlList);
+        urlList.clear();
+        params.put("play", new Play());
+        for (String s : l) {
+            if (!urlList.contains(s)) urlList.add(s);
+            Regex r = new Regex(".*(%(?@{})%).*");
+            if (r.search(s)) {
+                StringWriter sw = new StringWriter();
+                params.put("out", new PrintWriter(sw));
+                String script = r.stringMatched(1);
+                TemplateLoader.loadString(script).render(params);
+                String s0 = sw.toString();
+                r = new Regex("(%(?@{})%)", s0);
+                s0 = r.replaceAll(s);
+                if (!urlList.contains(s0)) urlList.add(s0);
+                r = new Regex("(%(?@{})%)", "");
+                s0 = r.replaceAll(s);
+                s0 = s0.replace("//", "/");
+                if (!urlList.contains(s0)) urlList.add(s0);
+            }
+        }
     }
 
 }
