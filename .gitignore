@@ -1,6 +1,7 @@
 .classpath
 .project
 .settings
+lib
 dist
 *.eml
 *.iml
