@@ -18,12 +18,12 @@
     if(s().isEmpty(valueProperty)) valueProperty = "id";
     play.templates.TagContext.current().data.put("selected", value);
 
-    String serializedAttrs  = play.templates.FastTags.serialize(_properties, "size", "name", "items", "labelProperty", "value", "valueProperty")
+    String serializedAttrs  = play.templates.FastTags.serialize(__renderArgs, "size", "name", "items", "labelProperty", "value", "valueProperty")
 }
 
 <select name="@name" size="@size?:1" @serializedAttrs>
     @doBody()
-    @for(X item: items) {
+    @for(item: items) {
         @{
             if (null != item && null != valueProperty && _hasBeanProperty(item, valueProperty)) valueProperty = _getBeanProperty(item, valueProperty);
 

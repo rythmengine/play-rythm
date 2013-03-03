@@ -97,6 +97,19 @@ Corresponding JavaExtension methods to escape formats are:
 # @Java@: @escapeJava()@
 # @JavaScript@: @escapeJavaScript()@
 
+
+h4. <a name="smart-escape">Smart escape</a>
+
+Start from v1.0-b4, PlayRythm support smart escape feature which escape expressions based on the template context. E.g.
+
+bc. String p1 = "<h1>h1</h1>";
+String p2 = "tom's store";
+String t = "@1<script>alert('@2');</script>";
+String s = Rythm.render(t, p1, p2);
+assertEquals("&lt;h1&gt;h1&lt;/h1&gt;<script>alert('tom\\'s store');</script>", s);
+
+In the above sample, default escape is @html@, and when Rythm executed into @<script>@ and @</script>@ block, it automatcially switched the escape scheme to @javascript@.
+
 h3. <a name="call_build-in_function">Call built-in function</a>
 
 <code>@</code> is also used to invoke built-in functions. Built-in function could be treated as special type of tags. From the user's perspective there is no difference between calling a built-in function and calling a tag (either built-in or custom)
@@ -938,3 +951,5 @@ h2. <a name="resource">See also</a>
 
 # %(next)"References manual":reference%
 # "Integrate PlayRythm into your Play project":integration
+# "Natural template":natural_template
+# "Passing parameter with JSON string":json_parameter

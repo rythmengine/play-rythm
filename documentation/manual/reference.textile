@@ -438,10 +438,12 @@ The <code>@for</code> tag defines implicit variables in it's body. The variable 
 * @name_isFirst@, true for the first element
 * @name_isLast@, true for the last element
 * @name_parity@, alternates between @odd@ and @even@
-* @name__isOdd@, true if the current element is odd in sequence
+* @name_isOdd@, true if the current element is odd in sequence
 * @name_size@, the size of the collection
-* <img src="http://www.epa.gov/watersense/images/new-en.gif" style="border: none !important"> @name_sep@, "," if the current loop is not at the last item
-* <img src="http://www.epa.gov/watersense/images/new-en.gif" style="border: none !important"> @name_utils@, the loop utils object
+* @name_sep@, "," if the current loop is not at the last item
+* <img src="http://www.epa.gov/watersense/images/new-en.gif" style="border: none !important"> @name__sep@, loop variable + "," if the current loop is not at the last item
+* @name_utils@, the loop utils object
+* <img src="http://www.epa.gov/watersense/images/new-en.gif" style="border: none !important"> @name__utils@, loop variable + the loop utils object
 
 bc. <ul>
 @for (Product product: products) {
@@ -481,6 +483,86 @@ bc. @for(int i = 0; i < 6; ++i) {
 }
 
 p(note). You don't have access to loop variables if you use the second <code>@for</code> loop form. Neither can you use @else@ branch along with this second for loop style
+
+h4. <a name="for-type-inference">Loop variable type inference</a>
+
+Start from v1.0-b4, play-rythm support loop variable type inference. For example:
+
+bc. @args List<User> users
+...
+@for(user: users) {
+    ...
+}
+
+In the above case, as you have declared @users@ as @List<User>@ type, you don't need to declare the type of for loop variable @user@, Rythm will automatically give type @User@ to it. Type inference also support type inference for @Map@ iterables:
+
+bc. @args Map<String, Integer> myMap
+...
+@for(key: myMap.keySet()) {...} @// key type is String
+@for(val: myMap.values()) {...} @// val type is Integer
+
+Limitation of type inference:
+
+* The iterable must be declared with <code>@args</code> statement
+* The iterable cannot be an expression, e.g. <code>@for(v: foo.bar()){...}</code>
+
+In the above case when Rythm cannot identify the loop variable type, @java.lang.Object@ will be used as the type of the loop variable
+
+h4. <a name="for-new-loop-style">New loop styles</a>
+
+Since v1.0-b4 Play-rythm support new loop styles:
+
+h5. The class Java style:
+
+bc. @for(s : list) {...}
+
+h5. JavaScript style:
+
+bc. @for(s in list) {...}
+
+h5. Scala style:
+
+bc. @for(s <- list) {...}
+
+h4. <a name="for-new-iterable">New loop iterable expressions</a>
+
+Since v1.0-b4 Play-rythm support new loop iterable expressions include String separator and Number range:
+
+h5. String separators
+
+bc. @for("a, b, c"){@__sep} @// output: a,b,c
+
+bc. @for("a : b:c"){@__sep} @// output: a,b,c
+
+bc. @for("a; b;c"){@__sep} @// output: a,b,c
+
+bc. @for("a - b - c"){@__sep} @// output: a,b,c
+
+bc. @for("a_b_c"){@__sep} @// output: a,b,c
+
+Separator priority: ; > , > : > _ > -. E.g. "foo;bar,c:d" are separated into two groups: "foo" and "bar,c:d"
+
+h5. Number ranges
+
+bc. @for (1 .. 5) {@_} @// output: 1,2,3,4
+
+bc. @for ([1 .. 5]) {@_} @// output: 1,2,3,4,5
+
+h4. <a name="for-new-separator">New loop separators</a>
+
+Since v1.0-b4 Play-rythm support new loop separators:
+
+bc. @for("a:b:c"){@__sep} @// new style output a,b,c
+
+bc. @for("a:b:c"){@(_)@_sep} @// old style output a,b,c
+
+bc. @for(s in "a:b:c"){@s__sep} @// new style output a,b,c
+
+bc. @for(s in "a:b:c"){@(s)@s_sep} @// old style output a,b,c
+
+bc. @for("a:b:c"){@__utils.sep("|")} @// new style output a|b|c
+
+bc. @for("a:b:c"){@(_)@_utils.sep("|")} @// old style output a|b|c
 
 h3. <a name="get">get</a>
 

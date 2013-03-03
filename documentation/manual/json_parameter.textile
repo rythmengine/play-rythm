@@ -1,0 +1,26 @@
+h1. Passing template parameter with JSON string
+
+p(note). This is *NOT* a Play specific feature.
+
+Rythm (starts from v1.0-b4) supports passing template parameter with JSON string
+
+The template "tmpl.html":
+
+bc. @args List<User> users
+<ul>
+@for(users){
+@_.name: @_.age
+}
+</ul>
+
+The code:
+
+bc. String params = "{users: [{\"name\":\"Tom\", \"age\": 12}, {\"name\":\"Peter\", \"age\": 11}]}";  
+String result = Rythm.render(tmpl.html, JSONWrapper.wrap(params));
+
+Render result:
+
+bc. <ul>
+Tom: 12
+Peter: 11
+</ul> 

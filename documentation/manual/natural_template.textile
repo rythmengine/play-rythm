@@ -1,0 +1,26 @@
+h1. Natural Template
+
+p(note). This is *NOT* a Play specific feature.
+
+Rythm (starts from v1.0-b4) provides an new feature called natural template. According to "wikipedia":http://en.wikipedia.org/wiki/Template_engine_(web), an natural template is _the template can be a document as valid as the final result, the engine syntax doesn't break the document's structure_
+
+Here is an example of a Rythm natural template:
+
+bc. <!-- @args String name, int age -->
+<p>Hi @name, happy @age!</p>
+
+In the above sample, Rythm directives are put inside the html comment, and thus the html document will not be broken
+
+In addition, Rythm support smart natural template when you switch the context:
+
+bc. <!-- @if (true) { -->
+    <script>
+        /* @if(true) {*/
+            alert(1);
+        /* } */
+    </script><
+!-- } -->
+
+So in the above sample, the Rythm directive use @<!--@ and @-->@ as directive boundaries when running in html context, and switch to @/*@ and @*/@ when running in javascript context
+
+Due to it impact parsing performance, the natural template feature is not enabled by default. You need set @feature.natural_template.enabled@ to true to turn on the feature when initializing Rythm engine, or just put @rythm.feature.natural_template.enabled=true@ in your play @application.conf@ file.

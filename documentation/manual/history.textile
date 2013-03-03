@@ -2,10 +2,24 @@ h1. PlayRythm version history
 
 h2. <a name="roadmap">What's left for R1.0</a>
 
-* "Enable nature template support":https://github.com/greenlaw110/Rythm/issues/114
-* "Switch default escape scheme in different code section":https://github.com/greenlaw110/Rythm/issues/113
-* "Enable user to turn off built-in java extensions":https://github.com/greenlaw110/Rythm/issues/112
-* "Support passing template parameters by JSON type":https://github.com/greenlaw110/Rythm/issues/109
+* Waiting for rythm-engine 1.0 release
+
+h2. <a name="v1.0-b4">v1.0-b4</a>
+
+* New features:
+** "Add number and datetime format into built-in java extension":https://github.com/greenlaw110/Rythm/issues/115
+** "Enable nature template support":https://github.com/greenlaw110/Rythm/issues/114
+*** See also "Natural template":natural_template
+** "Switch default escape scheme in different code section":https://github.com/greenlaw110/Rythm/issues/113
+*** See also "Smart escape":user_guide#smart-escape
+** "Enable user to turn off built-in java extensions":https://github.com/greenlaw110/Rythm/issues/112
+** "Pass execution context info to tag when calling it":https://github.com/greenlaw110/Rythm/issues/111
+** "Support passing template parameters by JSON type":https://github.com/greenlaw110/Rythm/issues/109
+*** See also "Passing template arguments with JSON string":json_parameter
+** "For loop enhancements"
+*** "For loop type inference":reference#for-type-inference
+*** "New loop style":reference#for-new-loop-style
+*** "New loop separator":reference#for-new-separator
 
 h2. <a name="v1.0.0-20130132">v1.0.0-20130132</a>
 
