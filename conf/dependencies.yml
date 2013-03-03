@@ -1,4 +1,6 @@
 # History
+# 1.0-b1
+#        - Migrate to Engine 1.0-b4-SNAPSHOT
 # 1.0.0-20130211b
 #        - https://github.com/greenlaw110/play-rythm/issues/67
 #        - https://github.com/greenlaw110/play-rythm/issues/66
@@ -210,7 +212,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0.0-20130211b
+self: play -> rythm 1.0-b1
 
 require:
     - play 1.2

@@ -21,7 +21,7 @@ public class ActionInvokeProcessor implements IExpressionProcessor {
             int pos = action.indexOf("(");
             action = action.substring(0, pos);
             TextBuilder tb = new TextBuilder();
-            tb.p("new com.greenlaw110.rythm.spi.IExpressionProcessor.IResult(){\n" +
+            tb.p("new com.greenlaw110.rythm.internal.IExpressionProcessor.IResult(){\n" +
                     "\tpublic String get() { \n" +
                     "\tcom.greenlaw110.rythm.play.RythmPlugin.setActionCallFlag(); \n" +
                     "\tplay.mvc.Http.Request.current().action=\"");

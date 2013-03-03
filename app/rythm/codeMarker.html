@@ -1,2 +1,2 @@
 @args String tip
-@if (_rythmPlugin.enableCodeMarker) {<span class="code-marker" @ifNot(s().empty(tip)){title="@tip"} data-src="@_caller().getTemplateClass(false).getKey()" data-line="@_line()">@if(_rythmPlugin.fontawesome){<i class="icon-spinner icon-spin" style="color: #f00"></i>}</span>}
+@if (_rythmPlugin.enableCodeMarker) {<span class="code-marker" @ifNot(s().empty(tip)){title="@tip"} data-src="@__caller().__getTemplateClass(false).getKey()" data-line="@__line()">@if(_rythmPlugin.fontawesome){<i class="icon-spinner icon-spin" style="color: #f00"></i>}</span>}

@@ -99,6 +99,17 @@ under the License.
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>UTF-8</encoding>
+                    <debuglevel>lines,vars,source</debuglevel>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
@@ -130,6 +141,12 @@ under the License.
                                     <groupId>com.greenlaw110.rythm</groupId>
                                     <artifactId>rythm-engine</artifactId>
                                     <version>1.0-b4-SNAPSHOT</version>
+                                    <type>jar</type>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.github.greenlaw110.play-rythm</groupId>
+                                    <artifactId>play-rythm</artifactId>
+                                    <version>1.0-b1</version>
                                     <type>jar</type>
                                 </artifactItem>
                             </artifactItems>

@@ -22,6 +22,7 @@ import play.Play;
 import play.PlayPlugin;
 import play.cache.Cache;
 import play.classloading.ApplicationClasses;
+import play.classloading.ApplicationClassloader;
 import play.classloading.enhancers.ControllersEnhancer;
 import play.exceptions.UnexpectedException;
 import play.mvc.Http;
@@ -32,17 +33,15 @@ import play.templates.TagContext;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URL;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0.0-20130211a";
+    public static final String VERSION = "1.0-b1";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -154,10 +153,40 @@ public class RythmPlugin extends PlayPlugin {
     }
 
     private boolean logActionInvocationTime;
+    private ApplicationClassloader playAppClassLoader = new ApplicationClassloader() {
+        private ApplicationClassloader pcl() {
+            return Play.classloader;
+        }
+        @Override
+        public Class<?> loadClass(String name) throws ClassNotFoundException {
+            return pcl().loadClass(name);
+        }
 
+        @Override
+        public URL getResource(String name) {
+            return pcl().getResource(name);
+        }
+
+        @Override
+        public Enumeration<URL> getResources(String name) throws IOException {
+            return pcl().getResources(name);
+        }
+
+        @Override
+        public InputStream getResourceAsStream(String name) {
+            return pcl().getResourceAsStream(name);
+        }
+
+    };
+    
     @Override
     public void onConfigurationRead() {
         if (null != engine && Play.mode.isProd()) return; // already configured
+        if (null != engine && preloadConf && Play.mode.isDev()) {
+            // the following load conf are caused by app restart at dev mode
+            preloadConf = false;
+            return;
+        }
 
         Properties playConf = Play.configuration;
 
@@ -178,10 +207,11 @@ public class RythmPlugin extends PlayPlugin {
         // set default configurations
         // p.put("rythm.root", new File(Play.applicationPath, "app/views"));
         // p.put("rythm.tag.root", new File(Play.applicationPath, tagRoot));
+        final boolean isProd = Play.mode.isProd();
+        p.put("rythm.engine.mode", isProd ? Rythm.Mode.prod : Rythm.Mode.dev);
         p.put("rythm.engine.plugin.version", VERSION);
-        p.put("rythm.engine.class_loader.parent", Play.classloader);
+        p.put("rythm.engine.class_loader.parent", playAppClassLoader);
         p.put("rythm.engine.load_precompiled.enabled", Play.usePrecompiled);
-        boolean isProd = Play.mode.isProd();
         p.put("rythm.log.source.template.enabled", isProd);
         p.put("rythm.log.source.java.enabled", isProd);
         p.put("rythm.engine.precompile.mode", Play.mode.isProd() || System.getProperty("precompile") != null);
@@ -191,7 +221,7 @@ public class RythmPlugin extends PlayPlugin {
             p.put("rythm.home.precompiled", preCompiledRoot);
         }
         p.put("rythm.resource.loader", new VirtualFileTemplateResourceLoader());
-        p.put("rythm.class_loader.bytecode_helper", new IByteCodeHelper() {
+        p.put("rythm.engine.class_loader.bytecode_helper", new IByteCodeHelper() {
             @Override
             public byte[] findByteCode(String typeName) {
                 ApplicationClasses classBag = Play.classes;
@@ -251,7 +281,11 @@ public class RythmPlugin extends PlayPlugin {
 
             @Override
             public void clear() {
-                Cache.clear();
+                try {
+                    Cache.clear();
+                } catch (NullPointerException e) {
+                    //ignore it
+                }
             }
 
             @Override
@@ -319,6 +353,7 @@ public class RythmPlugin extends PlayPlugin {
             }
         });
 
+        final TemplatePropertiesEnhancer templateEnhancer = new TemplatePropertiesEnhancer();
         p.put("rythm.codegen.byte_code_enhancer", new IByteCodeEnhancer() {
             @Override
             public byte[] enhance(String className, byte[] classBytes) throws Exception {
@@ -329,7 +364,7 @@ public class RythmPlugin extends PlayPlugin {
                 File f = File.createTempFile("rythm_", className.contains("$") ? "$1" : "" + ".java", Play.tmpDir);
                 applicationClass.javaFile = VirtualFile.open(f);
                 try {
-                    new TemplatePropertiesEnhancer().enhanceThisClass(applicationClass);
+                    templateEnhancer.enhanceThisClass(applicationClass);
                 } catch (Exception e) {
                     error(e, "Error enhancing class: %s", className);
                 }
@@ -341,8 +376,10 @@ public class RythmPlugin extends PlayPlugin {
         p.put("rythm.codegen.source_code_enhancer", new ISourceCodeEnhancer() {
             @Override
             public List<String> imports() {
-                List<String> l = Arrays.asList(TemplateClassAppEnhancer.imports().split("[,\n]+"));
+                List<String> l = new ArrayList(Arrays.asList(TemplateClassAppEnhancer.imports().split("[,\n]+")));
                 l.add(JavaExtensions.class.getName());
+                l.add("models.*");
+                l.add("controller.*");
                 return l;
             }
 
@@ -359,7 +396,7 @@ public class RythmPlugin extends PlayPlugin {
                         + "\n\t}\n";
                 String url = "\n    protected play.mvc.Router.ActionDefinition _act(String action, Object... params) {return _act(false, action, params);}" +
                         "\n    protected play.mvc.Router.ActionDefinition _act(boolean isAbsolute, String action, Object... params) {" +
-                        "\n        com.greenlaw110.rythm.internal.compiler.TemplateClass tc = getTemplateClass(true);" +
+                        "\n        com.greenlaw110.rythm.internal.compiler.TemplateClass tc = __getTemplateClass(true);" +
                         "\n        boolean escapeXML = (!tc.isStringTemplate() && tc.templateResource.getKey().toString().endsWith(\".xml\"));" +
                         "\n        return new com.greenlaw110.rythm.play.utils.ActionBridge(isAbsolute, escapeXML).invokeMethod(action, params);" +
                         "\n   }\n" +
@@ -526,11 +563,14 @@ public class RythmPlugin extends PlayPlugin {
             throw new UnexpectedException("It's not supposed to be called");
         }
     };
+    
+    private boolean preloadConf = false;
 
     @Override
     public Template loadTemplate(VirtualFile file) {
         if (loadingRoute) return null;
         if (null == engine) {
+            preloadConf = true;
             // in prod mode this method is called in preCompile() when onConfigurationRead() has not been called yet
             onConfigurationRead();
             StaticRouteResolver.processVersionedRoutes();

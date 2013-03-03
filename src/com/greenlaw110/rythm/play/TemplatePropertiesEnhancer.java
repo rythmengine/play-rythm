@@ -27,11 +27,20 @@ class TemplatePropertiesEnhancer extends PropertiesEnhancer {
             @Override
             public InputStream openClassfile(String className) throws NotFoundException {
                 TemplateClass tc = RythmPlugin.engine.classes().getByClassName(className);
+                InputStream is = null;
                 if (null != tc) {
-                    if (null != tc.enhancedByteCode) return new ByteArrayInputStream(tc.enhancedByteCode);
-                    else throw new FastRuntimeException("Cannot find enhanced byte class for " + className);
+                    if (null == tc.javaByteCode) {
+                        tc.refresh();
+                    }
+                    if (null != tc.enhancedByteCode) {
+                        is = new ByteArrayInputStream(tc.enhancedByteCode);
+                    } else if (null != tc.javaByteCode) {
+                        is = new ByteArrayInputStream(tc.javaByteCode);
+                    } else {
+                        throw new FastRuntimeException("Cannot find enhanced byte class for " + className);
+                    }
                 }
-                else return null;
+                return is;
             }
 
             @Override
