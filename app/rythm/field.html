@@ -2,7 +2,7 @@
 @args String name
 @play.field(name) {
     @{
-        Map<String, Object> _field = getRenderArg("field");
+        Map<String, Object> _field = __getRenderArg("field");
         Object _errorClass = _field.get("errorClass"),
             _name = _field.get("name"),
             _error = _field.get("error")

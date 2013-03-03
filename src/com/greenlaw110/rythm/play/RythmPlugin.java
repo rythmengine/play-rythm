@@ -379,7 +379,7 @@ public class RythmPlugin extends PlayPlugin {
                 List<String> l = new ArrayList(Arrays.asList(TemplateClassAppEnhancer.imports().split("[,\n]+")));
                 l.add(JavaExtensions.class.getName());
                 l.add("models.*");
-                l.add("controller.*");
+                l.add("controllers.*");
                 return l;
             }
 

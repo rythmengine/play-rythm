@@ -23,7 +23,7 @@
 
 <select name="@name" size="@size?:1" @serializedAttrs>
     @doBody()
-    @for(Object item: items) {
+    @for(X item: items) {
         @{
             if (null != item && null != valueProperty && _hasBeanProperty(item, valueProperty)) valueProperty = _getBeanProperty(item, valueProperty);
 
