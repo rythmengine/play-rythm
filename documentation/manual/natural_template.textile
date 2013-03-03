@@ -2,7 +2,7 @@ h1. Natural Template
 
 p(note). This is *NOT* a Play specific feature.
 
-Rythm (starts from v1.0-b4) provides an new feature called natural template. According to "wikipedia":http://en.wikipedia.org/wiki/Template_engine_(web), an natural template is _the template can be a document as valid as the final result, the engine syntax doesn't break the document's structure_
+Rythm (starts from v1.0-b4) provides an new feature called natural template. According to <a href="http://en.wikipedia.org/wiki/Template_engine_(web)">wikipedia</a>, an natural template is _the template can be a document as valid as the final result, the engine syntax doesn't break the document's structure_
 
 Here is an example of a Rythm natural template:
 
