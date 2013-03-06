@@ -31,7 +31,7 @@ under the License.
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.greenlaw110.play-rythm</groupId>
     <artifactId>play-rythm</artifactId>
-    <version>1.0-b4</version>
+    <version>1.0-b4e</version>
     <packaging>jar</packaging>
 
     <repositories>
@@ -66,7 +66,7 @@ under the License.
     <properties>
         <play.manifest.section>Play</play.manifest.section>
         <play.manifest.specification.title>Rythm Module</play.manifest.specification.title>
-        <play.module.frameworkVersions>1.0-b4</play.module.frameworkVersions>
+        <play.module.frameworkVersions>1.0-b4a</play.module.frameworkVersions>
 
         <play.version>1.2.4</play.version>
     </properties>
@@ -82,7 +82,7 @@ under the License.
         <dependency>
             <groupId>com.greenlaw110.rythm</groupId>
             <artifactId>rythm-engine</artifactId>
-            <version>1.0-b4</version>
+            <version>1.0-b5-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -140,13 +140,13 @@ under the License.
                                 <artifactItem>
                                     <groupId>com.greenlaw110.rythm</groupId>
                                     <artifactId>rythm-engine</artifactId>
-                                    <version>1.0-b4</version>
+                                    <version>1.0-b5-SNAPSHOT</version>
                                     <type>jar</type>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>com.github.greenlaw110.play-rythm</groupId>
                                     <artifactId>play-rythm</artifactId>
-                                    <version>1.0-b4</version>
+                                    <version>1.0-b4e</version>
                                     <type>jar</type>
                                 </artifactItem>
                             </artifactItems>

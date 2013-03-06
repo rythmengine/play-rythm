@@ -29,6 +29,7 @@ import play.mvc.Http;
 import play.mvc.Scope;
 import play.mvc.results.*;
 import play.templates.JavaExtensions;
+import play.templates.RythmTagContext;
 import play.templates.TagContext;
 import play.templates.Template;
 import play.vfs.VirtualFile;
@@ -41,7 +42,7 @@ import java.net.URL;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0-b4";
+    public static final String VERSION = "1.0-b4e";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -344,12 +345,12 @@ public class RythmPlugin extends PlayPlugin {
         p.put("rythm.render.listener", new IRythmListener.ListenerAdaptor() {
             @Override
             public void onInvoke(ITag tag) {
-                TagContext.enterTag(tag.__getName());
+                RythmTagContext.enterTag(tag.__getName());
             }
 
             @Override
             public void invoked(ITag tag) {
-                TagContext.exitTag();
+                RythmTagContext.exitTag();
             }
         });
 

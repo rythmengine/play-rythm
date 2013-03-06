@@ -38,6 +38,7 @@ under the License.
                 <include>conf/**</include>
                 <include>documentation/**</include>
                 <include>src/**</include>
+                <include>public/**</include>
                 <include>assembly-dist.xml</include>
                 <include>LICENSE.txt</include>
                 <include>pom.xml</include>
