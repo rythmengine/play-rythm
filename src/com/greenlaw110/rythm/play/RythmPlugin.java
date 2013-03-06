@@ -177,6 +177,9 @@ public class RythmPlugin extends PlayPlugin {
             return pcl().getResourceAsStream(name);
         }
 
+        public Class<?> loadApplicationClass(String name) {
+            return pcl().loadApplicationClass(name);
+        }
     };
     
     @Override
