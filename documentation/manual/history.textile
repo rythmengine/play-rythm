@@ -24,6 +24,7 @@ h2. <a name="v1.0-b4e">v1.0-b4e</a>
 ** "Error in @get parser":https://github.com/greenlaw110/Rythm/issues/116
 ** "For loop separator should be output as Raw data":https://github.com/greenlaw110/Rythm/issues/117
 ** "Forward loadApplicationClass method in ApplicationClassLoader wrapper":https://github.com/greenlaw110/play-rythm/pull/68
+** "public folder not packaged in the 1.0-b4 version":https://github.com/greenlaw110/play-rythm/issues/69
 
 h2. <a name="v1.0.0-20130132">v1.0.0-20130132</a>
 
