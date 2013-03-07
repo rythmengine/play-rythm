@@ -4,7 +4,7 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * Waiting for rythm-engine 1.0 release
 
-h2. <a name="v1.0-b4e">v1.0-b4e</a>
+h2. <a name="v1.0-b4f">v1.0-b4f</a>
 
 * New features:
 ** "Add number and datetime format into built-in java extension":https://github.com/greenlaw110/Rythm/issues/115
@@ -25,6 +25,7 @@ h2. <a name="v1.0-b4e">v1.0-b4e</a>
 ** "For loop separator should be output as Raw data":https://github.com/greenlaw110/Rythm/issues/117
 ** "Forward loadApplicationClass method in ApplicationClassLoader wrapper":https://github.com/greenlaw110/play-rythm/pull/68
 ** "public folder not packaged in the 1.0-b4 version":https://github.com/greenlaw110/play-rythm/issues/69
+** "Add language sensitive CacheKeyProvider":https://github.com/greenlaw110/play-rythm/issues/70
 
 h2. <a name="v1.0.0-20130132">v1.0.0-20130132</a>
 

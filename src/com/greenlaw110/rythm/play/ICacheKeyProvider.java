@@ -1,5 +1,6 @@
 package com.greenlaw110.rythm.play;
 
+import play.i18n.Lang;
 import play.mvc.Http;
 import play.mvc.Scope;
 
@@ -16,7 +17,11 @@ public interface ICacheKeyProvider {
 
     public static class Default implements ICacheKeyProvider {
         protected final Http.Request req() {
-            return Http.Request.current();
+            Http.Request req = Http.Request.current();
+            if (null == req) {
+                throw new IllegalStateException("HTTP.Request expected");
+            }
+            return req;
         }
         protected final Scope.Params params() {
             return Scope.Params.current();
@@ -26,19 +31,24 @@ public interface ICacheKeyProvider {
         }
         @Override
         public String getKey(boolean sessionSensitive, boolean schemeSensitive) {
-            Http.Request req = Http.Request.current();
-            if (null != req) {
-                String key = "rythm-urlcache:" + req.url + req.querystring;
-                if (sessionSensitive) {
-                    key += session().getId();
-                }
-                if (schemeSensitive) {
-                    key += req().secure ? "1" : "0";
-                }
-                return key;
-            } else {
-                throw new IllegalStateException("HTTP.Request expected");
+            Http.Request req = req();
+            String key = "rythm" + req.url + req.querystring;
+            if (sessionSensitive) {
+                key += session().getId();
             }
+            if (schemeSensitive) {
+                key += req().secure ? "1" : "0";
+            }
+            return key;
         }
     };
+    
+    public static class LangSensitive extends Default {
+        @Override
+        public String getKey(boolean sessionSensitive, boolean schemeSensitive) {
+            String key = super.getKey(sessionSensitive, schemeSensitive);
+            String lang = Lang.get();
+            return key + lang;
+        }
+    }
 }
