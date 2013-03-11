@@ -10,13 +10,13 @@ import com.greenlaw110.rythm.logger.ILogger;
 import com.greenlaw110.rythm.logger.ILoggerFactory;
 import com.greenlaw110.rythm.play.parsers.*;
 import com.greenlaw110.rythm.play.utils.ActionInvokeProcessor;
+import com.greenlaw110.rythm.play.utils.PlayI18nMessageResolver;
 import com.greenlaw110.rythm.play.utils.StaticRouteResolver;
 import com.greenlaw110.rythm.play.utils.TemplateClassAppEnhancer;
 import com.greenlaw110.rythm.template.ITag;
 import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.template.TemplateBase;
 import com.greenlaw110.rythm.utils.S;
-import com.stevesoft.pat.Regex;
 import play.Logger;
 import play.Play;
 import play.PlayPlugin;
@@ -25,6 +25,8 @@ import play.classloading.ApplicationClasses;
 import play.classloading.ApplicationClassloader;
 import play.classloading.enhancers.ControllersEnhancer;
 import play.exceptions.UnexpectedException;
+import play.i18n.Lang;
+import play.i18n.Messages;
 import play.mvc.Http;
 import play.mvc.Scope;
 import play.mvc.results.*;
@@ -42,7 +44,7 @@ import java.net.URL;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0-b4f";
+    public static final String VERSION = "1.0-b5c";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -105,7 +107,7 @@ public class RythmPlugin extends PlayPlugin {
     public static String templateRoot = R_VIEW_ROOT;
 
     public static boolean enableCodeMarker = false;
-    public static String jquery = "http://code.jquery.com/jquery-1.9.0.min.js";
+    public static String jquery = "http://code.jquery.com/jquery-1.9.1.min.js";
     public static boolean fontawesome = false;
     //public static String templateRoot2 = R_VIEW_ROOT;
     //public static String tagRoot = "app/views/tags/rythm";
@@ -462,6 +464,8 @@ public class RythmPlugin extends PlayPlugin {
                 return false;
             }
         });
+        
+        p.put("rythm.i18n.message.resolver", new PlayI18nMessageResolver());
 
         if (null != engine) {
             engine.shutdown();
@@ -614,6 +618,7 @@ public class RythmPlugin extends PlayPlugin {
                 sessSensitive = cache4.useSessionData();
             }
             boolean schemeSensitive = cache4.schemeSensitive();
+            boolean langSensitive = cache4.langSensitive();
             if (S.isEmpty(cacheKey)) {
                 Class<? extends ICacheKeyProvider> kpFact = cache4.key();
                 try {
@@ -622,7 +627,7 @@ public class RythmPlugin extends PlayPlugin {
                         keyProvider = kpFact.newInstance();
                         keyProviders.put(kpFact, keyProvider);
                     }
-                    cacheKey = keyProvider.getKey(sessSensitive, schemeSensitive);
+                    cacheKey = keyProvider.getKey(sessSensitive, schemeSensitive, langSensitive);
                     if (S.isEmpty(cacheKey)) {
                         //warn("empty cache key found");
                         return;
@@ -645,6 +650,9 @@ public class RythmPlugin extends PlayPlugin {
                 }
                 if (schemeSensitive) {
                     cacheKey += request.secure;
+                }
+                if (langSensitive) {
+                    cacheKey += Lang.get();
                 }
             }
             request.args.put("rythm-urlcache-key", cacheKey);
@@ -690,12 +698,32 @@ public class RythmPlugin extends PlayPlugin {
         play.cache.Cache.set(cacheKey, new Cache4.CacheResult(result), duration);
     }
 
-    public static void main(String[] args) {
-        String s = "controllers.Tester.action1().cacheFor(\"1mn\").ad";
-        Regex r = new Regex("cache(?@())$");
-        if (r.search(s)) {
-            System.out.println(r.stringMatched());
+    @Override
+    public String getMessage(String locale, Object key, Object... args) {
+        String value = null;
+        if( key == null ) {
+            return "";
         }
+        Map<String, Properties> locales = Messages.locales;
+        String k = key.toString();
+        if (locales.containsKey(locale)) {
+            value = locales.get(locale).getProperty(k);
+        }
+        if (value == null) {
+            int pos = locale.indexOf('_');
+            if (pos > -1) {
+                locale = locale.substring(0, pos);
+                value = locales.get(locale).getProperty(k);
+            }
+            if (value == null) {
+                value = Messages.defaults.getProperty(key.toString());
+            }
+        }
+        if (value == null) {
+            value = key.toString();
+        }
+
+        return Messages.formatString(value, args);
     }
 
 }

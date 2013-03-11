@@ -7,16 +7,18 @@ import com.greenlaw110.rythm.exception.RythmException;
 import com.greenlaw110.rythm.internal.compiler.ClassReloadException;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
-import com.greenlaw110.rythm.template.ITemplate;
+import com.greenlaw110.rythm.template.TemplateBase;
 import com.greenlaw110.rythm.utils.TextBuilder;
 import play.Logger;
 import play.Play;
 import play.exceptions.TemplateCompilationException;
 import play.exceptions.TemplateExecutionException;
 import play.exceptions.UnexpectedException;
+import play.i18n.Lang;
 import play.mvc.results.Result;
 import play.templates.Template;
 
+import java.util.Locale;
 import java.util.Map;
 
 import static play.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation.*;
@@ -108,8 +110,9 @@ public class RythmTemplate extends Template {
             isActionCallAllowed = true;
         }
         try {
+            RythmPlugin.engine.setLocale(new Locale(Lang.get()));
             if (Logger.isTraceEnabled()) RythmPlugin.trace("prepare template to render");
-            ITemplate t = tc.asTemplate();
+            TemplateBase t = (TemplateBase)tc.asTemplate();
             if (Logger.isTraceEnabled()) RythmPlugin.trace("about to set render args");
             t.__setRenderArgs(args);
             // allow invoke controller method without redirect

@@ -13,7 +13,7 @@ import play.mvc.Scope;
  */
 public interface ICacheKeyProvider {
 
-    String getKey(boolean sessionSensitive, boolean schemeSensitive);
+    String getKey(boolean sessionSensitive, boolean schemeSensitive, boolean langSensitive);
 
     public static class Default implements ICacheKeyProvider {
         protected final Http.Request req() {
@@ -30,25 +30,19 @@ public interface ICacheKeyProvider {
             return Scope.Session.current();
         }
         @Override
-        public String getKey(boolean sessionSensitive, boolean schemeSensitive) {
+        public String getKey(boolean sessionSensitive, boolean schemeSensitive, boolean langSensitive) {
             Http.Request req = req();
             String key = "rythm" + req.url + req.querystring;
             if (sessionSensitive) {
                 key += session().getId();
             }
             if (schemeSensitive) {
-                key += req().secure ? "1" : "0";
+                key += req.secure ? "1" : "0";
+            }
+            if (langSensitive) {
+                key += Lang.get();
             }
             return key;
         }
     };
-    
-    public static class LangSensitive extends Default {
-        @Override
-        public String getKey(boolean sessionSensitive, boolean schemeSensitive) {
-            String key = super.getKey(sessionSensitive, schemeSensitive);
-            String lang = Lang.get();
-            return key + lang;
-        }
-    }
 }

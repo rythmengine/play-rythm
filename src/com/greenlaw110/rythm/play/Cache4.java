@@ -31,7 +31,7 @@ public @interface Cache4 {
      *
      * A special value "forever" also accept
      *
-     * @return
+     * @return cache expiration time
      */
     String value() default "1h";
 
@@ -43,7 +43,7 @@ public @interface Cache4 {
     /**
      * Define the cache key. Leave it empty if you want system to generate key from request automatically
      *
-     * @return
+     * @return the session key provider class
      */
     Class<? extends ICacheKeyProvider> key() default ICacheKeyProvider.Default.class;
 
@@ -51,7 +51,7 @@ public @interface Cache4 {
      * Whether use session data to generate key
      *
      * @deprecated use {@link #sessionSensitive()} instead 
-     * @return
+     * @return true if use session id to generate the key
      */
     boolean useSessionData() default false;
     
@@ -59,9 +59,18 @@ public @interface Cache4 {
      * Whether use session id to generate the cache key, meaning if the cached copy is 
      * for session specific or not
      *
-     * @return
+     * @return true if it is session sensitive
      */
     boolean sessionSensitive() default false;
+    
+    
+    /**
+     * Whether use <tt>Lang.get()</tt> to generate the cache key, meaning if the cached copy is 
+     * for language specific or not
+     *
+     * @return true if it is language sensitive
+     */
+    boolean langSensitive() default false;
 
     /**
      * Whether the cache key is sensitive to request.secure. When this parameter
@@ -70,13 +79,14 @@ public @interface Cache4 {
      * 
      * default: false
      * 
-     * @return
+     * @return true if key is http scheme sensitive
      */
     boolean schemeSensitive() default false;
 
     /**
      * Indicate whether cache post request. Useful for certain case, e.g. facebook always post to tab page in iframe
-     * @return
+     * 
+     * @return true if cache post request also 
      */
     boolean cachePost() default false;
 

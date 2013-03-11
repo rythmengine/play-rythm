@@ -1,4 +1,12 @@
 # History
+# 1.0-b5c
+#        - https://github.com/greenlaw110/Rythm/issues/120
+# 1.0-b5b
+#        - rename i18n.tag to playi18n to avoid name conflict with the new @i18n directive
+# 1.0-b5a
+#        - solve Play.i18n.Messages.getMessage() cannot properly handle en_AU style locale issue
+# 1.0-b5 - catch up to engine 1.0-b6-SNAPSHOT
+#        - https://github.com/greenlaw110/Rythm/issues/118
 # 1.0-b4f
 #        - https://github.com/greenlaw110/play-rythm/issues/70
 # 1.0-b4e
@@ -229,7 +237,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0-b4f
+self: play -> rythm 1.0-b5c
 
 require:
     - play 1.2
