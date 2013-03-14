@@ -44,7 +44,7 @@ import java.net.URL;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0-b5c";
+    public static final String VERSION = "1.0-b5e";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -137,11 +137,18 @@ public class RythmPlugin extends PlayPlugin {
     }
 
     private boolean loadingRoute = false;
+    
+    public static boolean precompiling() {
+        return System.getProperty("precompile") != null;
+    }
 
     @Override
     public void onLoad() {
         loadTemplatePaths();
         StaticRouteResolver.loadStaticRoutes();
+        if (!precompiling()) {
+            Play.lazyLoadTemplates = true;
+        }
 /* disable preload routes as it cause class load troubles */
 //        // try to workaround play issue https://play.lighthouseapp.com/projects/57987-play-framework/tickets/1545-play-precompile-does-not-load-routes
 //        if (Router.routes.isEmpty()) {
@@ -216,17 +223,19 @@ public class RythmPlugin extends PlayPlugin {
         final boolean isProd = Play.mode.isProd();
         p.put("rythm.engine.mode", isProd ? Rythm.Mode.prod : Rythm.Mode.dev);
         p.put("rythm.engine.plugin.version", VERSION);
+        p.put("rythm.codegen.compact.enabled", isProd);
         p.put("rythm.engine.class_loader.parent", playAppClassLoader);
         p.put("rythm.engine.load_precompiled.enabled", Play.usePrecompiled);
         p.put("rythm.log.source.template.enabled", isProd);
         p.put("rythm.log.source.java.enabled", isProd);
-        p.put("rythm.engine.precompile.mode", Play.mode.isProd() || System.getProperty("precompile") != null);
+        p.put("rythm.engine.precompile.mode", Play.mode.isProd() && System.getProperty("precompile") != null);
         if (Play.usePrecompiled || Play.getFile("precompiled").exists()) {
             File preCompiledRoot = new File(Play.getFile("precompiled"), "rythm");
             if (!preCompiledRoot.exists()) preCompiledRoot.mkdirs();
             p.put("rythm.home.precompiled", preCompiledRoot);
         }
         p.put("rythm.resource.loader", new VirtualFileTemplateResourceLoader());
+        p.put("rythm.resource.name.suffix", "");
         p.put("rythm.engine.class_loader.bytecode_helper", new IByteCodeHelper() {
             @Override
             public byte[] findByteCode(String typeName) {
@@ -522,12 +531,14 @@ public class RythmPlugin extends PlayPlugin {
     }
 
     @Override
-    public void onApplicationStart() {
+    public void afterApplicationStart() {
         if (engine.mode().isProd()) {
             // pre load template classes if they are not loaded yet
             VirtualFile vf = Play.getVirtualFile("app/rythm/welcome.html");
             String key = vf.relativePath().replaceFirst("\\{.*?\\}", "");
             if (!engine.classes().tmplIdx.containsKey(key)) RythmTemplateLoader.scanRythmFolder();
+        } else {
+            RythmTemplateLoader.scanRythmFolder();
         }
     }
 
@@ -584,7 +595,16 @@ public class RythmPlugin extends PlayPlugin {
             StaticRouteResolver.processVersionedRoutes();
         }
         //warn(">>>> %s", file.relativePath());
-        return RythmTemplateLoader.loadTemplate(file);
+        if (precompiling()) {
+            try {
+                return RythmTemplateLoader.loadTemplate(file);
+            } catch (Throwable e) {
+                error(e, "Error precompiling template");
+                return null;
+            }
+        } else {
+            return RythmTemplateLoader.loadTemplate(file);
+        }
     }
 
     @Override

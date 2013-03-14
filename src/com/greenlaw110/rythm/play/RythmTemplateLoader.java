@@ -100,12 +100,13 @@ public class RythmTemplateLoader {
     static void scanRythmFolder() {
         RythmPlugin.trace("start to preload templates");
         long ts = System.currentTimeMillis();
-        String s = RythmPlugin.templateRoot;
-        for (VirtualFile root: Play.roots) {
-            VirtualFile templateRoot = root.child(s);
-            if (!templateRoot.isDirectory()) continue;
-            scanRythmFolder(templateRoot);
-        }
+        RythmPlugin.engine.resourceManager().scan(null);
+//        String s = RythmPlugin.templateRoot;
+//        for (VirtualFile root: Play.roots) {
+//            VirtualFile templateRoot = root.child(s);
+//            if (!templateRoot.isDirectory()) continue;
+//            //scanRythmFolder(templateRoot);
+//        }
         ts = System.currentTimeMillis() - ts;
         RythmPlugin.trace("%sms to preload templates", ts);
     }

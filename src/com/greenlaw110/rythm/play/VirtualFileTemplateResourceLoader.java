@@ -1,19 +1,25 @@
 package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.RythmEngine;
+import com.greenlaw110.rythm.extension.ICodeType;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.resource.ITemplateResourceLoader;
 import com.greenlaw110.rythm.resource.TemplateResourceBase;
+import com.greenlaw110.rythm.resource.TemplateResourceManager;
 import com.greenlaw110.rythm.template.ITag;
 import com.greenlaw110.rythm.utils.S;
 import play.Play;
+import play.jobs.Job;
+import play.jobs.JobsPlugin;
 import play.libs.IO;
-import play.mvc.Http;
 import play.vfs.VirtualFile;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -67,11 +73,16 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
         protected String reload() {
             return IO.readContentAsString(file.inputstream());
         }
+        
+        private String key = null;
 
         @Override
         public String getKey() {
-            String path = file.relativePath();
-            return path.replaceFirst("\\{.*?\\}", "");
+            if (null == key) {
+                String path = file.relativePath();
+                key = path.replaceFirst("\\{.*?\\}", "");
+            }
+            return key;
         }
 
         @Override
@@ -170,7 +181,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
     }
 
     @Override
-    public String getFullTagName(TemplateClass tc) {
+    public String getFullTagName(TemplateClass tc, RythmEngine engine) {
         String key = tc.getKey().toString();
         return getFullTagName(key);
     }
@@ -187,29 +198,51 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
     }
 
     @Override
-    public TemplateClass tryLoadTag(String tagName, TemplateClass templateClass) {
+    public TemplateClass tryLoadTag(String tagName, RythmEngine engine, TemplateClass templateClass) {
+        return tryLoadTag(tagName, engine, templateClass, true);
+    }
+    
+    private TemplateClass tryLoadTag(String tagName, RythmEngine engine, TemplateClass templateClass, boolean processTagName) {
 //Logger.info(">>> try to load tag: %s", tagName);
-        RythmEngine engine = RythmPlugin.engine;
+        if (null == engine) engine = RythmPlugin.engine;
         if (engine.hasTag(tagName)) return null; //TODO: not consistent here
 //Logger.info(">>> try to load tag: %s, tag not found in engine registry, continue loading", tagName);
         //String origName = tagName;
-        tagName = tagName.replace('.', '/');
-        final String[] suffixes = {
+        final List<String> suffixes = new ArrayList(Arrays.asList(new String[]{
                 ".html",
                 ".json",
-                ".xml",
+                ".js",
+                ".css",
                 ".csv",
-                ".tag"
-        };
-        String defSuffix = null;
-        Http.Request request = Http.Request.current();
-        if (null != request) {
-            defSuffix = "." + request.format;
+                ".tag",
+                ".xml",
+                ""
+        }));
+        ICodeType codeType = TemplateResourceBase.getTypeOfPath(engine, tagName);
+        if (ICodeType.DefImpl.RAW == codeType) {
+            // use caller's code type
+            codeType = templateClass.codeType;
         }
-        List<String> sl = new ArrayList<String>();
-        sl.add(defSuffix);
-        for (String s : suffixes) {
-            if (!S.isEqual(s, defSuffix)) sl.add(s);
+        final String tagNameOrigin = tagName;
+        if (processTagName) {
+            boolean tagNameProcessed = false;
+            while(!tagNameProcessed) {
+                // process tagName to remove suffixes
+                // 1. check without rythm-suffix
+                for (String s: suffixes) {
+                    if (tagName.endsWith(s)) {
+                        tagName = tagName.substring(0, tagName.lastIndexOf(s));
+                        break;
+                    }
+                }
+                tagNameProcessed = true;
+            }
+        }
+        tagName = tagName.replace('.', '/');
+        String sfx = codeType.resourceNameSuffix();
+        if (S.notEmpty(sfx) && !suffixes.get(0).equals(sfx)) {
+            suffixes.remove(sfx);
+            suffixes.add(0, sfx);
         }
 
         List<String> roots = new ArrayList<String>();
@@ -236,10 +269,11 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
         for (String root : roots) {
             tagName = root + "/" + tagName0;
             VirtualFile tagFile = null;
-            for (String suffix : sl) {
+            for (String suffix : suffixes) {
                 String name = tagName + suffix;
                 tagFile = Play.getVirtualFile(name);
-                if (null != tagFile && tagFile.getRealFile().canRead()) {
+                File realFile = null == tagFile ? null : tagFile.getRealFile();
+                if (null != realFile && realFile.canRead() && !realFile.isDirectory()) {
                     VirtualFileTemplateResource tr = new VirtualFileTemplateResource(tagFile);
                     TemplateClass tc = engine.classes().getByTemplate(tr.getKey());
                     if (null == tc) {
@@ -250,7 +284,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
                     }
                     ITag tag = (ITag) tc.asTemplate();
                     if (null != tag) {
-                        String fullName = getFullTagName(tc);
+                        String fullName = getFullTagName(tc, engine);
                         tc.setFullName(fullName);
                         engine.registerTag(fullName, tag);
                         return tc;
@@ -258,7 +292,44 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
                 }
             }
         }
-        return null;
+        return processTagName ? tryLoadTag(tagNameOrigin, engine, templateClass, false) : null;
     }
 
+    @Override
+    public void scan(String root, TemplateResourceManager manager) {
+        if (true) return;
+        if (null == JobsPlugin.executor) return;
+        final AtomicInteger failed = new AtomicInteger(0);
+        for (VirtualFile vf: Play.templatesPath) {
+            if (RythmPlugin.R_VIEW_ROOT.endsWith(vf.getName())) {
+                scan(vf, manager, failed);
+            }
+        }
+    }
+    
+    private void scan(final VirtualFile dir, final TemplateResourceManager manager, final AtomicInteger failed) {
+        if (!dir.isDirectory() && dir.getRealFile().canRead()) {
+            load(dir, manager, failed);
+            return;
+        }
+        for (VirtualFile vf: dir.list()) {
+            scan(vf, manager, failed);
+        }
+    }
+    
+    private void load(final VirtualFile file, final TemplateResourceManager manager, final AtomicInteger failed) {
+        new Job() {
+            @Override
+            public void doJob() throws Exception {
+                VirtualFileTemplateResource resource = new VirtualFileTemplateResource(file);
+                if (!resource.isValid()) return;
+                try {
+                    RythmPlugin.info("preloading %s ...", resource.getKey());
+                    manager.resourceLoaded(resource);
+                } catch (Exception e) {
+                    failed.incrementAndGet();
+                }
+            }
+        }.now();
+    }
 }

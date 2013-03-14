@@ -4,9 +4,10 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * Waiting for rythm-engine 1.0 release
 
-h2. <a name="v1.0-b5c">v1.0-b5c</a>
+h2. <a name="v1.0-b5e">v1.0-b5e</a>
 
 * New features:
+** "Support calling template with code type suffix":https://github.com/greenlaw110/Rythm/issues/121
 ** "new i18n":https://github.com/greenlaw110/Rythm/issues/118
 ** "Add number and datetime format into built-in java extension":https://github.com/greenlaw110/Rythm/issues/115
 ** "Enable nature template support":https://github.com/greenlaw110/Rythm/issues/114
@@ -22,12 +23,15 @@ h2. <a name="v1.0-b5c">v1.0-b5c</a>
 *** "New loop style":reference#for-new-loop-style
 *** "New loop separator":reference#for-new-separator
 * Bug fixes:
+** "expression inside <script ...> not processed when smart escape feature is turned on":https://github.com/greenlaw110/Rythm/issues/122
 ** "Compile error when define inline function with if-else block":https://github.com/greenlaw110/Rythm/issues/120
 ** "For loop separator should be output as Raw data":https://github.com/greenlaw110/Rythm/issues/117
 ** "Error in @get parser":https://github.com/greenlaw110/Rythm/issues/116
 ** "Forward loadApplicationClass method in ApplicationClassLoader wrapper":https://github.com/greenlaw110/play-rythm/pull/68
 ** "public folder not packaged in the 1.0-b4 version":https://github.com/greenlaw110/play-rythm/issues/69
 ** "Support lang sensitive Cache4 key":https://github.com/greenlaw110/play-rythm/issues/70
+** "output is compact when run in dev mode":https://github.com/greenlaw110/play-rythm/issues/72
+** "lots of tmp files generated at prod mode in the project root folder":https://github.com/greenlaw110/play-rythm/issues/73
 
 h2. <a name="v1.0.0-20130132">v1.0.0-20130132</a>
 
@@ -55,7 +59,7 @@ h2. <a name="v1.0.0-20130131a">v1.0.0-20130131a</a>
 ** "Passing params by position logic is not correct":https://github.com/greenlaw110/Rythm/issues/108
 ** "Default value of @args declaration tranformed to lowercase which breaks compilation":https://github.com/greenlaw110/Rythm/issues/101
 ** "NPE with Boolean type @args":https://github.com/greenlaw110/Rythm/issues/100
-** "Filename of 3 clases renamed":https://github.com/greenlaw110/Rythm/issues/98
+** "Filename of 3 classes renamed":https://github.com/greenlaw110/Rythm/issues/98
 
 
 h2. <a name="v1.0.0-20121210">v1.0.0-20121210</a>
@@ -330,12 +334,12 @@ h3. Small enhancements
 
 h3. Issues closed
 
-* "https://github.com/greenlaw110/Rythm/issues/6":https://github.com/greenlaw110/Rythm/issues/6
-* "https://github.com/greenlaw110/Rythm/issues/21":https://github.com/greenlaw110/Rythm/issues/21
-* "https://github.com/greenlaw110/Rythm/issues/14":https://github.com/greenlaw110/Rythm/issues/14
-* "https://github.com/greenlaw110/play-rythm/issues/5":https://github.com/greenlaw110/play-rythm/issues/5
-* "https://github.com/greenlaw110/play-rythm/issues/1":https://github.com/greenlaw110/play-rythm/issues/1
-* "https://github.com/greenlaw110/play-rythm/pull/11":https://github.com/greenlaw110/play-rythm/pull/11
+* "Add support to "include" concept":https://github.com/greenlaw110/Rythm/issues/6
+* "template filename started with underscore cannot be called as tag":https://github.com/greenlaw110/Rythm/issues/21
+* "Tag template changes are not captured by reloading process":https://github.com/greenlaw110/Rythm/issues/14
+* "Support "cacheFor" and "cacheForOnProd" extension to expressions":https://github.com/greenlaw110/play-rythm/issues/5
+* "Support content type based tag selection":https://github.com/greenlaw110/play-rythm/issues/1
+* "To fix null pointer exception while invoking reverse url in mail template":https://github.com/greenlaw110/play-rythm/pull/11
 
 h2. <a name="v0.9.7a">v0.9.7a</a>
 

@@ -2,7 +2,7 @@ package com.greenlaw110.rythm.play.utils;
 
 import com.greenlaw110.rythm.RythmEngine;
 import com.greenlaw110.rythm.extension.II18nMessageResolver;
-import com.greenlaw110.rythm.template.TemplateBase;
+import com.greenlaw110.rythm.template.ITemplate;
 import play.i18n.Lang;
 import play.i18n.Messages;
 
@@ -16,18 +16,9 @@ import java.util.Locale;
  * To change this template use File | Settings | File Templates.
  */
 public class PlayI18nMessageResolver implements II18nMessageResolver {
-    @Override
-    public String getMessage(Locale locale, RythmEngine engine, String key) {
-        if (null == locale && null != engine) {
-            TemplateBase tmpl = engine.currentTemplate();
-            locale = null == tmpl ? engine.locale() : tmpl.__curLocale();
-        }
-        String sLoc = null == locale ? Lang.get() : locale.toString();
-        return Messages.getMessage(sLoc, key);
-    }
 
     @Override
-    public String getMessage(RythmEngine engine, String key, Object... args) {
+    public String getMessage(ITemplate template, String key, Object... args) {
         Locale locale = null;
         if (args.length > 0) {
             Object arg0 = args[0];
@@ -38,9 +29,8 @@ public class PlayI18nMessageResolver implements II18nMessageResolver {
                 args = args0;
             }
         }
-        if (null == locale && null != engine) {
-            TemplateBase tmpl = engine.currentTemplate();
-            locale = null == tmpl ? engine.locale() : tmpl.__curLocale();
+        if (null == locale && null != template) {
+            locale = null == template ? RythmEngine.get().renderSettings.locale() : template.__curLocale();
         }
         String sLoc = null == locale ? Lang.get() : locale.toString();
         return Messages.getMessage(sLoc, key, args);

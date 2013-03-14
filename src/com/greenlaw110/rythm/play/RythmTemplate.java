@@ -4,6 +4,7 @@ import com.greenlaw110.rythm.RythmEngine;
 import com.greenlaw110.rythm.exception.CompileException;
 import com.greenlaw110.rythm.exception.ParseException;
 import com.greenlaw110.rythm.exception.RythmException;
+import com.greenlaw110.rythm.extension.ICodeType;
 import com.greenlaw110.rythm.internal.compiler.ClassReloadException;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
@@ -33,12 +34,14 @@ import static play.classloading.enhancers.ControllersEnhancer.ControllerInstrume
 public class RythmTemplate extends Template {
 
     private TemplateClass tc;
+    private ICodeType codeType;
 
     RythmTemplate(ITemplateResource resource) {
         if (null == resource) throw new NullPointerException();
         tc = new TemplateClass(resource, RythmPlugin.engine, true);
         name = resource.getKey().toString();
         source = tc.templateResource.asTemplateContent();
+        codeType = resource.codeType();
     }
 
     private RythmEngine engine() {
@@ -93,8 +96,18 @@ public class RythmTemplate extends Template {
 
     @Override
     public void compile() {
-        refresh();
-        tc.asTemplate();
+        if (RythmPlugin.precompiling()) {
+            try {
+                refresh();
+                tc.asTemplate();
+            } catch (Throwable e) {
+                RythmPlugin.error(e, "Error precompiling template");
+            }
+        } else {
+            refresh();
+            tc.asTemplate();
+        }
+         
         //if (tc.isValid) tc.compile();
     }
 
@@ -110,7 +123,7 @@ public class RythmTemplate extends Template {
             isActionCallAllowed = true;
         }
         try {
-            RythmPlugin.engine.setLocale(new Locale(Lang.get()));
+            RythmPlugin.engine.renderSettings.init(codeType, new Locale(Lang.get()));
             if (Logger.isTraceEnabled()) RythmPlugin.trace("prepare template to render");
             TemplateBase t = (TemplateBase)tc.asTemplate();
             if (Logger.isTraceEnabled()) RythmPlugin.trace("about to set render args");
