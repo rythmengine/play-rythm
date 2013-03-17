@@ -565,7 +565,7 @@ public class RythmPlugin extends PlayPlugin {
             Constructor<?> c = jc.getConstructor(new Class[]{});
             c.setAccessible(true);
             FastRythmTag tag = (FastRythmTag) c.newInstance();
-            engine.registerTag(tag);
+            engine.registerTemplate(tag);
         } catch (Exception e) {
             throw new UnexpectedException("Error initialize JavaTag: " + jc.getName(), e);
         }
@@ -599,7 +599,7 @@ public class RythmPlugin extends PlayPlugin {
             try {
                 return RythmTemplateLoader.loadTemplate(file);
             } catch (Throwable e) {
-                error(e, "Error precompiling template");
+                error(e, "Error precompiling template: %s", file);
                 return null;
             }
         } else {

@@ -4,8 +4,10 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * Waiting for rythm-engine 1.0 release
 
-h2. <a name="v1.0-b5e">v1.0-b5e</a>
+h2. <a name="v1.0-b5f">v1.0-b5f</a>
 
+* Changes:
+** internal optimization on performance
 * New features:
 ** "Support calling template with code type suffix":https://github.com/greenlaw110/Rythm/issues/121
 ** "new i18n":https://github.com/greenlaw110/Rythm/issues/118

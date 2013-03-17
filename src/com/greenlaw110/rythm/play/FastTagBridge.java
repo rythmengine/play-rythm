@@ -1,7 +1,6 @@
 package com.greenlaw110.rythm.play;
 
 import com.greenlaw110.rythm.RythmEngine;
-import com.greenlaw110.rythm.template.ITag;
 import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.template.JavaTagBase;
 import com.greenlaw110.rythm.template.TemplateBase;
@@ -179,9 +178,9 @@ public class FastTagBridge extends JavaTagBase {
         if (m.getParameterTypes().length != 5) return;
         //note, need to strip off leading '_' from method name
         FastTagBridge tag = new FastTagBridge(ns, m.getName().substring(1), jc);
-        ITag tag0 = engine.getTag(tag.__getName());
+        ITemplate tmpl = engine.getRegisteredTemplate(tag.__getName());
         // FastTagBridge has lowest priority, thus if there are other tags already registered
         // with the same name, FastTag bridge will not be registered again
-        if (null == tag0 || (tag0 instanceof FastTagBridge)) engine.registerTag(tag);
+        if (null == tmpl || (tmpl instanceof FastTagBridge)) engine.registerTemplate(tag);
     }
 }

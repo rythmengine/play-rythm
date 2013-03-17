@@ -121,9 +121,9 @@ public class ActionTagBridge extends JavaTagBase {
             for (Method method : cls.getMethods()) {
                 if (!isActionMethod(method)) continue;
                 ActionTagBridge atb = new ActionTagBridge(cls, method);
-                engine.registerTag(atb);
+                engine.registerTemplate(atb);
                 atb = new ActionTagBridge(cls, method, true);
-                engine.registerTag(atb);
+                engine.registerTemplate(atb);
             }
         }
         if (Logger.isDebugEnabled()) {

@@ -8,6 +8,8 @@ import com.greenlaw110.rythm.extension.ICodeType;
 import com.greenlaw110.rythm.internal.compiler.ClassReloadException;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
+import com.greenlaw110.rythm.resource.TemplateResourceManager;
+import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.template.TemplateBase;
 import com.greenlaw110.rythm.utils.TextBuilder;
 import play.Logger;
@@ -35,10 +37,12 @@ public class RythmTemplate extends Template {
 
     private TemplateClass tc;
     private ICodeType codeType;
+    private String fullName;
 
     RythmTemplate(ITemplateResource resource) {
         if (null == resource) throw new NullPointerException();
-        tc = new TemplateClass(resource, RythmPlugin.engine, true);
+        //tc = new TemplateClass(resource, RythmPlugin.engine, true);
+        tc = RythmPlugin.engine.getTemplateClass(resource);
         name = resource.getKey().toString();
         source = tc.templateResource.asTemplateContent();
         codeType = resource.codeType();
@@ -105,7 +109,12 @@ public class RythmTemplate extends Template {
             }
         } else {
             refresh();
-            tc.asTemplate();
+            if (isValid()) {
+                ITemplate t = tc.asTemplate();
+                RythmEngine engine = engine();
+                TemplateResourceManager mgr = engine.resourceManager();
+                engine.registerTemplate(mgr.getFullTagName(tc), t);
+            }
         }
          
         //if (tc.isValid) tc.compile();
@@ -126,6 +135,7 @@ public class RythmTemplate extends Template {
             RythmPlugin.engine.renderSettings.init(codeType, new Locale(Lang.get()));
             if (Logger.isTraceEnabled()) RythmPlugin.trace("prepare template to render");
             TemplateBase t = (TemplateBase)tc.asTemplate();
+            RythmPlugin.engine.registerTemplate(fullName, t);
             if (Logger.isTraceEnabled()) RythmPlugin.trace("about to set render args");
             t.__setRenderArgs(args);
             // allow invoke controller method without redirect

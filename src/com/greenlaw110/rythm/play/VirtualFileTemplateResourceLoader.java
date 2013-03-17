@@ -7,12 +7,12 @@ import com.greenlaw110.rythm.resource.ITemplateResource;
 import com.greenlaw110.rythm.resource.ITemplateResourceLoader;
 import com.greenlaw110.rythm.resource.TemplateResourceBase;
 import com.greenlaw110.rythm.resource.TemplateResourceManager;
-import com.greenlaw110.rythm.template.ITag;
 import com.greenlaw110.rythm.utils.S;
 import play.Play;
 import play.jobs.Job;
 import play.jobs.JobsPlugin;
 import play.libs.IO;
+import play.templates.Template;
 import play.vfs.VirtualFile;
 
 import java.io.File;
@@ -181,7 +181,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
     }
 
     @Override
-    public String getFullTagName(TemplateClass tc, RythmEngine engine) {
+    public String getFullName(TemplateClass tc, RythmEngine engine) {
         String key = tc.getKey().toString();
         return getFullTagName(key);
     }
@@ -198,14 +198,14 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
     }
 
     @Override
-    public TemplateClass tryLoadTag(String tagName, RythmEngine engine, TemplateClass templateClass) {
-        return tryLoadTag(tagName, engine, templateClass, true);
+    public TemplateClass tryLoadTemplate(String tmplName, RythmEngine engine, TemplateClass templateClass) {
+        return tryLoadTemplate(tmplName, engine, templateClass, true);
     }
     
-    private TemplateClass tryLoadTag(String tagName, RythmEngine engine, TemplateClass templateClass, boolean processTagName) {
+    private TemplateClass tryLoadTemplate(String tmplName, RythmEngine engine, TemplateClass templateClass, boolean processTagName) {
 //Logger.info(">>> try to load tag: %s", tagName);
         if (null == engine) engine = RythmPlugin.engine;
-        if (engine.hasTag(tagName)) return null; //TODO: not consistent here
+        if (engine.templateRegistered(tmplName)) return null; //TODO: not consistent here
 //Logger.info(">>> try to load tag: %s, tag not found in engine registry, continue loading", tagName);
         //String origName = tagName;
         final List<String> suffixes = new ArrayList(Arrays.asList(new String[]{
@@ -218,27 +218,27 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
                 ".xml",
                 ""
         }));
-        ICodeType codeType = TemplateResourceBase.getTypeOfPath(engine, tagName);
+        ICodeType codeType = TemplateResourceBase.getTypeOfPath(engine, tmplName);
         if (ICodeType.DefImpl.RAW == codeType) {
             // use caller's code type
             codeType = templateClass.codeType;
         }
-        final String tagNameOrigin = tagName;
+        final String tagNameOrigin = tmplName;
         if (processTagName) {
             boolean tagNameProcessed = false;
             while(!tagNameProcessed) {
                 // process tagName to remove suffixes
                 // 1. check without rythm-suffix
                 for (String s: suffixes) {
-                    if (tagName.endsWith(s)) {
-                        tagName = tagName.substring(0, tagName.lastIndexOf(s));
+                    if (tmplName.endsWith(s)) {
+                        tmplName = tmplName.substring(0, tmplName.lastIndexOf(s));
                         break;
                     }
                 }
                 tagNameProcessed = true;
             }
         }
-        tagName = tagName.replace('.', '/');
+        tmplName = tmplName.replace('.', '/');
         String sfx = codeType.resourceNameSuffix();
         if (S.notEmpty(sfx) && !suffixes.get(0).equals(sfx)) {
             suffixes.remove(sfx);
@@ -255,7 +255,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
             }
         }
 
-        String tagName0 = tagName;
+        String tagName0 = tmplName;
         // call tag using relative path
         String currentPath = templateClass.getKey().toString();
         int pos = currentPath.lastIndexOf("/");
@@ -267,10 +267,10 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
         }
 
         for (String root : roots) {
-            tagName = root + "/" + tagName0;
+            tmplName = root + "/" + tagName0;
             VirtualFile tagFile = null;
             for (String suffix : suffixes) {
-                String name = tagName + suffix;
+                String name = tmplName + suffix;
                 tagFile = Play.getVirtualFile(name);
                 File realFile = null == tagFile ? null : tagFile.getRealFile();
                 if (null != realFile && realFile.canRead() && !realFile.isDirectory()) {
@@ -282,17 +282,18 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
                         // call self
                         return templateClass;
                     }
-                    ITag tag = (ITag) tc.asTemplate();
-                    if (null != tag) {
-                        String fullName = getFullTagName(tc, engine);
-                        tc.setFullName(fullName);
-                        engine.registerTag(fullName, tag);
-                        return tc;
-                    }
+                    tc.asTemplate();
+                    return tc;
+//                    if (null != t) {
+//                        String fullName = getFullName(tc, engine);
+//                        tc.setFullName(fullName);
+//                        engine.registerTemplate(fullName, t);
+//                        return tc;
+//                    }
                 }
             }
         }
-        return processTagName ? tryLoadTag(tagNameOrigin, engine, templateClass, false) : null;
+        return processTagName ? tryLoadTemplate(tagNameOrigin, engine, templateClass, false) : null;
     }
 
     @Override
@@ -325,7 +326,12 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
                 if (!resource.isValid()) return;
                 try {
                     RythmPlugin.info("preloading %s ...", resource.getKey());
+                    String path = RythmTemplateLoader.templatePath(file);
+                    if (null == path) return;
+                    Template t = RythmTemplateLoader.cachedTemplate(path);
+                    if (null != t) return;
                     manager.resourceLoaded(resource);
+                    RythmTemplateLoader.createTemplate(file, path);
                 } catch (Exception e) {
                     failed.incrementAndGet();
                 }
