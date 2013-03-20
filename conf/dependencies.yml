@@ -1,4 +1,8 @@
 # History
+# 1.0-b5h
+#        - catch up rythm-egnine latest version with Sandbox and JSON fixes
+# 1.0-b5g
+#        - catch up rythm-egnine latest version
 # 1.0-b5f
 #        - catch up rythm-egnine latest version
 # 1.0-b5e
@@ -245,7 +249,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0-b5f
+self: play -> rythm 1.0-b5h
 
 require:
     - play 1.2
