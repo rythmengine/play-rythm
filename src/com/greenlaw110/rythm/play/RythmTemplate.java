@@ -132,9 +132,10 @@ public class RythmTemplate extends Template {
             isActionCallAllowed = true;
         }
         try {
-            RythmPlugin.engine.renderSettings.init(codeType, new Locale(Lang.get()));
+            RythmPlugin.engine.renderSettings.init(codeType).init(new Locale(Lang.get()));
+            //RythmPlugin.engine.renderSettings.init(codeType, new Locale(Lang.get()));
             if (Logger.isTraceEnabled()) RythmPlugin.trace("prepare template to render");
-            TemplateBase t = (TemplateBase)tc.asTemplate();
+            TemplateBase t = (TemplateBase) tc.asTemplate();
             RythmPlugin.engine.registerTemplate(fullName, t);
             if (Logger.isTraceEnabled()) RythmPlugin.trace("about to set render args");
             t.__setRenderArgs(args);
