@@ -18,12 +18,19 @@ js_messages=new com.google.gson.Gson().toJson(ymessages);
 @{
     Properties ymessages = null;
 
-    if (null != keys) {
-        Set s = new HashSet();
+    if (s().notEmpty(keys)) {
+        HashSet s = new HashSet();
         s.addAll(Arrays.asList(keys.split("[,;:\\s]")));
+        Set s0 = (Set)s.clone();
         ymessages = Messages.find(Lang.get(), s);
+        if (ymessages.isEmpty()) {
+            ymessages = Messages.find(null, s0);
+        }
     } else {
         ymessages = Messages.all(Lang.get());
+        if (ymessages.isEmpty()) {
+            ymessages = Messages.all(null);
+        }
     }
     String js_messages = new com.google.gson.Gson().toJson(ymessages);
 }

@@ -4,7 +4,7 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * Waiting for rythm-engine 1.0 release
 
-h2. <a name="v1.0-b5">v1.0-b5h</a>
+h2. <a name="v1.0-b5">v1.0-b5n</a>
 
 * Changes:
 ** internal optimization on performance
@@ -25,7 +25,11 @@ h2. <a name="v1.0-b5">v1.0-b5h</a>
 *** "New loop style":reference#for-new-loop-style
 *** "New loop separator":reference#for-new-separator
 * Bug fixes:
+** "call @play18n() get no messages":https://github.com/greenlaw110/play-rythm/issues/74
+** "@for join issue":https://github.com/greenlaw110/Rythm/issues/134
+** "@locale() parsing fail":https://github.com/greenlaw110/Rythm/issues/133
 ** Several Sandbox and JSON issues
+** "Inconsistent null value handling for String type template argument":https://github.com/greenlaw110/Rythm/issues/132
 ** "expression inside <script ...> not processed when smart escape feature is turned on":https://github.com/greenlaw110/Rythm/issues/122
 ** "Compile error when define inline function with if-else block":https://github.com/greenlaw110/Rythm/issues/120
 ** "For loop separator should be output as Raw data":https://github.com/greenlaw110/Rythm/issues/117

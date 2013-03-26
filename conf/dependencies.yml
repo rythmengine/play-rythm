@@ -1,4 +1,18 @@
 # History
+# 1.0-b5n
+#        - catch up rythm-egnine latest version
+#        - https://github.com/greenlaw110/play-rythm/issues/74
+# 1.0-b5m
+#        - catch up rythm-egnine latest version
+#        - https://github.com/greenlaw110/Rythm/issues/134
+#        - https://github.com/greenlaw110/Rythm/issues/133
+# 1.0-b5l
+#        - catch up rythm-egnine latest version, fix a escape() transformer issue
+# 1.0-b5k
+#        - catch up rythm-egnine latest version to allow sandbox support rythmfiddle use case
+# 1.0-b5j
+#        - catch up rythm-egnine latest version
+#        - https://github.com/greenlaw110/Rythm/issues/132
 # 1.0-b5h
 #        - catch up rythm-egnine latest version with Sandbox and JSON fixes
 # 1.0-b5g
@@ -249,7 +263,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0-b5h
+self: play -> rythm 1.0-b5n
 
 require:
     - play 1.2
