@@ -1,4 +1,7 @@
 # History
+# 1.0-b5o
+#        - catch up rythm-egnine latest version
+#        - https://github.com/greenlaw110/rythm/issues/135
 # 1.0-b5n
 #        - catch up rythm-egnine latest version
 #        - https://github.com/greenlaw110/play-rythm/issues/74
@@ -263,7 +266,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0-b5n
+self: play -> rythm 1.0-b5o
 
 require:
     - play 1.2
