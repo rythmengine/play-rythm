@@ -16,6 +16,8 @@ import com.greenlaw110.rythm.play.utils.TemplateClassAppEnhancer;
 import com.greenlaw110.rythm.template.ITag;
 import com.greenlaw110.rythm.template.ITemplate;
 import com.greenlaw110.rythm.template.TemplateBase;
+import com.greenlaw110.rythm.toString.ToStringOption;
+import com.greenlaw110.rythm.toString.ToStringStyle;
 import com.greenlaw110.rythm.utils.S;
 import play.Logger;
 import play.Play;
@@ -44,7 +46,7 @@ import java.net.URL;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0-b5o";
+    public static final String VERSION = "1.0-b5r";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -482,7 +484,7 @@ public class RythmPlugin extends PlayPlugin {
 
         engine = new RythmEngine(p);
         //Rythm.engine.cacheService.shutdown();
-        Rythm.init(engine);
+        ///Rythm.init(engine);
 
         IParserFactory[] factories = {new AbsoluteUrlReverseLookupParser(), new UrlReverseLookupParser(),
                 new MessageLookupParser(), new GroovyVerbatimTagParser(), new ExitIfNoModuleParser()};
@@ -744,6 +746,124 @@ public class RythmPlugin extends PlayPlugin {
         }
 
         return Messages.formatString(value, args);
+    }
+    
+    private static RythmEngine engine() {
+        return engine;
+    }
+    
+    // ----- render interfaces ---------
+    /**
+     * @param template
+     * @param args
+     * @return render result
+     * @see RythmEngine#render(String, Object...)
+     */
+    public static String render(String template, Object... args) {
+        return engine().render(template, args);
+    }
+
+    /**
+     * @param file
+     * @param args
+     * @return render result
+     * @see RythmEngine#render(java.io.File, Object...)
+     */
+    public static String render(File file, Object... args) {
+        return engine().render(file, args);
+    }
+
+    /**
+     * @param template
+     * @param args
+     * @return render result
+     * @see RythmEngine#substitute(String, Object...)
+     */
+    public static String substitute(String template, Object... args) {
+        return engine().substitute(template, args);
+    }
+
+    /**
+     * @param template
+     * @param args
+     * @return render result
+     * @see RythmEngine#substitute(java.io.File, Object...)
+     */
+    public static String substitute(File template, Object... args) {
+        return engine().substitute(template, args);
+    }
+
+    /**
+     * @param template
+     * @param obj
+     * @return render result
+     * @see RythmEngine#toString(String, Object)
+     */
+    public static String toString(String template, Object obj) {
+        return engine().toString(template, obj);
+    }
+    
+    /**
+     * @param obj
+     * @return render result
+     * @see RythmEngine#toString(Object)
+     */
+    public static String toString(Object obj) {
+        return engine().toString(obj);
+    }
+
+    /**
+     * @param obj
+     * @param option
+     * @param style
+     * @return render result
+     * @see RythmEngine#toString(Object, com.greenlaw110.rythm.toString.ToStringOption, com.greenlaw110.rythm.toString.ToStringStyle)
+     */
+    public static String toString(Object obj, ToStringOption option, ToStringStyle style) {
+        return engine().toString(obj, option, style);
+    }
+
+    /**
+     * @param obj
+     * @param option
+     * @param style
+     * @return render result
+     * @see RythmEngine#commonsToString(Object, com.greenlaw110.rythm.toString.ToStringOption, org.apache.commons.lang3.builder.ToStringStyle)
+     */
+    public static String commonsToString(Object obj, ToStringOption option, org.apache.commons.lang3.builder.ToStringStyle style) {
+        return engine().commonsToString(obj, option, style);
+    }
+
+    /**
+     * Alias of {@link #renderString(String, Object...)}
+     *
+     * @param template
+     * @param args
+     * @return render result
+     * @see RythmEngine#renderString(String, Object...)
+     */
+    public static String renderStr(String template, Object... args) {
+        return engine().renderString(template, args);
+    }
+
+    /**
+     * @param template
+     * @param args
+     * @return render result
+     * @see RythmEngine#renderString(String, Object...)
+     */
+    public static String renderString(String template, Object... args) {
+        return engine().renderString(template, args);
+    }
+
+    /**
+     * @param template
+     * @param args
+     * @return render result
+     * @see RythmEngine#renderIfTemplateExists(String, Object...)
+     */
+    public static String renderIfTemplateExists(String template, Object... args) {
+        return engine().renderIfTemplateExists(template, args);
     }
 
 }

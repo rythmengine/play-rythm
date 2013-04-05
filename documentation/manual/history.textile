@@ -4,10 +4,12 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * Waiting for rythm-engine 1.0 release
 
-h2. <a name="v1.0-b5">v1.0-b5o</a>
+h2. <a name="v1.0-b5">v1.0-b5r</a>
 
 * Changes:
 ** internal optimization on performance
+** do not use Plugin engine to init Rythm
+** add renderXX interface to RythmPlugin
 * New features:
 ** "Support calling template with code type suffix":https://github.com/greenlaw110/Rythm/issues/121
 ** "new i18n":https://github.com/greenlaw110/Rythm/issues/118
@@ -25,6 +27,9 @@ h2. <a name="v1.0-b5">v1.0-b5o</a>
 *** "New loop style":reference#for-new-loop-style
 *** "New loop separator":reference#for-new-separator
 * Bug fixes:
+** "@if and @for does not support Allman/GNU/Whitesmiths indent style":https://github.com/greenlaw110/Rythm/issues/139
+** "Allow `format()` transformer be applied to Number":https://github.com/greenlaw110/Rythm/issues/138
+** "Name conflict when using `@assign()`":https://github.com/greenlaw110/Rythm/issues/137
 ** "Cannot use `@s().escape(x)` in template":https://github.com/greenlaw110/rythm/issues/135
 ** "call @play18n() get no messages":https://github.com/greenlaw110/play-rythm/issues/74
 ** "@for join issue":https://github.com/greenlaw110/Rythm/issues/134

@@ -1,12 +1,16 @@
 # History
+# 1.0-b5r
+#        - https://github.com/greenlaw110/rythm/issues/139
+#        - https://github.com/greenlaw110/rythm/issues/138
+# 1.0-b5q
+#        - do not use plugin engine to init Rythm class field
+# 1.0-b5p
+#        - https://github.com/greenlaw110/rythm/issues/137
 # 1.0-b5o
-#        - catch up rythm-egnine latest version
 #        - https://github.com/greenlaw110/rythm/issues/135
 # 1.0-b5n
-#        - catch up rythm-egnine latest version
 #        - https://github.com/greenlaw110/play-rythm/issues/74
 # 1.0-b5m
-#        - catch up rythm-egnine latest version
 #        - https://github.com/greenlaw110/Rythm/issues/134
 #        - https://github.com/greenlaw110/Rythm/issues/133
 # 1.0-b5l
@@ -266,7 +270,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0-b5o
+self: play -> rythm 1.0-b5r
 
 require:
     - play 1.2
