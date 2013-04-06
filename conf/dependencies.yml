@@ -1,4 +1,7 @@
 # History
+# 1.0-b5s
+#        - https://github.com/greenlaw110/rythm/issues/141
+#        - https://github.com/greenlaw110/rythm/issues/140
 # 1.0-b5r
 #        - https://github.com/greenlaw110/rythm/issues/139
 #        - https://github.com/greenlaw110/rythm/issues/138
@@ -270,7 +273,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0-b5r
+self: play -> rythm 1.0-b5s
 
 require:
     - play 1.2
