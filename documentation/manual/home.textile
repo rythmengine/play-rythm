@@ -1,6 +1,6 @@
 h1. PlayRythm module documentation
 
-Welcome to *PlayRythm module* documentation. This documentation is intended for the *1.0-b5s release* and might be significantly differ from previous module version (1.0.0-20130132).
+Welcome to *PlayRythm module* documentation. This documentation is intended for the *1.0-b5t release* and might be significantly differ from previous module version (1.0.0-20130132).
 
 Check the "version history":history.
 

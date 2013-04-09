@@ -4,7 +4,7 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * Waiting for rythm-engine 1.0 release
 
-h2. <a name="v1.0-b5">v1.0-b5s</a>
+h2. <a name="v1.0-b5">v1.0-b5t</a>
 
 * Changes:
 ** internal optimization on performance
@@ -29,6 +29,10 @@ h2. <a name="v1.0-b5">v1.0-b5s</a>
 *** "New loop style":reference#for-new-loop-style
 *** "New loop separator":reference#for-new-separator
 * Bug fixes:
+** "'No open block' error on `if` and `for`":https://github.com/greenlaw110/Rythm/issues/146
+** "Cannot use `new` in `@args` directive statement to set default value":https://github.com/greenlaw110/Rythm/issues/145
+** "NPE when set param with JSONWrapper to wrap an array based param":https://github.com/greenlaw110/Rythm/issues/144
+** "Add join() interfaces to S for primitive typed array":https://github.com/greenlaw110/Rythm/issues/143
 ** "The 'integration' in '@args integration.MyClass' be translated into 'Integeregration'":#https://github.com/greenlaw110/rythm/issues/141
 ** "@if and @for does not support Allman/GNU/Whitesmiths indent style":https://github.com/greenlaw110/Rythm/issues/139
 ** "Name conflict when using `@assign()`":https://github.com/greenlaw110/Rythm/issues/137
