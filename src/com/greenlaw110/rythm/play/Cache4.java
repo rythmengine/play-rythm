@@ -95,10 +95,16 @@ public @interface Cache4 {
      */
     public static class CacheResult extends Result {
         private Result cached;
+        private String key;
 
-        public CacheResult(Result result) {
+        public CacheResult(String key, Result result) {
             if (null == result) throw new NullPointerException();
             cached = result;
+            this.key = key;
+        }
+        
+        public String getKey() {
+            return key;
         }
 
         public Result getCached() {

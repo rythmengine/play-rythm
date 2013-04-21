@@ -46,7 +46,7 @@ import java.net.URL;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0-b5t";
+    public static final String VERSION = "1.0-b6";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -682,7 +682,7 @@ public class RythmPlugin extends PlayPlugin {
             Result result = (Result) play.cache.Cache.get(cacheKey);
             if (null == result) return;
             if (!(result instanceof Cache4.CacheResult)) {
-                result = new Cache4.CacheResult(result);
+                result = new Cache4.CacheResult(cacheKey, result);
             }
             throw result;
         }
@@ -717,7 +717,7 @@ public class RythmPlugin extends PlayPlugin {
         if ("forever".equals(duration)) {
             duration = "99999d";
         }
-        play.cache.Cache.set(cacheKey, new Cache4.CacheResult(result), duration);
+        play.cache.Cache.set(cacheKey, new Cache4.CacheResult(cacheKey, result), duration);
     }
 
     @Override

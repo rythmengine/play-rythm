@@ -1,4 +1,7 @@
 # History
+# 1.0-b6
+#        - update to rythm-engine b6
+#        - add "key" to "CachedResult" for profiling purpose
 # 1.0-b5t
 #        - https://github.com/greenlaw110/Rythm/issues/146
 #        - https://github.com/greenlaw110/Rythm/issues/145
@@ -278,7 +281,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0-b5s
+self: play -> rythm 1.0-b6
 
 require:
     - play 1.2

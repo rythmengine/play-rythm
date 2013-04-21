@@ -4,9 +4,10 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * Waiting for rythm-engine 1.0 release
 
-h2. <a name="v1.0-b5">v1.0-b5t</a>
+h2. <a name="v1.0-b6">v1.0-b6</a>
 
 * Changes:
+** Add "key" to CachedResult for profiling purpose
 ** internal optimization on performance
 ** do not use Plugin engine to init Rythm
 ** add renderXX interface to RythmPlugin
@@ -29,6 +30,7 @@ h2. <a name="v1.0-b5">v1.0-b5t</a>
 *** "New loop style":reference#for-new-loop-style
 *** "New loop separator":reference#for-new-separator
 * Bug fixes:
+** "call a template extends a layout template inside the callback body of another template call has no effective":https://github.com/greenlaw110/Rythm/issues/147
 ** "'No open block' error on `if` and `for`":https://github.com/greenlaw110/Rythm/issues/146
 ** "Cannot use `new` in `@args` directive statement to set default value":https://github.com/greenlaw110/Rythm/issues/145
 ** "NPE when set param with JSONWrapper to wrap an array based param":https://github.com/greenlaw110/Rythm/issues/144
