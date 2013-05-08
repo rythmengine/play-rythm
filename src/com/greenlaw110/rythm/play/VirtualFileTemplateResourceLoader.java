@@ -4,7 +4,7 @@ import com.greenlaw110.rythm.RythmEngine;
 import com.greenlaw110.rythm.extension.ICodeType;
 import com.greenlaw110.rythm.internal.compiler.TemplateClass;
 import com.greenlaw110.rythm.resource.ITemplateResource;
-import com.greenlaw110.rythm.resource.ITemplateResourceLoader;
+import com.greenlaw110.rythm.extension.ITemplateResourceLoader;
 import com.greenlaw110.rythm.resource.TemplateResourceBase;
 import com.greenlaw110.rythm.resource.TemplateResourceManager;
 import com.greenlaw110.rythm.utils.S;

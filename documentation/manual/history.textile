@@ -4,7 +4,7 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * Waiting for rythm-engine 1.0 release
 
-h2. <a name="v1.0-b6">v1.0-b6</a>
+h2. <a name="v1.0-b6a">v1.0-b7</a>
 
 * Changes:
 ** Add "key" to CachedResult for profiling purpose
@@ -30,6 +30,8 @@ h2. <a name="v1.0-b6">v1.0-b6</a>
 *** "New loop style":reference#for-new-loop-style
 *** "New loop separator":reference#for-new-separator
 * Bug fixes:
+** "S.escapeJSON() should escape backslash":https://github.com/greenlaw110/Rythm/issues/150
+** "Bug? wrong scope":https://github.com/greenlaw110/Rythm/issues/148
 ** "call a template extends a layout template inside the callback body of another template call has no effective":https://github.com/greenlaw110/Rythm/issues/147
 ** "'No open block' error on `if` and `for`":https://github.com/greenlaw110/Rythm/issues/146
 ** "Cannot use `new` in `@args` directive statement to set default value":https://github.com/greenlaw110/Rythm/issues/145
