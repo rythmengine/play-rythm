@@ -4,7 +4,9 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * Waiting for rythm-engine 1.0 release
 
-h2. <a name="v1.0-b6a">v1.0-b7</a>
+h2. <a name="v1.0-b8">v1.0-b8</a>
+
+p(note). **Break change**: package name renamed from @com.greenlaw110.rythm@ to @org.rythmengine@
 
 * Changes:
 ** Add "key" to CachedResult for profiling purpose

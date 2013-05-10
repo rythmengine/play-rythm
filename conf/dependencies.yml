@@ -1,11 +1,14 @@
 # History
+# 1.0-b8
+#        - update to rythm-engine 1.0-b8
+#        - package name changed from com.greenlaw110.rythm to org.rythmengine
 # 1.0-b7 
-#        - update to rythm-engine b7
+#        - update to rythm-engine 1.0-b7
 #        - https://github.com/greenlaw110/Rythm/issues/150
 # 1.0-b6a
 #        - https://github.com/greenlaw110/Rythm/issues/148
 # 1.0-b6
-#        - update to rythm-engine b6
+#        - update to rythm-engine 1.0-b6
 #        - add "key" to "CachedResult" for profiling purpose
 # 1.0-b5t
 #        - https://github.com/greenlaw110/Rythm/issues/146
@@ -286,7 +289,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0-b6a
+self: play -> rythm 1.0-b8
 
 require:
     - play 1.2

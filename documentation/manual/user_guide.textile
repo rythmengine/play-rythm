@@ -604,9 +604,9 @@ p(note). Developer cannot use all stuffs in FastTags. The constraints include @C
 
 h3. <a name="rythm_java_tag">Implement Java Tag using Rythm's new Java Tag interface (Play specific)</a>
 
-Another approach is to implement Java Tag using Rythm's new @com.greenlaw110.rythm.play.FastRythmTag@:
+Another approach is to implement Java Tag using Rythm's new @org.rythmengine.play.FastRythmTag@:
 
-bc. import com.greenlaw110.rythm.play.FastRythmTag;
+bc. import org.rythmengine.play.FastRythmTag;
 　
 @play.templates.FastTags.Namespace("") // yes, you use the same Namespace annotation in Rythm Fast Tag definition
 public class authenticityToken extends FastRythmTag {
@@ -627,13 +627,13 @@ h3. <a name="pure_rythm_java_tag">Create Java Tag in non-play environment
 
 Pure rythm user can also implement Java based Tag easily:
 
-# Create a Java class, say MyTag, extends @com.greenlaw110.rythm.template.JavaTagBase@
+# Create a Java class, say MyTag, extends @org.rythmengine.template.JavaTagBase@
 # Call @RythmEngine.registerTag(JavaTagBase)@ interface to register your Java tag class
 
 bc. /**
  * The Hello tag accept a name and output "hello @name"
  */
-public class Hello extends com.greenlaw110.rythm.template.JavaTagBase {
+public class Hello extends org.rythmengine.template.JavaTagBase {
 　　
     public Hello() {
     }
@@ -928,8 +928,8 @@ Unlike Play's Groovy template that all objects added to the renderArgs scope are
 | @session@ | Session scope | "play.mvc.Scope.Session":/@api/play/mvc/Scope.Session.html  | "Controllers - Session & Flash Scope":controllers#session |
 | @_response_encoding@ | encoding of the response object | "play.mvc.Http.Response":/@api/play/mvc/Http.Response.html | |
 | @_renderArgs@ | the renderArgs object | "play.mvc.Scope.RenderArgs":/@api/play/mvc/Scope.RenderArgs.html | |
-| @_rythmPlugin@ | the RythmPlugin instance | @com.greenlaw110.rythm.play.RythmPlugin@ | |
-| @_rythm@ | the rythm template engine instance | @com.greenlaw110.rythm.RythmEngine@ | |
+| @_rythmPlugin@ | the RythmPlugin instance | @org.rythmengine.play.RythmPlugin@ | |
+| @_rythm@ | the rythm template engine instance | @org.rythmengine.RythmEngine@ | |
 
 So as you can see most of these implicit variables are the same as those defined in "Groovy templates":http://localhost:9000/@documentation/modules/play/user_guide#Implicitobjectsavailableinatemplate. The only exception is Groovy's implicit variable @play@ has been renamed to @_play@. The reason for this is I want to allow user to use full qualified classes in play.* package.
 

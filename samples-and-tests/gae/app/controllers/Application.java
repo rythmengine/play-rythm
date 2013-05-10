@@ -7,8 +7,8 @@ import java.util.*;
 
 import models.*;
 
-import com.greenlaw110.rythm.*;
-import com.greenlaw110.rythm.play.*;
+import org.rythmengine.*;
+import org.rythmengine.play.*;
 
 public class Application extends Controller {
 

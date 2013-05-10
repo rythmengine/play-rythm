@@ -174,7 +174,7 @@ Things you need to take care of:
 
 h2. <a name="cache4">New Cache4 annotation for caching action invocation</a>
 
-Though not so relevant to a template engine, Rythm still provides an new annotation <code>com.greenlaw110.rythm.play.Cache4</code> for controller action (GET and HEAD) result caching. It improves the Play's built-in <code>play.cache.CacheFor</code> in the following way:
+Though not so relevant to a template engine, Rythm still provides an new annotation <code>org.rythmengine.play.Cache4</code> for controller action (GET and HEAD) result caching. It improves the Play's built-in <code>play.cache.CacheFor</code> in the following way:
 
 * It will check <code>rythm.cache.prodOnly</code> configuration. If it's true (default value), then cache get disabled on dev mode, which is a desired behavior
 * You can specify time by configuration name like <code>cron.xx.yy</code>, and Rythm will go @Play.configuration@ to find out the cache time duration. Meaning the cache duration is configurable now. Thus mechanism (by app developer) is well decoupled from policy (by app deployer). Note time duration configuration name must start with "cron"

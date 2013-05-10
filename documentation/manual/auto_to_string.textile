@@ -11,7 +11,7 @@ bc. public class Address {
     public String suburb;
     public String state;
     public String postCode;
-    @com.greenlaw110.rythm.toString.NoExpose
+    @org.rythmengine.toString.NoExpose
     public String accessCode;
     @Override public String toString() {
         return Rythm.toString(this);
@@ -22,8 +22,8 @@ You can also pass option and style to fine tune to toString result:
 
 bc. @Override public String toString() {
     return Rythm.toString(this,
-        com.greenlaw110.rythm.toString.ToStringOption.defaultOption.setAppendTransient(true),
-        com.greenlaw110.rythm.toString.ToStringStyle.MULTI_LINE_STYLE);
+        org.rythmengine.toString.ToStringOption.defaultOption.setAppendTransient(true),
+        org.rythmengine.toString.ToStringStyle.MULTI_LINE_STYLE);
 }
 
 h2. @Rythm.toString()@ API
@@ -35,8 +35,8 @@ bc. public String toString(Object)
 This API export object using default option and default style
 
 bc. public String toString(Object,
-    com.greenlaw110.rythm.toString.ToStringOption,
-    com.greenlaw110.rythm.toString.ToStringStyle)
+    org.rythmengine.toString.ToStringOption,
+    org.rythmengine.toString.ToStringStyle)
 
 This API export object using specified option and style.
 
@@ -56,11 +56,11 @@ if @appendStatic@ is set to true then static properties will be output. By defau
 
 h2. @ToStringStyle@
 
-@com.greenlaw110.rythm.toString.ToStringStyle@ cloned @org.apache.commons.lang3.builder.ToStringStyle@
+@org.rythmengine.toString.ToStringStyle@ cloned @org.apache.commons.lang3.builder.ToStringStyle@
 
 h2. Skip certain properties
 
-ATSM suppresses output properties annotated with @com.greenlaw110.rythm.toString.NoExpose@, or @org.codehaus.jackson.annotate.JsonIgnore@.
+ATSM suppresses output properties annotated with @org.rythmengine.toString.NoExpose@, or @org.codehaus.jackson.annotate.JsonIgnore@.
 
 h2. Performance
 
