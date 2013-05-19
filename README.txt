@@ -1,3 +1,5 @@
+NOTE: Play!Framework official web site is close to module update. Please follow https://gist.github.com/2868365 to get new rythm module version
+
 PlayRythm v1.0
 
 Gelin Luo (greenlaw110@gmail.com)
