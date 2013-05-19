@@ -4,7 +4,7 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * Waiting for rythm-engine 1.0 release
 
-h2. <a name="v1.0-b8">v1.0-b8</a>
+h2. <a name="v1.0-b8d">v1.0-b8d</a>
 
 p(note). **Break change**: package name renamed from @com.greenlaw110.rythm@ to @org.rythmengine@
 
@@ -32,6 +32,12 @@ p(note). **Break change**: package name renamed from @com.greenlaw110.rythm@ to 
 *** "New loop style":reference#for-new-loop-style
 *** "New loop separator":reference#for-new-separator
 * Bug fixes:
+** "User can do file IO in template when running in sandbox mode":https://github.com/greenlaw110/Rythm/issues/158
+** "NPE in smart evaluation":https://github.com/greenlaw110/Rythm/issues/157
+** "S.escapeCSV() cause StringIndexOutOfBoundsException":https://github.com/greenlaw110/Rythm/issues/155
+** "@escape() directive needs to accept variable as parameter":https://github.com/greenlaw110/Rythm/issues/154
+** "User configured logger factory not effective":https://github.com/greenlaw110/Rythm/issues/153
+** "Improve @args directive block body syntax":https://github.com/greenlaw110/Rythm/issues/152
 ** "S.escapeJSON() should escape backslash":https://github.com/greenlaw110/Rythm/issues/150
 ** "Bug? wrong scope":https://github.com/greenlaw110/Rythm/issues/148
 ** "call a template extends a layout template inside the callback body of another template call has no effective":https://github.com/greenlaw110/Rythm/issues/147

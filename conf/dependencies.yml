@@ -1,4 +1,13 @@
 # History
+# 1.0-b8d
+#        - https://github.com/greenlaw110/Rythm/issues/158
+#        - https://github.com/greenlaw110/Rythm/issues/157
+# 1.0-b8b
+#        - https://github.com/greenlaw110/Rythm/issues/155
+# 1.0-b8a
+#        - https://github.com/greenlaw110/Rythm/issues/154
+#        - https://github.com/greenlaw110/Rythm/issues/153
+#        - https://github.com/greenlaw110/Rythm/issues/152
 # 1.0-b8
 #        - update to rythm-engine 1.0-b8
 #        - package name changed from com.greenlaw110.rythm to org.rythmengine
@@ -289,7 +298,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0-b8
+self: play -> rythm 1.0-b8d
 
 require:
     - play 1.2

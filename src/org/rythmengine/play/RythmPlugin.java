@@ -2,6 +2,7 @@ package org.rythmengine.play;
 
 import org.rythmengine.Rythm;
 import org.rythmengine.RythmEngine;
+import org.rythmengine.exception.RythmException;
 import org.rythmengine.extension.ICacheService;
 import org.rythmengine.extension.*;
 import org.rythmengine.internal.IParserFactory;
@@ -46,7 +47,7 @@ import java.net.URL;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0-b8";
+    public static final String VERSION = "1.0-b8b";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -190,7 +191,16 @@ public class RythmPlugin extends PlayPlugin {
         }
 
         public Class<?> loadApplicationClass(String name) {
-            return pcl().loadApplicationClass(name);
+            try {
+                return pcl().loadApplicationClass(name);
+            } catch (SecurityException se) {
+                return null;
+            } catch (RythmException re) {
+                if (re.getCause() instanceof SecurityException) {
+                    return null;
+                }
+                throw re;
+            }
         }
     };
     
@@ -356,7 +366,7 @@ public class RythmPlugin extends PlayPlugin {
         }
 
         p.put("rythm.engine.mode", Play.mode.isDev() && Play.standalonePlayServer ? Rythm.Mode.dev : Rythm.Mode.prod);
-        p.put("rythm.playframework", true);
+        p.put("rythm.engine.playframework", true);
 
         p.put("rythm.render.listener", new IRythmListener.ListenerAdaptor() {
             @Override
@@ -771,6 +781,10 @@ public class RythmPlugin extends PlayPlugin {
      */
     public static String render(File file, Object... args) {
         return engine().render(file, args);
+    }
+    
+    public static String render(VirtualFile file, Object... args) {
+        return engine().render(file.getRealFile(), args);
     }
 
     /**
