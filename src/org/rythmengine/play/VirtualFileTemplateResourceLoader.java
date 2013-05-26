@@ -265,7 +265,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
             if (!currentPath.startsWith(RythmPlugin.templateRoot)) currentPath = RythmPlugin.templateRoot + "/" + currentPath;
             roots.add(currentPath);
         }
-
+        
         for (String root : roots) {
             tmplName = root + "/" + tagName0;
             VirtualFile tagFile = null;
@@ -282,7 +282,7 @@ public class VirtualFileTemplateResourceLoader implements ITemplateResourceLoade
                         // call self
                         return templateClass;
                     }
-                    tc.asTemplate();
+                    tc.asTemplate(engine);
                     return tc;
 //                    if (null != t) {
 //                        String fullName = getFullName(tc, engine);

@@ -101,18 +101,18 @@ public class RythmTemplate extends Template {
 
     @Override
     public void compile() {
+        RythmEngine engine = this.engine();
         if (RythmPlugin.precompiling()) {
             try {
                 refresh();
-                tc.asTemplate();
+                tc.asTemplate(engine);
             } catch (Throwable e) {
                 RythmPlugin.error(e, "Error precompiling template");
             }
         } else {
             refresh();
             if (isValid()) {
-                ITemplate t = tc.asTemplate();
-                RythmEngine engine = engine();
+                ITemplate t = tc.asTemplate(engine);
                 TemplateResourceManager mgr = engine.resourceManager();
                 engine.registerTemplate(mgr.getFullTagName(tc), t);
             }
@@ -133,11 +133,12 @@ public class RythmTemplate extends Template {
             isActionCallAllowed = true;
         }
         try {
-            RythmPlugin.engine.prepare(codeType, new Locale(Lang.get()), Collections.EMPTY_MAP);
+            RythmEngine engine = engine();
+            engine.prepare(codeType, new Locale(Lang.get()), Collections.EMPTY_MAP);
             //RythmPlugin.engine.renderSettings.init(codeType, new Locale(Lang.get()));
             if (Logger.isTraceEnabled()) RythmPlugin.trace("prepare template to render");
-            TemplateBase t = (TemplateBase) tc.asTemplate();
-            RythmPlugin.engine.registerTemplate(fullName, t);
+            TemplateBase t = (TemplateBase) tc.asTemplate(engine);
+            engine.registerTemplate(fullName, t);
             if (Logger.isTraceEnabled()) RythmPlugin.trace("about to set render args");
             t.__setRenderArgs(args);
             // allow invoke controller method without redirect
@@ -148,7 +149,7 @@ public class RythmTemplate extends Template {
 //            }
             if (Logger.isTraceEnabled()) RythmPlugin.trace("about to execute template");
             String s = t.render();
-            if (!RythmPlugin.engine.isProdMode()) {
+            if (!engine.isProdMode()) {
                 refreshCounter.set(0);
             }
             if (Logger.isTraceEnabled()) RythmPlugin.trace("render completed");
