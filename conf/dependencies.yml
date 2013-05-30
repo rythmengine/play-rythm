@@ -1,4 +1,13 @@
 # History
+# 1.0-b9a
+#        - https://github.com/greenlaw110/Rythm/issues/163
+#        - https://github.com/greenlaw110/Rythm/issues/162
+# 1.0-b9
+#        - change version number
+# 1.0-b8g
+#        - https://github.com/greenlaw110/Rythm/issues/161
+# 1.0-b8f
+#        - https://github.com/greenlaw110/Rythm/issues/160
 # 1.0-b8e
 #        - https://github.com/greenlaw110/Rythm/issues/159
 #        - performance optimization
@@ -301,7 +310,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0-b8d
+self: play -> rythm 1.0-b9a
 
 require:
     - play 1.2

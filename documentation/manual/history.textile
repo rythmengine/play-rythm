@@ -4,7 +4,7 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * Waiting for rythm-engine 1.0 release
 
-h2. <a name="v1.0-b8e">v1.0-b8e</a>
+h2. <a name="v1.0-b9a">v1.0-b9a</a>
 
 p(note). **Break change**: package name renamed from @com.greenlaw110.rythm@ to @org.rythmengine@
 
@@ -16,6 +16,7 @@ p(note). **Break change**: package name renamed from @com.greenlaw110.rythm@ to 
 ** "Make @format() transformer be null safe":https://github.com/greenlaw110/Rythm/issues/140
 ** "Allow `format()` transformer be applied to Number":https://github.com/greenlaw110/Rythm/issues/138
 * New features:
+** "Support JavaBean notation in template expressions":https://github.com/greenlaw110/Rythm/issues/163
 ** "Support conditional @break, @continue and @return":https://github.com/greenlaw110/Rythm/issues/159
 ** "Support calling template with code type suffix":https://github.com/greenlaw110/Rythm/issues/121
 ** "new i18n":https://github.com/greenlaw110/Rythm/issues/118
@@ -33,6 +34,9 @@ p(note). **Break change**: package name renamed from @com.greenlaw110.rythm@ to 
 *** "New loop style":reference#for-new-loop-style
 *** "New loop separator":reference#for-new-separator
 * Bug fixes:
+** "strange behaviour for tag calling staring from b8e version":https://github.com/greenlaw110/Rythm/issues/162
+** "@verbatim output shall not be escaped":https://github.com/greenlaw110/Rythm/issues/161
+** "SecurityException thrown out when running in sandbox mode with layout template":https://github.com/greenlaw110/Rythm/issues/160
 ** "User can do file IO in template when running in sandbox mode":https://github.com/greenlaw110/Rythm/issues/158
 ** "NPE in smart evaluation":https://github.com/greenlaw110/Rythm/issues/157
 ** "S.escapeCSV() cause StringIndexOutOfBoundsException":https://github.com/greenlaw110/Rythm/issues/155

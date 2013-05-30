@@ -45,6 +45,7 @@ public class RythmTemplate extends Template {
         //tc = new TemplateClass(resource, RythmPlugin.engine, true);
         tc = RythmPlugin.engine.getTemplateClass(resource);
         name = resource.getKey().toString();
+        fullName = tc.getFullName();
         source = tc.templateResource.asTemplateContent();
         codeType = resource.codeType();
     }

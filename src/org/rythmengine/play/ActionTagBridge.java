@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 /**
@@ -36,6 +37,11 @@ public class ActionTagBridge extends JavaTagBase {
         paramNumber = action.getParameterTypes().length;
         method = action;
     }
+
+//    @Override
+//    public ITemplate __cloneMe(RythmEngine engine, ITemplate caller) {
+//        return this;
+//    }
 
     @Override
     protected void call(__ParameterList params, __Body body) {
@@ -91,6 +97,16 @@ public class ActionTagBridge extends JavaTagBase {
         if (!Void.TYPE.equals(method.getReturnType())) {
             return false;
         }
+        int mod = method.getModifiers();
+        if (Modifier.isAbstract(mod)) {
+            return false;
+        }
+        if (!Modifier.isPublic(mod)) {
+            return false;
+        }
+        if (!Modifier.isStatic(mod)) {
+            return false;
+        }
         if (method.isAnnotationPresent(Before.class)) {
             return false;
         }
@@ -123,7 +139,7 @@ public class ActionTagBridge extends JavaTagBase {
                 ActionTagBridge atb = new ActionTagBridge(cls, method);
                 engine.registerTemplate(atb);
                 atb = new ActionTagBridge(cls, method, true);
-                engine.registerTemplate(atb);
+                engine.registerFastTag(atb);
             }
         }
         if (Logger.isDebugEnabled()) {
