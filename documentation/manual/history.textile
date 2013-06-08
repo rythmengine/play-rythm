@@ -4,11 +4,12 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * Waiting for rythm-engine 1.0 release
 
-h2. <a name="v1.0-b9a">v1.0-b9a</a>
+h2. <a name="v1.0-b9c">v1.0-b9c</a>
 
 p(note). **Break change**: package name renamed from @com.greenlaw110.rythm@ to @org.rythmengine@
 
 * Changes:
+** "Refactor the template resource loading and template class logic":https://github.com/greenlaw110/Rythm/issues/178
 ** Add "key" to CachedResult for profiling purpose
 ** internal optimization on performance
 ** do not use Plugin engine to init Rythm
@@ -16,6 +17,7 @@ p(note). **Break change**: package name renamed from @com.greenlaw110.rythm@ to 
 ** "Make @format() transformer be null safe":https://github.com/greenlaw110/Rythm/issues/140
 ** "Allow `format()` transformer be applied to Number":https://github.com/greenlaw110/Rythm/issues/138
 * New features:
+** "Enable developer to use template_home/__global.rythm to add global imports and defs ":https://github.com/greenlaw110/Rythm/issues/163
 ** "Support JavaBean notation in template expressions":https://github.com/greenlaw110/Rythm/issues/163
 ** "Support conditional @break, @continue and @return":https://github.com/greenlaw110/Rythm/issues/159
 ** "Support calling template with code type suffix":https://github.com/greenlaw110/Rythm/issues/121

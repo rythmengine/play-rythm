@@ -3,12 +3,10 @@ package org.rythmengine.play;
 import org.rythmengine.Rythm;
 import org.rythmengine.RythmEngine;
 import org.rythmengine.exception.RythmException;
-import org.rythmengine.extension.ICacheService;
 import org.rythmengine.extension.*;
 import org.rythmengine.internal.IParserFactory;
 import org.rythmengine.internal.dialect.SimpleRythm;
 import org.rythmengine.logger.ILogger;
-import org.rythmengine.extension.ILoggerFactory;
 import org.rythmengine.play.parsers.*;
 import org.rythmengine.play.utils.ActionInvokeProcessor;
 import org.rythmengine.play.utils.PlayI18nMessageResolver;
@@ -47,7 +45,7 @@ import java.net.URL;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0-b9a";
+    public static final String VERSION = "1.0-b9c";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -246,7 +244,7 @@ public class RythmPlugin extends PlayPlugin {
             if (!preCompiledRoot.exists()) preCompiledRoot.mkdirs();
             p.put("rythm.home.precompiled", preCompiledRoot);
         }
-        p.put("rythm.resource.loader", new VirtualFileTemplateResourceLoader());
+        p.put("rythm.resource.loader.impls", new VirtualFileTemplateResourceLoader());
         p.put("rythm.resource.name.suffix", "");
         p.put("rythm.engine.class_loader.byte_code_helper", new IByteCodeHelper() {
             @Override

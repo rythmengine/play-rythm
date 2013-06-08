@@ -8,7 +8,6 @@ import org.rythmengine.extension.ICodeType;
 import org.rythmengine.internal.compiler.ClassReloadException;
 import org.rythmengine.internal.compiler.TemplateClass;
 import org.rythmengine.resource.ITemplateResource;
-import org.rythmengine.resource.TemplateResourceManager;
 import org.rythmengine.template.ITemplate;
 import org.rythmengine.template.TemplateBase;
 import org.rythmengine.utils.TextBuilder;
@@ -45,7 +44,7 @@ public class RythmTemplate extends Template {
         //tc = new TemplateClass(resource, RythmPlugin.engine, true);
         tc = RythmPlugin.engine.getTemplateClass(resource);
         name = resource.getKey().toString();
-        fullName = tc.getFullName();
+        fullName = tc.getTagName();
         source = tc.templateResource.asTemplateContent();
         codeType = resource.codeType();
     }
@@ -114,8 +113,8 @@ public class RythmTemplate extends Template {
             refresh();
             if (isValid()) {
                 ITemplate t = tc.asTemplate(engine);
-                TemplateResourceManager mgr = engine.resourceManager();
-                engine.registerTemplate(mgr.getFullTagName(tc), t);
+//                TemplateResourceManager mgr = engine.resourceManager();
+//                engine.registerTemplate(mgr.getFullTagName(tc), t);
             }
         }
          

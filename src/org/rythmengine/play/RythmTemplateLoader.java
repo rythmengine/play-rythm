@@ -1,8 +1,6 @@
 package org.rythmengine.play;
 
-import org.rythmengine.exception.RythmException;
 import org.rythmengine.resource.ITemplateResource;
-import org.rythmengine.resource.TemplateResourceManager;
 import play.Logger;
 import play.Play;
 import play.classloading.ApplicationClasses;
@@ -11,7 +9,6 @@ import play.vfs.VirtualFile;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -62,61 +59,13 @@ public class RythmTemplateLoader {
         return null;
     }
 
-    private static void scanRythmFolder(VirtualFile root, final TemplateResourceManager rm) {
-        class FileTraversal {
-            public final void traverse( final VirtualFile f )  {
-                if (f.isDirectory()) {
-                    // aha, we don't want to traverse .svn
-                    if (".svn".equals(f.getName())) return;
-                    final List<VirtualFile> children = f.list();
-                    for( VirtualFile child : children ) {
-                        traverse(child);
-                    }
-                    return;
-                }
-                onFile(f);
-            }
-            public void onFile( final VirtualFile f ) {
-                try {
-                    VirtualFileTemplateResourceLoader.VirtualFileTemplateResource resource = new VirtualFileTemplateResourceLoader.VirtualFileTemplateResource(f);
-                    rm.resourceLoaded(resource);
-//                    TemplateClass templateClass = RythmPlugin.engine.classes().getByTemplate(resource.getKey());
-//                    if (null == templateClass) {
-//                        templateClass = new TemplateClass(resource, RythmPlugin.engine);
-//                    }
-//                    ITag tag = (ITag)templateClass.asTemplate();
-//                    if (null != tag)RythmPlugin.engine.registerTemplate(tag);
-                } catch (RythmException e) {
-                    RythmTemplate.handleRythmException(e);
-                } catch (Exception e) {
-                    Logger.warn(e, "error pre-loading template: %s", f.relativePath());
-                    // might be groovy template, let's ignore it
-                }
-            }
-        }
-        new FileTraversal().traverse(root);
-    }
-
     static void scanRythmFolder() {
         RythmPlugin.info("start to preload templates");
-//        long ts = System.currentTimeMillis();
-        RythmPlugin.engine.resourceManager().scan(null);
-//        String s = RythmPlugin.templateRoot;
-//        TemplateResourceManager rm = RythmPlugin.engine.resourceManager();
-//        for (VirtualFile root: Play.roots) {
-//            VirtualFile templateRoot = root.child(s);
-//            if (!templateRoot.isDirectory()) continue;
-//            scanRythmFolder(templateRoot, rm);
-//        }
-//        ts = System.currentTimeMillis() - ts;
-//        RythmPlugin.trace("%sms to preload templates", ts);
+        RythmPlugin.engine.resourceManager().scan();
     }
 
-    private static Object lock_ = new Object();
-    
     public static String templatePath(VirtualFile file) {
         String path = file.relativePath();
-//RythmPlugin.info("loading template from virtual file: %s", file.relativePath());
         if (!path.contains(RythmPlugin.R_VIEW_ROOT)) return null;
         if (path.indexOf("conf/routes") != -1) return null; // we don't handle routes file at the moment
         if (path.endsWith(".xls") || path.endsWith(".xlsx") || path.endsWith(".pdf")) return null; // we don't handle binary files
