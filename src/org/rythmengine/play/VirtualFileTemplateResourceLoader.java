@@ -6,7 +6,6 @@ import org.rythmengine.resource.ResourceLoaderBase;
 import org.rythmengine.resource.TemplateResourceBase;
 import org.rythmengine.resource.TemplateResourceManager;
 import play.Play;
-import play.jobs.Job;
 import play.jobs.JobsPlugin;
 import play.libs.IO;
 import play.templates.Template;
@@ -172,23 +171,37 @@ public class VirtualFileTemplateResourceLoader extends ResourceLoaderBase {
     }
 
     private void load(final VirtualFile file, final TemplateResourceManager manager, final AtomicInteger failed) {
-        new Job() {
-            @Override
-            public void doJob() throws Exception {
-                VirtualFileTemplateResource resource = new VirtualFileTemplateResource(file);
-                if (!resource.isValid()) return;
-                try {
-                    RythmPlugin.info("preloading %s ...", resource.getKey());
-                    String path = RythmTemplateLoader.templatePath(file);
-                    if (null == path) return;
-                    Template t = RythmTemplateLoader.cachedTemplate(path);
-                    if (null != t) return;
-                    manager.resourceLoaded(resource, VirtualFileTemplateResourceLoader.this, false);
-                    RythmTemplateLoader.createTemplate(file, path);
-                } catch (Exception e) {
-                    failed.incrementAndGet();
-                }
-            }
-        }.now();
+//        new Job() {
+//            @Override
+//            public void doJob() throws Exception {
+//                VirtualFileTemplateResource resource = new VirtualFileTemplateResource(file);
+//                if (!resource.isValid()) return;
+//                try {
+//                    RythmPlugin.info("preloading %s ...", resource.getKey());
+//                    String path = RythmTemplateLoader.templatePath(file);
+//                    if (null == path) return;
+//                    Template t = RythmTemplateLoader.cachedTemplate(path);
+//                    if (null != t) return;
+//                    manager.resourceLoaded(resource, false);
+//                    RythmTemplateLoader.createTemplate(file, path);
+//                } catch (Exception e) {
+//                    failed.incrementAndGet();
+//                }
+//            }
+//        }.now();
+
+        VirtualFileTemplateResource resource = new VirtualFileTemplateResource(file);
+        if (!resource.isValid()) return;
+        try {
+            RythmPlugin.info("preloading %s ...", resource.getKey());
+            String path = RythmTemplateLoader.templatePath(file);
+            if (null == path) return;
+            Template t = RythmTemplateLoader.cachedTemplate(path);
+            if (null != t) return;
+            manager.resourceLoaded(resource, false);
+            RythmTemplateLoader.createTemplate(file, path);
+        } catch (Exception e) {
+            failed.incrementAndGet();
+        }
     }
 }

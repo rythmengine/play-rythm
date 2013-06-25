@@ -45,7 +45,7 @@ import java.net.URL;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0-b9c";
+    public static final String VERSION = "1.0-b9d";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -485,6 +485,7 @@ public class RythmPlugin extends PlayPlugin {
         });
         
         p.put("rythm.i18n.message.resolver", new PlayI18nMessageResolver());
+        p.put("rythm.resource.autoScan", false);
 
         if (null != engine) {
             engine.shutdown();
@@ -548,7 +549,7 @@ public class RythmPlugin extends PlayPlugin {
             String key = vf.relativePath().replaceFirst("\\{.*?\\}", "");
             if (!engine.classes().tmplIdx.containsKey(key)) RythmTemplateLoader.scanRythmFolder();
         } else {
-            RythmTemplateLoader.scanRythmFolder();
+            //RythmTemplateLoader.scanRythmFolder();
         }
     }
 
