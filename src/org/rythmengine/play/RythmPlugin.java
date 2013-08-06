@@ -45,7 +45,7 @@ import java.net.URL;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0-b9d";
+    public static final String VERSION = "1.0-b9e";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -114,6 +114,8 @@ public class RythmPlugin extends PlayPlugin {
     //public static String tagRoot = "app/views/tags/rythm";
 
     public static List<ImplicitVariables.Var> implicitRenderArgs = new ArrayList<ImplicitVariables.Var>();
+    
+    public static VirtualFileTemplateResourceLoader resourceLoader;
 
     public static void registerImplicitRenderArg(final String name, final String type) {
         implicitRenderArgs.add(new ImplicitVariables.Var(name, type) {
@@ -244,7 +246,8 @@ public class RythmPlugin extends PlayPlugin {
             if (!preCompiledRoot.exists()) preCompiledRoot.mkdirs();
             p.put("rythm.home.precompiled", preCompiledRoot);
         }
-        p.put("rythm.resource.loader.impls", new VirtualFileTemplateResourceLoader());
+        resourceLoader = new VirtualFileTemplateResourceLoader();
+        p.put("rythm.resource.loader.impls", resourceLoader);
         p.put("rythm.resource.name.suffix", "");
         p.put("rythm.engine.class_loader.byte_code_helper", new IByteCodeHelper() {
             @Override
@@ -308,7 +311,7 @@ public class RythmPlugin extends PlayPlugin {
             public void clear() {
                 try {
                     Cache.clear();
-                } catch (NullPointerException e) {
+                } catch (Throwable e) {
                     //ignore it
                 }
             }

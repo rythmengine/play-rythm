@@ -61,7 +61,7 @@ public class RythmTemplateLoader {
 
     static void scanRythmFolder() {
         RythmPlugin.info("start to preload templates");
-        RythmPlugin.engine.resourceManager().scan();
+        RythmPlugin.resourceLoader.scan(RythmPlugin.engine.resourceManager());
     }
 
     public static String templatePath(VirtualFile file) {
