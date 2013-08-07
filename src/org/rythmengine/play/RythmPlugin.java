@@ -45,7 +45,7 @@ import java.net.URL;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0-b9e";
+    public static final String VERSION = "1.0-b9f";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -147,6 +147,9 @@ public class RythmPlugin extends PlayPlugin {
 
     @Override
     public void onLoad() {
+        if (null != engine) {
+            engine.shutdown();
+        }
         loadTemplatePaths();
         StaticRouteResolver.loadStaticRoutes();
         if (!precompiling()) {
@@ -248,6 +251,7 @@ public class RythmPlugin extends PlayPlugin {
         }
         resourceLoader = new VirtualFileTemplateResourceLoader();
         p.put("rythm.resource.loader.impls", resourceLoader);
+        p.put("rythm.resource.loader.def.enabled", false);
         p.put("rythm.resource.name.suffix", "");
         p.put("rythm.engine.class_loader.byte_code_helper", new IByteCodeHelper() {
             @Override
