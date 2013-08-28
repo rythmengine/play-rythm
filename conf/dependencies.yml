@@ -1,4 +1,5 @@
 # History
+# 1.0-b9g null the template class loader when shutdown engine
 # 1.0-b9f disable default file system based resource loader
 # 1.0-b9e fix resource load fail issue when running on linux in prod mode
 # 1.0-b9c
@@ -320,7 +321,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0-b9f
+self: play -> rythm 1.0-b9g
 
 require:
     - play 1.2

@@ -31,7 +31,7 @@ under the License.
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.greenlaw110.play-rythm</groupId>
     <artifactId>play-rythm</artifactId>
-    <version>1.0-b9e</version>
+    <version>1.0-b9g</version>
     <packaging>jar</packaging>
 
     <repositories>
@@ -146,7 +146,7 @@ under the License.
                                 <artifactItem>
                                     <groupId>com.github.greenlaw110.play-rythm</groupId>
                                     <artifactId>play-rythm</artifactId>
-                                    <version>1.0-b9e</version>
+                                    <version>1.0-b9g</version>
                                     <type>jar</type>
                                 </artifactItem>
                             </artifactItems>
