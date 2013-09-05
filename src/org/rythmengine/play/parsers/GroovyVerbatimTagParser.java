@@ -5,7 +5,6 @@ import org.rythmengine.internal.IParser;
 import org.rythmengine.internal.IParserFactory;
 import org.rythmengine.internal.Token;
 import org.rythmengine.internal.parser.ParserBase;
-import org.rythmengine.utils.TextBuilder;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,7 +19,7 @@ public class GroovyVerbatimTagParser implements IParserFactory {
     public IParser create(IContext ctx) {
         return new ParserBase(ctx) {
             @Override
-            public TextBuilder go() {
+            public Token go() {
                 Matcher m = P.matcher(remain());
                 if (m.matches()) {
                     step(m.group(1).length());

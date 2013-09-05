@@ -1,5 +1,6 @@
 package org.rythmengine.play.parsers;
 
+import com.stevesoft.pat.Regex;
 import org.rythmengine.internal.IContext;
 import org.rythmengine.internal.IParser;
 import org.rythmengine.internal.TemplateParser;
@@ -8,8 +9,6 @@ import org.rythmengine.internal.dialect.Rythm;
 import org.rythmengine.internal.parser.ParserBase;
 import org.rythmengine.internal.parser.build_in.KeywordParserFactory;
 import org.rythmengine.utils.S;
-import org.rythmengine.utils.TextBuilder;
-import com.stevesoft.pat.Regex;
 import play.Play;
 
 public class ExitIfNoModuleParser extends KeywordParserFactory {
@@ -21,7 +20,7 @@ public class ExitIfNoModuleParser extends KeywordParserFactory {
 
     public IParser create(final IContext ctx) {
         return new ParserBase(ctx) {
-            public TextBuilder go() {
+            public Token go() {
                 Regex r = reg(dialect());
                 if (!r.search(remain())) {
                     raiseParseException("error parsing @__exitIfNoPlayModule__, correct usage: @__exitIfNoPlayModule__(\"play-module-name\"");

@@ -49,7 +49,7 @@ public class UrlReverseLookupParser extends KeywordParserFactory {
     @Override
     public IParser create(IContext ctx) {
         return new ParserBase(ctx) {
-            public TextBuilder go() {
+            public Token go() {
                 Regex r = reg(dialect());
                 if (!r.search(remain())) {
 //                    if (isAbsolute) {
