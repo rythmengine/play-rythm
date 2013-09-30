@@ -1,0 +1,34 @@
+@extends(main, title:"Pass your model objects to the template")
+@args Message info
+
+This sample shows how to pass your models objects to your templates.
+The namespace <code>Models.*</code> is imported by default, as <a href="ee">specified
+in the documentation</a>.
+
+<h3>Template code</h3> 
+@verbatim{
+	<pre class="code">
+	@extends(main, title:"Pass your model objects to the template")
+	@args Message info <br/>
+
+	@info.capital is the capital of @info.country
+	</pre>
+}
+
+<h3>Action code</h3> 
+
+@verbatim{
+	<pre class="code">
+	public static void displayModelArgs() {
+		Message info = new Message("Australia", "Canberra"); <br/>
+
+		render(info);
+	}
+	</pre>
+}
+
+<h3>Output</h3> 
+
+<pre class="result">
+@info.capital is the capital of @info.country
+</pre>
