@@ -45,7 +45,7 @@ import java.net.URL;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
-    public static final String VERSION = "1.0-b9h";
+    public static final String VERSION = "1.0-carl";
     public static final String R_VIEW_ROOT = "app/rythm";
 
     public static void info(String msg, Object... args) {
@@ -357,8 +357,12 @@ public class RythmPlugin extends PlayPlugin {
 
         // set tmp dir
         debug("Play standalone play server? %s", Play.standalonePlayServer);
+		//boolean isGaePresent = Boolean.valueOf(p.getProperty("rythm.gae", "false")) ;  
+		boolean isGaePresent = isGaeSdkInClasspath() ;
+		if( isGaePresent ) 
+			warn("GAE SDK present in the classpath");
         boolean gae = !Play.standalonePlayServer
-                || Boolean.valueOf(p.getProperty("rythm.gae", "false"))
+                || isGaePresent
                 || Boolean.valueOf(p.getProperty("rythm.engine.file_write", "false"));
         if (!gae) {
             File tmpDir = new File(Play.tmpDir, "rythm");
@@ -517,6 +521,21 @@ public class RythmPlugin extends PlayPlugin {
 
         RythmTemplateLoader.clear();
     }
+
+	public static boolean isGaeSdkInClasspath() 
+	{
+		try
+		{
+			String classname = "com.google.appengine.api.LifecycleManager" ; 
+			Class clazz = Class.forName(classname);
+			return clazz != null ;
+		}
+		catch (Throwable t)
+		{
+			// Nothing to do
+		}
+		return false ;
+	}
 
     public static final String ACTION_CALL_FLAG_KEY = "__RYTHM_PLUGIN_ACTION_CALL_";
 

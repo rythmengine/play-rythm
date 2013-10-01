@@ -1,0 +1,67 @@
+h2{
+    line-height: 1em;
+    margin-top: 1em;
+    color: rgb(69, 69, 69);
+    font-family: "HelveticaNeue-CondensedBold","Open Sans Condensed","Helvetica",sans-serif;
+    font-stretch: condensed;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+
+    margin-bottom: 0.5em;
+    font-size: 2.5em;
+
+    padding-top: 1em;
+    border-top: 1px solid rgb(244, 243, 241);
+}
+
+body {
+    background: none repeat scroll 0% 0% rgb(255, 255, 255);
+    font-family: "Helvetica Neue","Helvetica",sans-serif;
+    font-weight: normal;
+    font-size: 15px;
+}
+
+#content
+{
+    width: auto;
+	padding-top:10px;
+	padding-bottom:10px;
+	padding-right:100px;
+	padding-left:100px;
+    background: none repeat scroll 0% 0% rgb(255, 255, 255);
+	max-width: 1500px;
+}
+
+.code
+{
+    background: none repeat scroll 0% 0% rgb(247, 247, 247);
+	overflow: auto;
+	margin: 10px 0px;
+	padding: 10px 10px 10px 10px ;
+	border: medium none !important;
+}
+
+.result
+{
+    border-right: 1px solid rgb(244, 243, 241);
+    border-left: 1px solid rgb(244, 243, 241);
+    border-top: 1px solid rgb(244, 243, 241);
+    border-bottom: 1px solid rgb(244, 243, 241);
+	padding: 10px 10px 10px 10px ;
+	margin: 10px 0px;
+	background: none repeat scroll 0% 0% rgb(255, 247, 214);
+	color: rgb(76, 71, 66) ;
+}
+
+code
+{
+	margin: 0px 2px;
+	padding: 0px 5px;
+	border: 1px solid rgb(221, 221, 221);
+	background-color: rgb(248, 248, 248);
+	border-radius: 3px 3px 3px 3px;
+
+	font-family: Consolas,"Liberation Mono",Courier,monospace;
+    font-size: 12px;
+
+}
