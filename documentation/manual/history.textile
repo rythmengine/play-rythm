@@ -4,7 +4,7 @@ h2. <a name="roadmap">What's left for R1.0</a>
 
 * Waiting for rythm-engine 1.0 release
 
-h2. <a name="v1.0-b9h">v1.0-b9h</a>
+h2. <a name="v1.0-b9j">v1.0-b9j</a>
 
 p(note). **Break change**: package name renamed from @com.greenlaw110.rythm@ to @org.rythmengine@
 
@@ -39,6 +39,8 @@ p(note). **Break change**: package name renamed from @com.greenlaw110.rythm@ to 
 *** "New loop style":reference#for-new-loop-style
 *** "New loop separator":reference#for-new-separator
 * Bug fixes:
+** "Cant start application on GAE":https://github.com/greenlaw110/play-rythm/issues/87
+** "EmptyStack Exception":https://github.com/greenlaw110/Rythm/issues/183
 ** "NPE problem":https://github.com/greenlaw110/Rythm/issues/182
 ** "strange behaviour for tag calling staring from b8e version":https://github.com/greenlaw110/Rythm/issues/162
 ** "@verbatim output shall not be escaped":https://github.com/greenlaw110/Rythm/issues/161
