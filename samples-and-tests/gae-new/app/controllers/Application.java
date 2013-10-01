@@ -10,15 +10,13 @@ public class Application extends Controller {
 	}
 
 	public static void displaySimpleArgs() {
-		renderArgs.put("country", "France");
-		renderArgs.put("capital", "Paris");
-
-		render();
+	    String country = "France";
+        String capital = "Paris";
+		render(country, capital);
 	}
 
 	public static void displayModelArgs() {
 		Message info = new Message("Australia", "Canberra");
-
 		render(info);
 	}
 }

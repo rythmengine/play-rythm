@@ -6,7 +6,6 @@ import org.rythmengine.resource.ResourceLoaderBase;
 import org.rythmengine.resource.TemplateResourceBase;
 import org.rythmengine.resource.TemplateResourceManager;
 import play.Play;
-import play.jobs.JobsPlugin;
 import play.libs.IO;
 import play.templates.Template;
 import play.vfs.VirtualFile;
@@ -150,8 +149,7 @@ public class VirtualFileTemplateResourceLoader extends ResourceLoaderBase {
 
     @Override
     public void scan(TemplateResourceManager manager) {
-        if (true) return;
-        if (null == JobsPlugin.executor) return;
+        //if (null == JobsPlugin.executor) return;
         final AtomicInteger failed = new AtomicInteger(0);
         for (VirtualFile vf : Play.templatesPath) {
             if (RythmPlugin.R_VIEW_ROOT.endsWith(vf.getName())) {

@@ -1,9 +1,8 @@
 package org.rythmengine.play;
 
-import org.rythmengine.Rythm;
-import org.rythmengine.internal.compiler.TemplateClass;
 import javassist.ClassPath;
 import javassist.NotFoundException;
+import org.rythmengine.internal.compiler.TemplateClass;
 import play.classloading.enhancers.PropertiesEnhancer;
 import play.utils.FastRuntimeException;
 
@@ -49,7 +48,7 @@ class TemplatePropertiesEnhancer extends PropertiesEnhancer {
                 if (pos > -1) {
                     className = className.substring(0, pos);
                 }
-                if (Rythm.engine().classes().getByClassName(className) != null) {
+                if (RythmPlugin.engine.classes().getByClassName(className) != null) {
                     String cname = className.replace('.', '/') + ".class";
                     try {
                         // return new File(cname).toURL();

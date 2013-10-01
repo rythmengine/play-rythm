@@ -1,4 +1,7 @@
 # History
+# 1.0-b9k
+#        - https://github.com/greenlaw110/play-rythm/issues/91
+#        - https://github.com/greenlaw110/play-rythm/issues/89
 # 1.0-b9j fix https://github.com/greenlaw110/play-rythm/issues/87
 # 1.0-b9i fix EmptyStackException issue
 # 1.0-b9g null the template class loader when shutdown engine
@@ -323,7 +326,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0-b9j
+self: play -> rythm 1.0-b9k
 
 require:
     - play 1.2

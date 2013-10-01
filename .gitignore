@@ -6,3 +6,4 @@ dist
 *.eml
 *.iml
 target
+precompiled

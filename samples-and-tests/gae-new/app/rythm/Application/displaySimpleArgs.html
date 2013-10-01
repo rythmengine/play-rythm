@@ -4,7 +4,7 @@
 This sample shows how to pass simple argurments to your templates.
 
 <h3>Template code</h3> 
-@verbatim{
+@verbatim() {
 	<pre class="code">
 	@extends(main, title:"simple template arguments")
 	@args String country, String capital<br/>
@@ -15,13 +15,12 @@ This sample shows how to pass simple argurments to your templates.
 
 <h3>Action code</h3> 
 
-@verbatim{
+@verbatim (){
 	<pre class="code">
 	public static void displaySimpleArgs() {
-		renderArgs.put("country", "France");
-		renderArgs.put("capital", "Paris"); <br/>
-
-		render();
+        String country = "France";
+        String capital = "Paris";
+        render(country, capital);
 	}
 	</pre>
 }

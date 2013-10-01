@@ -31,22 +31,20 @@ import play.i18n.Messages;
 import play.mvc.Http;
 import play.mvc.Scope;
 import play.mvc.results.*;
-import play.templates.JavaExtensions;
-import play.templates.RythmTagContext;
-import play.templates.TagContext;
-import play.templates.Template;
+import play.templates.*;
 import play.vfs.VirtualFile;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
 
-    public static final String VERSION = "1.0-b9k";
+    public static final String VERSION = "1.0-b9l";
 
     public static final String R_VIEW_ROOT = "app/rythm";
 
@@ -116,7 +114,7 @@ public class RythmPlugin extends PlayPlugin {
     //public static String tagRoot = "app/views/tags/rythm";
 
     public static List<ImplicitVariables.Var> implicitRenderArgs = new ArrayList<ImplicitVariables.Var>();
-    
+
     public static VirtualFileTemplateResourceLoader resourceLoader;
 
     public static void registerImplicitRenderArg(final String name, final String type) {
@@ -142,7 +140,7 @@ public class RythmPlugin extends PlayPlugin {
     }
 
     private boolean loadingRoute = false;
-    
+
     public static boolean precompiling() {
         return System.getProperty("precompile") != null;
     }
@@ -157,17 +155,6 @@ public class RythmPlugin extends PlayPlugin {
         if (!precompiling()) {
             Play.lazyLoadTemplates = true;
         }
-/* disable preload routes as it cause class load troubles */
-//        // try to workaround play issue https://play.lighthouseapp.com/projects/57987-play-framework/tickets/1545-play-precompile-does-not-load-routes
-//        if (Router.routes.isEmpty()) {
-//            loadingRoute = true;
-//            try {
-//                Router.load(Play.ctxPath);
-//            } catch (Exception e) {
-//                warn("cannot load routes on rythm load: you have compilation error: %s", e.getMessage());
-//            }
-//            loadingRoute = false;
-//        }
     }
 
     private boolean logActionInvocationTime;
@@ -175,6 +162,7 @@ public class RythmPlugin extends PlayPlugin {
         private ApplicationClassloader pcl() {
             return Play.classloader;
         }
+
         @Override
         public Class<?> loadClass(String name) throws ClassNotFoundException {
             return pcl().loadClass(name);
@@ -182,7 +170,25 @@ public class RythmPlugin extends PlayPlugin {
 
         @Override
         public URL getResource(String name) {
-            return pcl().getResource(name);
+            if (name.endsWith(".class")) {
+                String base;
+                if (Play.usePrecompiled) {
+                    base = "precompiled";
+                } else {
+                    base = "tmp";
+                }
+                File file = new File(Play.applicationPath, base + "/java/" + name);
+                if (file.exists() && file.canRead()) {
+                    try {
+                        return file.toURI().toURL();
+                    } catch (MalformedURLException e) {
+                        throw new UnexpectedException(e);
+                    }
+                }
+                return pcl().getParent().getResource(name);
+            } else {
+                return pcl().getResource(name);
+            }
         }
 
         @Override
@@ -208,7 +214,7 @@ public class RythmPlugin extends PlayPlugin {
             }
         }
     };
-    
+
     @Override
     public void onConfigurationRead() {
         if (null != engine && Play.mode.isProd()) return; // already configured
@@ -359,21 +365,22 @@ public class RythmPlugin extends PlayPlugin {
 
         // set tmp dir
         debug("Play standalone play server? %s", Play.standalonePlayServer);
-		//boolean isGaePresent = Boolean.valueOf(p.getProperty("rythm.gae", "false")) ;  
-		boolean isGaePresent = isGaeSdkInClasspath() ;
-		if( isGaePresent ) 
-			warn("GAE SDK present in the classpath");
-        boolean gae = !Play.standalonePlayServer
-                || isGaePresent
-                || Boolean.valueOf(p.getProperty("rythm.engine.file_write", "false"));
-        if (!gae) {
+        //boolean isGaePresent = Boolean.valueOf(p.getProperty("rythm.gae", "false")) ;
+        boolean isGaePresent = isGaeSdkInClasspath();
+        if (isGaePresent) {
+            warn("GAE SDK present in the classpath");
+        }
+        boolean gae = !Play.standalonePlayServer && isGaePresent;
+        boolean readOnly = gae || Boolean.valueOf(p.getProperty("rythm.engine.file_write", "false"));
+        if (!readOnly) {
             File tmpDir = new File(Play.tmpDir, "rythm");
             tmpDir.mkdirs();
             p.put("rythm.home.tmp", tmpDir);
-            if (Logger.isDebugEnabled()) debug("rythm tmp dir set to %s", p.get("rythm.home.tmp"));
-        } else {
+            if (Logger.isDebugEnabled()) {
+                debug("rythm tmp dir set to %s", p.get("rythm.home.tmp"));
+            }
+        } else if (gae) {
             warn("GAE enabled");
-            p.put("rythm.engine.file_write", true);
         }
 
         p.put("rythm.engine.mode", Play.mode.isDev() && Play.standalonePlayServer ? Rythm.Mode.dev : Rythm.Mode.prod);
@@ -470,7 +477,7 @@ public class RythmPlugin extends PlayPlugin {
                 template.__setRenderArgs(m);
             }
         });
-        
+
         p.put("rythm.render.exception_handler", new IRenderExceptionHandler() {
             @Override
             public boolean handleTemplateExecutionException(Exception e, TemplateBase template) {
@@ -496,7 +503,7 @@ public class RythmPlugin extends PlayPlugin {
                 return false;
             }
         });
-        
+
         p.put("rythm.i18n.message.resolver", new PlayI18nMessageResolver());
         p.put("rythm.resource.autoScan", false);
 
@@ -522,22 +529,21 @@ public class RythmPlugin extends PlayPlugin {
         }
 
         RythmTemplateLoader.clear();
+        if (engine.conf().gae()) {
+            TemplateLoader.getAllTemplate();
+        }
     }
 
-	public static boolean isGaeSdkInClasspath() 
-	{
-		try
-		{
-			String classname = "com.google.appengine.api.LifecycleManager" ; 
-			Class clazz = Class.forName(classname);
-			return clazz != null ;
-		}
-		catch (Throwable t)
-		{
-			// Nothing to do
-		}
-		return false ;
-	}
+    public static boolean isGaeSdkInClasspath() {
+        try {
+            String classname = "com.google.appengine.api.LifecycleManager";
+            Class clazz = Class.forName(classname);
+            return clazz != null;
+        } catch (Throwable t) {
+            // Nothing to do
+        }
+        return false;
+    }
 
     public static final String ACTION_CALL_FLAG_KEY = "__RYTHM_PLUGIN_ACTION_CALL_";
 
@@ -575,7 +581,9 @@ public class RythmPlugin extends PlayPlugin {
             // pre load template classes if they are not loaded yet
             VirtualFile vf = Play.getVirtualFile("app/rythm/welcome.html");
             String key = vf.relativePath().replaceFirst("\\{.*?\\}", "");
-            if (!engine.classes().tmplIdx.containsKey(key)) RythmTemplateLoader.scanRythmFolder();
+            if (!engine.classes().tmplIdx.containsKey(key) || engine.conf().loadPrecompiled()) {
+                RythmTemplateLoader.scanRythmFolder();
+            }
         } else {
             //RythmTemplateLoader.scanRythmFolder();
         }
@@ -621,7 +629,7 @@ public class RythmPlugin extends PlayPlugin {
             throw new UnexpectedException("It's not supposed to be called");
         }
     };
-    
+
     private boolean preloadConf = false;
 
     @Override
@@ -760,7 +768,7 @@ public class RythmPlugin extends PlayPlugin {
     @Override
     public String getMessage(String locale, Object key, Object... args) {
         String value = null;
-        if( key == null ) {
+        if (key == null) {
             return "";
         }
         Map<String, Properties> locales = Messages.locales;
@@ -784,12 +792,13 @@ public class RythmPlugin extends PlayPlugin {
 
         return Messages.formatString(value, args);
     }
-    
+
     private static RythmEngine engine() {
         return engine;
     }
-    
+
     // ----- render interfaces ---------
+
     /**
      * @param template
      * @param args
@@ -809,7 +818,7 @@ public class RythmPlugin extends PlayPlugin {
     public static String render(File file, Object... args) {
         return engine().render(file, args);
     }
-    
+
     public static String render(VirtualFile file, Object... args) {
         return engine().render(file.getRealFile(), args);
     }
@@ -843,7 +852,7 @@ public class RythmPlugin extends PlayPlugin {
     public static String toString(String template, Object obj) {
         return engine().toString(template, obj);
     }
-    
+
     /**
      * @param obj
      * @return render result
