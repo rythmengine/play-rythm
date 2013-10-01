@@ -1,0 +1,18 @@
+# Application dependencies
+require:
+    - play -> gae 1.6.0
+#    - play-rythm -> play-rythm
+    - com.gelinsoft -> play-rythm 1.0-b9j
+
+repositories:
+    - local:
+        type: local
+        artifact: ${application.path}/../../../[module]
+        contains:
+            - play-rythm
+
+    - gelinsoft:
+        type: http
+        artifact: "http://gelinsoft.com/play/repo/[module]-[revision].zip"
+        contains:
+            - com.gelinsoft -> *   

@@ -1,0 +1,33 @@
+@extends(main, title:"simple template arguments")
+@args String country, String capital
+
+This sample shows how to pass simple argurments to your templates.
+
+<h3>Template code</h3> 
+@verbatim{
+	<pre class="code">
+	@extends(main, title:"simple template arguments")
+	@args String country, String capital<br/>
+
+	@capital is the capital of @country
+	</pre>
+}
+
+<h3>Action code</h3> 
+
+@verbatim{
+	<pre class="code">
+	public static void displaySimpleArgs() {
+		renderArgs.put("country", "France");
+		renderArgs.put("capital", "Paris"); <br/>
+
+		render();
+	}
+	</pre>
+}
+
+<h3>Output</h3> 
+
+<pre class="result">
+@capital is the capital of @country
+</pre>
