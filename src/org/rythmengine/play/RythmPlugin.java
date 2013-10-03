@@ -529,9 +529,9 @@ public class RythmPlugin extends PlayPlugin {
         }
 
         RythmTemplateLoader.clear();
-        if (engine.conf().gae()) {
-            TemplateLoader.getAllTemplate();
-        }
+//        if (engine.conf().gae()) {
+//            TemplateLoader.getAllTemplate();
+//        }
     }
 
     public static boolean isGaeSdkInClasspath() {
@@ -577,16 +577,16 @@ public class RythmPlugin extends PlayPlugin {
 
     @Override
     public void afterApplicationStart() {
-        if (engine.mode().isProd()) {
-            // pre load template classes if they are not loaded yet
-            VirtualFile vf = Play.getVirtualFile("app/rythm/welcome.html");
-            String key = vf.relativePath().replaceFirst("\\{.*?\\}", "");
-            if (!engine.classes().tmplIdx.containsKey(key) || engine.conf().loadPrecompiled()) {
-                RythmTemplateLoader.scanRythmFolder();
-            }
-        } else {
-            //RythmTemplateLoader.scanRythmFolder();
-        }
+//        if (engine.mode().isProd() && engine.conf().loadPrecompiled()) {
+//            // pre load template classes if they are not loaded yet
+//            VirtualFile vf = Play.getVirtualFile("app/rythm/welcome.html");
+//            String key = vf.relativePath().replaceFirst("\\{.*?\\}", "");
+//            if (!engine.classes().tmplIdx.containsKey(key)) {
+//                RythmTemplateLoader.scanRythmFolder();
+//            }
+//        } else {
+//            //RythmTemplateLoader.scanRythmFolder();
+//        }
     }
 
     private void registerJavaTags(RythmEngine engine) {

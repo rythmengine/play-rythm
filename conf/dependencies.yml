@@ -1,4 +1,5 @@
 # History
+# 1.0-b9l disable preloading template to reduce bootup time
 # 1.0-b9k
 #        - https://github.com/greenlaw110/play-rythm/issues/91
 #        - https://github.com/greenlaw110/play-rythm/issues/89
@@ -326,7 +327,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0-b9k
+self: play -> rythm 1.0-b9l
 
 require:
     - play 1.2
