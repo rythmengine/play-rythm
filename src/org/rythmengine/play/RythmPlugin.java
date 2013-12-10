@@ -44,7 +44,7 @@ import java.util.*;
 
 public class RythmPlugin extends PlayPlugin {
 
-    public static final String VERSION = "1.0-b9l";
+    public static final String VERSION = "1.0-b10";
 
     public static final String R_VIEW_ROOT = "app/rythm";
 
@@ -305,6 +305,11 @@ public class RythmPlugin extends PlayPlugin {
                 Object o = Cache.get(key);
                 Cache.delete(key);
                 return null == o ? null : (o instanceof Serializable ? (Serializable) o : o.toString());
+            }
+
+            @Override
+            public void evict(String key) {
+                Cache.delete(key);
             }
 
             @Override

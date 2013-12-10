@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  *
  * <p>If a time is not specified, the results will be cached for 1 hour by default.
  *
- * <p>Example: <code>@CacheFor("1h")</code>
+ * <p>Example: <code>@Cache4("1h")</code>
  *
  * <ul>Differences with play.cache.CacheFor</p>
  * <li>You can specify time using configuration name like <code>cron.xx.cache4</code></li>

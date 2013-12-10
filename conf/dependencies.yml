@@ -1,4 +1,16 @@
 # History
+# 1.0-b10 update rythm-engine to 1.0-b11-SNAPSHOT
+#        - https://github.com/greenlaw110/Rythm/issues/203
+#        - https://github.com/greenlaw110/Rythm/issues/202
+#        - https://github.com/greenlaw110/Rythm/issues/200
+#        - https://github.com/greenlaw110/Rythm/issues/198
+#        - https://github.com/greenlaw110/Rythm/issues/193
+#        - https://github.com/greenlaw110/Rythm/issues/191
+#        - https://github.com/greenlaw110/Rythm/issues/190
+#        - https://github.com/greenlaw110/Rythm/issues/189
+#        - https://github.com/greenlaw110/Rythm/issues/187
+#        - https://github.com/greenlaw110/Rythm/issues/183
+#        - https://github.com/greenlaw110/Rythm/issues/182
 # 1.0-b9l disable preloading template to reduce bootup time
 # 1.0-b9k
 #        - https://github.com/greenlaw110/play-rythm/issues/91
@@ -327,7 +339,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0-b9l
+self: play -> rythm 1.0-b10
 
 require:
     - play 1.2
