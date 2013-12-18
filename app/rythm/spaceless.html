@@ -1,0 +1,4 @@
+@__simple__
+@assign("result") {
+  @doBody()
+}@(((String)result).trim().replaceAll(">\\s+<", "><").raw())

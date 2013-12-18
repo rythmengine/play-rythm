@@ -759,6 +759,23 @@ bc. @set(title:"Profile of " + user.login)
 
 Unlike "set":http://www.playframework.org/documentation/1.2.4/tags#set tag in Groovy template engine, Rythm @set@ tag does not accept tag body. You can use "section":#section tag to achieve the same result.
 
+h3. <a name="spaceless">spaceless</a>
+
+Analog of the "spaceless":https://docs.djangoproject.com/en/dev/ref/templates/builtins/#spaceless tag from Django. Removes whitespace (@\s@) characters between HTML tags, including tabs and newlines.
+
+Template:
+
+bc. @spaceless() {
+  <ul>
+    <li>First item</li>
+    <li>Second   item</li>
+  </ul>
+}
+
+Output:
+
+bc. <ul><li>First item</li><li>Second   item</li></ul>
+
 h3. <a name="tag">tag</a>
 
 Alias of <a href="#def"><code>@def()</code></a>
