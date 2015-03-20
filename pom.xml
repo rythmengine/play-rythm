@@ -27,11 +27,20 @@ under the License.
         <artifactId>play-module-default-parent</artifactId>
         <version>1.0.0-alpha6</version>
     </parent>
+    
+    <properties>
+        <play-rythm.version>1.0.1-b4</play-rythm.version>
+        <rythm.version>1.0.1-SNAPSHOT</rythm.version>
+        <play.manifest.section>Play</play.manifest.section>
+        <play.manifest.specification.title>Rythm Module</play.manifest.specification.title>
+        <play.module.frameworkVersions>1.0-b4a</play.module.frameworkVersions>
+        <play.version>1.2.4</play.version>
+    </properties>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.greenlaw110.play-rythm</groupId>
     <artifactId>play-rythm</artifactId>
-    <version>1.0-b10</version>
+    <version>${play-rythm.version}</version>
     <packaging>jar</packaging>
 
     <repositories>
@@ -63,14 +72,6 @@ under the License.
         </repository>
     </repositories>
 
-    <properties>
-        <play.manifest.section>Play</play.manifest.section>
-        <play.manifest.specification.title>Rythm Module</play.manifest.specification.title>
-        <play.module.frameworkVersions>1.0-b4a</play.module.frameworkVersions>
-
-        <play.version>1.2.4</play.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.google.code.maven-play-plugin.org.playframework</groupId>
@@ -82,7 +83,7 @@ under the License.
         <dependency>
             <groupId>org.rythmengine</groupId>
             <artifactId>rythm-engine</artifactId>
-            <version>1.0-b11-SNAPSHOT</version>
+            <version>${rythm.version}</version>
         </dependency>
     </dependencies>
 
@@ -140,13 +141,13 @@ under the License.
                                 <artifactItem>
                                     <groupId>org.rythmengine</groupId>
                                     <artifactId>rythm-engine</artifactId>
-                                    <version>1.0-b11-SNAPSHOT</version>
+                                    <version>${rythm.version}</version>
                                     <type>jar</type>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>com.github.greenlaw110.play-rythm</groupId>
                                     <artifactId>play-rythm</artifactId>
-                                    <version>1.0-b10</version>
+                                    <version>${play-rythm.version}</version>
                                     <type>jar</type>
                                 </artifactItem>
                             </artifactItems>

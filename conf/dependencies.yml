@@ -1,4 +1,7 @@
 # History
+# 1.0.1-b4 update rythm-engine to 1.0.1-SNAPSHOT
+# 1.0.1-b3 update rythm-engine to 1.0.1-SNAPSHOT
+# 1.0.1-b2 update rythm-engine to 1.0.1-SNAPSHOT
 # 1.0-b10 update rythm-engine to 1.0-b11-SNAPSHOT
 #        - https://github.com/greenlaw110/Rythm/issues/203
 #        - https://github.com/greenlaw110/Rythm/issues/202
@@ -339,7 +342,7 @@
 # 0.2c - fix bug: runtime exception when path point to a layout template
 # 0.2b - strip off ';' from @args declaration line
 # 0.2a - working with Play!
-self: play -> rythm 1.0-b10
+self: play -> rythm 1.0.1-b4
 
 require:
     - play 1.2
